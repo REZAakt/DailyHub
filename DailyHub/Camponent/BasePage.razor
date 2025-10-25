@@ -1,0 +1,93 @@
+﻿@using Microsoft.AspNetCore.Components
+@using System.Linq
+
+<!-- نوار روت که به بالای صفحه چسبیده و در فضای خالی بالا قرار می‌گیرد -->
+<div class="basepage-gap">
+    <ol class="breadcrumb">
+        @if (TopBarRoot is not null && TopBarRoot.Count > 0)
+        {
+            @for (int i = 0; i < TopBarRoot.Count - 1; i++)
+            {
+                var index = i;
+                <li>
+                    <a href="@TopBarRoot[index].Address"
+                       @onclick="@(() => TopBarRoot[index].ClickEvent.HasValue
+                                      ? TopBarRoot[index].ClickEvent!.Value.InvokeAsync()
+                                      : Task.CompletedTask)">
+                        @TopBarRoot[index].Text
+                    </a>
+                </li>
+            }
+
+            <li>
+                <a href="@TopBarRoot.Last().Address" style="color:gray;">
+                    @TopBarRoot.Last().Text
+                </a>
+            </li>
+        }
+    </ol>
+</div>
+
+<div class="basepage-container">
+    <!-- Header داخل کارت سفید -->
+    <div class="basepage-header">
+        <div class="header-extra flex justify-between ">
+            @TopBarContents
+        </div>
+    </div>
+
+    <!-- Body -->
+    <div class="MainContainer">
+        @ChildContent
+    </div>
+</div>
+
+<RadzenTooltip />
+<RadzenNotification />
+
+@code {
+    public record TopBarArg(string? Address, string Text, EventCallback? ClickEvent = null);
+
+    [Parameter] public IReadOnlyList<TopBarArg> TopBarRoot { get; set; } = Array.Empty<TopBarArg>();
+    [Parameter] public RenderFragment? TopBarContents { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}
+
+
+<style>
+
+    .MainContainer {
+        height: 100%;
+        display: flex;
+        flex-flow: column;
+        gap: 0px;
+        overflow-y: hidden;
+        overflow-x: hidden;
+        border-radius: 15px;
+        padding: 5px;
+    }
+
+    .list-border {
+        border: hidden !important;
+        /* border-radius: 15px; */
+        /* padding: 5px; */
+    }
+
+    .list-footer {
+        margin-right: 5px;
+        /* border-radius: 15px; */
+        /* padding: 5px; */
+    }
+
+    .list-In-border {
+        /* border:hidden!important; */
+        border-radius: 10px;
+        /* padding: 5px; */
+    }
+
+    @@media (max-width: 768px) {
+        .MainContainer {
+            /* border:hidden!important; */
+        }
+    }
+</style>

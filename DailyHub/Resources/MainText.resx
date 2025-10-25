@@ -1,0 +1,2035 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name=" ActivationStatus_Active" xml:space="preserve">
+    <value>فعال</value>
+  </data>
+  <data name=" ActivationStatus_DeActive" xml:space="preserve">
+    <value>غیر فعال</value>
+  </data>
+  <data name="accepted" xml:space="preserve">
+    <value>تایید شده</value>
+  </data>
+  <data name="AcceptOrder" xml:space="preserve">
+    <value>تایید سفارش</value>
+  </data>
+  <data name="AccessLevel" xml:space="preserve">
+    <value>نقش</value>
+  </data>
+  <data name="Account" xml:space="preserve">
+    <value>حساب کاربری</value>
+  </data>
+  <data name="AcseptItem" xml:space="preserve">
+    <value>کالای دریافت شده</value>
+  </data>
+  <data name="ActionHistory" xml:space="preserve">
+    <value>تاریخچه تراکنش ها</value>
+  </data>
+  <data name="Activated" xml:space="preserve">
+    <value>فعال شد</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>افزودن</value>
+  </data>
+  <data name="Add1" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="AddOrder" xml:space="preserve">
+    <value>ثبت سفارش</value>
+  </data>
+  <data name="AddPermission" xml:space="preserve">
+    <value>افزودن دسترسی جدید</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>آدرس</value>
+  </data>
+  <data name="AddReturnedItem" xml:space="preserve">
+    <value>ثبت مرجوعی</value>
+  </data>
+  <data name="AddToFavarate" xml:space="preserve">
+    <value>افزودن به علاقه مندی ها</value>
+  </data>
+  <data name="AddUser" xml:space="preserve">
+    <value>افزودن کاربران</value>
+  </data>
+  <data name="Add_Item" xml:space="preserve">
+    <value>افزودن کالا</value>
+  </data>
+  <data name="Add_Sub" xml:space="preserve">
+    <value>افزودن اشتراک</value>
+  </data>
+  <data name="AllitemsSet" xml:space="preserve">
+    <value>وضعیت تمامی کالا ها مشخص شد</value>
+  </data>
+  <data name="Allorders" xml:space="preserve">
+    <value>کل سفارشات</value>
+  </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>آیا می خواهید سفارش خود را ثبت کنید ؟</value>
+  </data>
+  <data name="AverageInventory" xml:space="preserve">
+    <value>میانگین موجودی</value>
+  </data>
+  <data name="AverageInventory_Help" xml:space="preserve">
+    <value>موجودی است که وضیعت که مناسب یا کمبود موجودی سیستم را نمایش میدهد</value>
+  </data>
+  <data name="AwnserTheQuestions" xml:space="preserve">
+    <value>لطفاً به همه سوال‌ها پاسخ دهید.</value>
+  </data>
+  <data name="Az" xml:space="preserve">
+    <value>Az</value>
+  </data>
+  <data name="back" xml:space="preserve">
+    <value>بازگشت</value>
+  </data>
+  <data name="Backtologin" xml:space="preserve">
+    <value>بازگشت به صفحه ورود</value>
+  </data>
+  <data name="BasePrice" xml:space="preserve">
+    <value>قیمت پایه</value>
+  </data>
+  <data name="Batch" xml:space="preserve">
+    <value>بتچ</value>
+  </data>
+  <data name="BatchType_Income" xml:space="preserve">
+    <value>ورودی</value>
+  </data>
+  <data name="BatchType_Outcome" xml:space="preserve">
+    <value>خروجی</value>
+  </data>
+  <data name="Batch_AddNew" xml:space="preserve">
+    <value>ثبت بتچ جدید</value>
+  </data>
+  <data name="Batch_AllInputQuantity" xml:space="preserve">
+    <value>تعداد کل ورودی بتچ</value>
+  </data>
+  <data name="Batch_AllOutputQuantity" xml:space="preserve">
+    <value>تعداد کل خروجی بتچ</value>
+  </data>
+  <data name="Batch_AllQuantity" xml:space="preserve">
+    <value>تعداد کل تراکنش</value>
+  </data>
+  <data name="Batch_ExpiryDate" xml:space="preserve">
+    <value>تاریخ انقضاء</value>
+  </data>
+  <data name="Batch_Name" xml:space="preserve">
+    <value>نام بتچ</value>
+  </data>
+  <data name="Batch_OutNumber" xml:space="preserve">
+    <value>تعداد خروج</value>
+  </data>
+  <data name="Batch_ProductionDate" xml:space="preserve">
+    <value>تاریخ تولید</value>
+  </data>
+  <data name="Batch_See_Inform" xml:space="preserve">
+    <value>اطلاعات بتچ</value>
+  </data>
+  <data name="Batch_Select" xml:space="preserve">
+    <value>انتخاب بتچ</value>
+  </data>
+  <data name="Batch_Stock" xml:space="preserve">
+    <value>موجودی بتچ</value>
+  </data>
+  <data name="Batch_Type" xml:space="preserve">
+    <value>نوع بتچ</value>
+  </data>
+  <data name="BoostByAdmin" xml:space="preserve">
+    <value>نردبان شود</value>
+  </data>
+  <data name="BoostUntil" xml:space="preserve">
+    <value>زمان پایان اعتبار</value>
+  </data>
+  <data name="BosstSuppleir" xml:space="preserve">
+    <value>نردبان شدن تامین کننده</value>
+  </data>
+  <data name="BuyerInfo" xml:space="preserve">
+    <value>مشخصات خریدار</value>
+  </data>
+  <data name="By" xml:space="preserve">
+    <value>کاربر</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>لغو</value>
+  </data>
+  <data name="CancelItem" xml:space="preserve">
+    <value>کالا را دریافت نکردید !❌</value>
+  </data>
+  <data name="CancelledByLaboratory" xml:space="preserve">
+    <value>لغو شده توسط آزمایشگاه</value>
+  </data>
+  <data name="CancelledBySupplier" xml:space="preserve">
+    <value>لغو شده توسط تأمین‌کننده</value>
+  </data>
+  <data name="CanselOrder" xml:space="preserve">
+    <value>لغو سفارش</value>
+  </data>
+  <data name="CategoryList" xml:space="preserve">
+    <value>دسته بندی ها</value>
+  </data>
+  <data name="CategoryParentSelect" xml:space="preserve">
+    <value>انتخاب دسته بندی والد</value>
+  </data>
+  <data name="CategorySelect" xml:space="preserve">
+    <value>انتخاب دسته بندی</value>
+  </data>
+  <data name="Category_Add" xml:space="preserve">
+    <value>افزودن دسته بندی جدید</value>
+  </data>
+  <data name="Category_Code" xml:space="preserve">
+    <value>کد دسته بندی</value>
+  </data>
+  <data name="Category_Edit" xml:space="preserve">
+    <value>ویرایش دسته بندی</value>
+  </data>
+  <data name="Category_Name" xml:space="preserve">
+    <value>نام دسته بندی</value>
+  </data>
+  <data name="Category_NameNotUniqe" xml:space="preserve">
+    <value>نام دسته بندی باید یکتا باشد</value>
+  </data>
+  <data name="Category_ParentName" xml:space="preserve">
+    <value>نام والد</value>
+  </data>
+  <data name="CheckStorageIsAvailableResult.ColumnSizeIsBigger" xml:space="preserve">
+    <value>ستون بزرگتر از تنظیمات رَک است</value>
+  </data>
+  <data name="CheckStorageIsAvailableResult.ContainAnotherBatch" xml:space="preserve">
+    <value>این خانه شامل بتچ دیگری میباشد</value>
+  </data>
+  <data name="CheckStorageIsAvailableResult.ItsFull" xml:space="preserve">
+    <value>بیشتر از ظرفیت است</value>
+  </data>
+  <data name="CheckStorageIsAvailableResult.LocatedNotAvailable" xml:space="preserve">
+    <value>خطایی پیش آمده است</value>
+  </data>
+  <data name="CheckStorageIsAvailableResult.MappingNotAvailable" xml:space="preserve">
+    <value>نقشه انبار تنظیم نشده است.</value>
+  </data>
+  <data name="CheckStorageIsAvailableResult.PartNotAvailable" xml:space="preserve">
+    <value>نام رَک وجود ندارد</value>
+  </data>
+  <data name="CheckStorageIsAvailableResult.RowSizeIsBigger" xml:space="preserve">
+    <value>سطر بزرگتر از تنظیمات رَک است</value>
+  </data>
+  <data name="Choice" xml:space="preserve">
+    <value>انتخاب کنید</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>شهر</value>
+  </data>
+  <data name="close" xml:space="preserve">
+    <value>بستن</value>
+  </data>
+  <data name="CofrimOrderitems" xml:space="preserve">
+    <value>وضعیت کالاها را مشخص کنید</value>
+  </data>
+  <data name="CompanyInformation" xml:space="preserve">
+    <value>اطلاعات شرکت</value>
+  </data>
+  <data name="CompanyMainForm_Editor" xml:space="preserve">
+    <value>ویرایش اطلاعات عمومی شرکت</value>
+  </data>
+  <data name="CompanyName" xml:space="preserve">
+    <value>نام کمپانی</value>
+  </data>
+  <data name="Completed" xml:space="preserve">
+    <value>تکمیل شده</value>
+  </data>
+  <data name="ConfigurationAlertSave_Help" xml:space="preserve">
+    <value>! برای صرف نظر از هرکدام از مقادیر کافیست عدد صفر را وارد نمایید</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="Confirmed" xml:space="preserve">
+    <value>تایید شده</value>
+  </data>
+  <data name="ConfirmOrder" xml:space="preserve">
+    <value>تایید سفارش</value>
+  </data>
+  <data name="Confirmpassword" xml:space="preserve">
+    <value>تایید رمز عبور</value>
+  </data>
+  <data name="confrim" xml:space="preserve">
+    <value>تایید</value>
+  </data>
+  <data name="confrimItem" xml:space="preserve">
+    <value>کالا را دریافت کردید ✔️</value>
+  </data>
+  <data name="ConfrimongOrderYouGet" xml:space="preserve">
+    <value>تایید کالای دریافتی</value>
+  </data>
+  <data name="ConvertToremittance" xml:space="preserve">
+    <value>تبدیل به حواله</value>
+  </data>
+  <data name="CountryUnit" xml:space="preserve">
+    <value>(ریال)</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>ایجاد شده</value>
+  </data>
+  <data name="CriticalInventory" xml:space="preserve">
+    <value>موجودی بحرانی</value>
+  </data>
+  <data name="CriticalInventory_Help" xml:space="preserve">
+    <value>موجودی است که شرایط بحرانی موجودی کالا در انبار را نمایش میدهد</value>
+  </data>
+  <data name="Critical_Point" xml:space="preserve">
+    <value>نقطه بحرانی</value>
+  </data>
+  <data name="Customers" xml:space="preserve">
+    <value>مشتریان</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>داشبرد</value>
+  </data>
+  <data name="DateTime" xml:space="preserve">
+    <value>زمان انجام</value>
+  </data>
+  <data name="Department" xml:space="preserve">
+    <value>Department</value>
+  </data>
+  <data name="DepartmentList" xml:space="preserve">
+    <value>دپارتمان ها</value>
+  </data>
+  <data name="Department_Add" xml:space="preserve">
+    <value> افزودن دپارتمان جدید</value>
+  </data>
+  <data name="Department_Code" xml:space="preserve">
+    <value>Department_Code</value>
+  </data>
+  <data name="Department_Code1" xml:space="preserve">
+    <value>کد دپارتمان</value>
+  </data>
+  <data name="Department_Desc" xml:space="preserve">
+    <value>توضیحات</value>
+  </data>
+  <data name="Department_Edit" xml:space="preserve">
+    <value>ویرایش دپارتمان</value>
+  </data>
+  <data name="Department_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Department_Name1" xml:space="preserve">
+    <value>نام دپارتمان</value>
+  </data>
+  <data name="Department_Search" xml:space="preserve">
+    <value>جست و جوی دپارتمان</value>
+  </data>
+  <data name="Department_Select" xml:space="preserve">
+    <value>Department_Select</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>توضیحات</value>
+  </data>
+  <data name="DetilInfo" xml:space="preserve">
+    <value>نمایش اطالاعات</value>
+  </data>
+  <data name="DiscountPercent" xml:space="preserve">
+    <value>تخفیف</value>
+  </data>
+  <data name="DisplayInfo" xml:space="preserve">
+    <value>اطلاعات مجموعه</value>
+  </data>
+  <data name="DisplayName" xml:space="preserve">
+    <value>نام نمایشی</value>
+  </data>
+  <data name="DiteilInfo" xml:space="preserve">
+    <value>جزئیات اطلاعات شما</value>
+  </data>
+  <data name="DiteilOfRetunedItem" xml:space="preserve">
+    <value>جزئیات مرجوعی</value>
+  </data>
+  <data name="Diteils" xml:space="preserve">
+    <value>جزئیات</value>
+  </data>
+  <data name="DoFotgetPassword" xml:space="preserve">
+    <value>رمز عبور خود را فراموش کرده‌اید؟</value>
+  </data>
+  <data name="Done" xml:space="preserve">
+    <value>کامل شد</value>
+  </data>
+  <data name="DontGotIt" xml:space="preserve">
+    <value>دریافت نشده !❌</value>
+  </data>
+  <data name="dontHaveAcount" xml:space="preserve">
+    <value>حساب کاربری ندارید؟</value>
+  </data>
+  <data name="DoVerifiy" xml:space="preserve">
+    <value>انجام تاییدیه</value>
+  </data>
+  <data name="EconomicCode" xml:space="preserve">
+    <value>کد اقتصادی</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>ویرایش</value>
+  </data>
+  <data name="EditFactorCode" xml:space="preserve">
+    <value>تغییر شماره فاکتور</value>
+  </data>
+  <data name="EditUser" xml:space="preserve">
+    <value>ویرایش کاربر</value>
+  </data>
+  <data name="EditYourInfo" xml:space="preserve">
+    <value>ویرایش اطلاعات</value>
+  </data>
+  <data name="Edit_sub" xml:space="preserve">
+    <value>ویرایش اشتراک</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>ایمیل</value>
+  </data>
+  <data name="EmptyPassword" xml:space="preserve">
+    <value>رمز انتخاب نشده است</value>
+  </data>
+  <data name="End" xml:space="preserve">
+    <value>اتمام</value>
+  </data>
+  <data name="EndOfAll" xml:space="preserve">
+    <value>تایید و ثبت نهایی</value>
+  </data>
+  <data name="enter" xml:space="preserve">
+    <value>ورود</value>
+  </data>
+  <data name="EnterAllAwnser" xml:space="preserve">
+    <value>لطفا وضعیت تمامی کالاها را مشخص کنید</value>
+  </data>
+  <data name="EnterName" xml:space="preserve">
+    <value>نام کاربری خود را وارد کنید</value>
+  </data>
+  <data name="EnterNumer" xml:space="preserve">
+    <value>تعداد مرجوعی را وارد کنید</value>
+  </data>
+  <data name="EnterPassword" xml:space="preserve">
+    <value>رمز خود را وارد کنید</value>
+  </data>
+  <data name="EnterPhoneNumber" xml:space="preserve">
+    <value>شماره تماس خود را وارد کنید</value>
+  </data>
+  <data name="EnterQuantityFirst" xml:space="preserve">
+    <value>ابتدا مقدار درخواستی را وارد نمایید</value>
+  </data>
+  <data name="EnterTime" xml:space="preserve">
+    <value>زمان اعتبار را وارد کنید</value>
+  </data>
+  <data name="EnterToAccount" xml:space="preserve">
+    <value>ورود به حساب کاربری</value>
+  </data>
+  <data name="EnterUserName" xml:space="preserve">
+    <value>نام کاربری خود را وارد کنید</value>
+  </data>
+  <data name="Error_DefineAllOutputBatch" xml:space="preserve">
+    <value>لطفا برای همه ردیف های کالا بتچ را تعریف کنید</value>
+  </data>
+  <data name="Error_Error" xml:space="preserve">
+    <value>Error_Error</value>
+    <comment>Error_Error</comment>
+  </data>
+  <data name="Error_InputItemRepetition" xml:space="preserve">
+    <value>نمیتوان کالای تکراری ثبت کرد</value>
+  </data>
+  <data name="Error_ItemStockNotAvailable" xml:space="preserve">
+    <value>موجودی کالای '{}'  کافی نیست. </value>
+  </data>
+  <data name="Error_LcatingNotAllowedAgain" xml:space="preserve">
+    <value>شما مجاز نیستید مجدد مکان یابی انجام دهید</value>
+  </data>
+  <data name="Error_LocatingIsRunning" xml:space="preserve">
+    <value>مکان یابی درحال اجراست لطفا لحظاتی دیگر تلاش کنید</value>
+  </data>
+  <data name="Error_LoginFailed" xml:space="preserve">
+    <value>نام کاربری یا رمز عبور اشتباه است</value>
+  </data>
+  <data name="Error_ReservationExpiryDate" xml:space="preserve">
+    <value>تاریخ انقضاء معتبر نیست</value>
+  </data>
+  <data name="Error_SelectDepartment" xml:space="preserve">
+    <value>Error_SelectDepartment</value>
+  </data>
+  <data name="Error_SelectDepartmentFirst" xml:space="preserve">
+    <value>ابتدا باید دپارتمان را انتخاب نمایید</value>
+  </data>
+  <data name="Error_SelectRole" xml:space="preserve">
+    <value>Error_SelectRole</value>
+  </data>
+  <data name="Error_SelectUser" xml:space="preserve">
+    <value>Error_SelectUser</value>
+  </data>
+  <data name="Error_StockIsIncomplete" xml:space="preserve">
+    <value>Error_StockIsIncomplete</value>
+  </data>
+  <data name="Error_StockNotAvailable" xml:space="preserve">
+    <value>موجودی کافی نیست</value>
+  </data>
+  <data name="Error_Transaction_CkeckLocation_RowColumn0" xml:space="preserve">
+    <value>ردیف و ستون را وارد کنید</value>
+  </data>
+  <data name="Error_Transaction_CkeckLocation_Size0" xml:space="preserve">
+    <value>حداقل یک ورودی باید داشته باشیم</value>
+  </data>
+  <data name="Error_UserHasNotAccessToWarehouse" xml:space="preserve">
+    <value>به این انبار دسترسی ندارید</value>
+  </data>
+  <data name="ExpireDate" xml:space="preserve">
+    <value>تاریخ انقضا</value>
+  </data>
+  <data name="FactorCode" xml:space="preserve">
+    <value>شماره فاکتور</value>
+  </data>
+  <data name="FactorCompany" xml:space="preserve">
+    <value>شرکت سازنده</value>
+  </data>
+  <data name="FailOP" xml:space="preserve">
+    <value>خطا</value>
+  </data>
+  <data name="FailRemove" xml:space="preserve">
+    <value>متاسفانه نتوانستیم حذف کنیم.</value>
+  </data>
+  <data name="FailSave" xml:space="preserve">
+    <value>ثبت نشده است.</value>
+  </data>
+  <data name="False" xml:space="preserve">
+    <value>خیر</value>
+  </data>
+  <data name="FilterAdd" xml:space="preserve">
+    <value>افزودن فیلتر جدید</value>
+  </data>
+  <data name="FilterAddGroup" xml:space="preserve">
+    <value>افزرودن فیلتر گروهی جدید</value>
+  </data>
+  <data name="FilterAnd" xml:space="preserve">
+    <value>و</value>
+  </data>
+  <data name="FilterApply" xml:space="preserve">
+    <value>اعمال فیلتر</value>
+  </data>
+  <data name="FilterApply1" xml:space="preserve">
+    <value>اعمال فیلتر</value>
+  </data>
+  <data name="FilterClear" xml:space="preserve">
+    <value>پاک کردن فیلتر</value>
+  </data>
+  <data name="FilterContain" xml:space="preserve">
+    <value>تشکیل شده است از</value>
+  </data>
+  <data name="FilterDoesNotContain" xml:space="preserve">
+    <value>تشکیل نشده است از</value>
+  </data>
+  <data name="FilterEqual" xml:space="preserve">
+    <value>برابر است با</value>
+  </data>
+  <data name="FilterGreaterThan" xml:space="preserve">
+    <value>بزرگ تر از</value>
+  </data>
+  <data name="FilterLessThan" xml:space="preserve">
+    <value>کم تر از</value>
+  </data>
+  <data name="FilterNotEquals" xml:space="preserve">
+    <value>برابر نیست با</value>
+  </data>
+  <data name="FilterOR" xml:space="preserve">
+    <value>یا</value>
+  </data>
+  <data name="finish" xml:space="preserve">
+    <value>اتمام</value>
+  </data>
+  <data name="FirstInventoryChange" xml:space="preserve">
+    <value>اولین تغییر موجودی</value>
+  </data>
+  <data name="FirstLoading" xml:space="preserve">
+    <value>در حال بارگزاری . . .</value>
+  </data>
+  <data name="FisrtOrder" xml:space="preserve">
+    <value>سفارش اولیه</value>
+  </data>
+  <data name="forgetpassword" xml:space="preserve">
+    <value>بازیابی رمز عبور</value>
+  </data>
+  <data name="From" xml:space="preserve">
+    <value>از تاریخ</value>
+  </data>
+  <data name="FullAccess" xml:space="preserve">
+    <value>دسترسی کامل</value>
+  </data>
+  <data name="FullAdmin" xml:space="preserve">
+    <value>مدیرکل</value>
+  </data>
+  <data name="FullName" xml:space="preserve">
+    <value>نام کامل</value>
+  </data>
+  <data name="GotIt" xml:space="preserve">
+    <value>دریافت شده ✅</value>
+  </data>
+  <data name="GreaterThanOrEqualsText" xml:space="preserve">
+    <value>GreaterThanOrEqualsText</value>
+  </data>
+  <data name="HistoryOfOrder" xml:space="preserve">
+    <value>تاریخچه سفارش</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>خـــانه</value>
+  </data>
+  <data name="Iems_FileManager" xml:space="preserve">
+    <value>مدیریت فایل</value>
+  </data>
+  <data name="InformationOrder" xml:space="preserve">
+    <value>اطلاعات سفارش</value>
+  </data>
+  <data name="InProgress" xml:space="preserve">
+    <value>در حال انجام</value>
+  </data>
+  <data name="InputBatch_AddNew" xml:space="preserve">
+    <value>ثبت بتچ ورودی</value>
+  </data>
+  <data name="InputBatch_Name" xml:space="preserve">
+    <value>نام بتچ ورودی</value>
+  </data>
+  <data name="InputBatch_Select" xml:space="preserve">
+    <value>انتخاب بتچ ورودی</value>
+  </data>
+  <data name="InputInLast30Day" xml:space="preserve">
+    <value>ورودی  30 روز اخیر</value>
+  </data>
+  <data name="InputQuantity" xml:space="preserve">
+    <value>تعداد ورودی</value>
+  </data>
+  <data name="InputRequest_Confirm" xml:space="preserve">
+    <value>تایید و تبدیل به حواله</value>
+  </data>
+  <data name="Inventory" xml:space="preserve">
+    <value>انبار</value>
+  </data>
+  <data name="Inventory1" xml:space="preserve">
+    <value>موجودی</value>
+  </data>
+  <data name="InventoryManagement" xml:space="preserve">
+    <value>انبار داری</value>
+  </data>
+  <data name="InventoryReport" xml:space="preserve">
+    <value>گزارش موجودی</value>
+  </data>
+  <data name="InventoryReport_List" xml:space="preserve">
+    <value>گزارش ها</value>
+  </data>
+  <data name="IRC" xml:space="preserve">
+    <value>کد IRC</value>
+  </data>
+  <data name="IsActiveStats" xml:space="preserve">
+    <value>وضعیت</value>
+  </data>
+  <data name="IsitDone" xml:space="preserve">
+    <value>این مرسوله تایید نهایی شود؟</value>
+  </data>
+  <data name="IsVerified" xml:space="preserve">
+    <value>پاسخ ارزیابی</value>
+  </data>
+  <data name="Item" xml:space="preserve">
+    <value>کالا</value>
+  </data>
+  <data name="ItemActiveAlert" xml:space="preserve">
+    <value>هشدار های فعال</value>
+  </data>
+  <data name="ItemAlertType_CriticalInventory" xml:space="preserve">
+    <value>موجودی بحرانی</value>
+  </data>
+  <data name="ItemAlertType_DownOfAverageInventory" xml:space="preserve">
+    <value>موجودی نامناسب</value>
+  </data>
+  <data name="ItemAlertType_MaximumAllowableInventory" xml:space="preserve">
+    <value>حد بالای موجودی</value>
+  </data>
+  <data name="ItemAlertType_MinimumAllowableInventory" xml:space="preserve">
+    <value>حد پایین موجودی</value>
+  </data>
+  <data name="ItemAlertType_UpOfAverageInventory" xml:space="preserve">
+    <value>موجودی مناسب</value>
+  </data>
+  <data name="ItemConfigurationAlert" xml:space="preserve">
+    <value>تنظیم هشدار های موجودی</value>
+  </data>
+  <data name="ItemList" xml:space="preserve">
+    <value>کالا ها</value>
+  </data>
+  <data name="Items" xml:space="preserve">
+    <value>کالاها</value>
+  </data>
+  <data name="ItemSent" xml:space="preserve">
+    <value>کالای ارسال شده</value>
+  </data>
+  <data name="ItemsFromSupplier" xml:space="preserve">
+    <value>کالاهای ارسال شده توسط تامین کننده</value>
+  </data>
+  <data name="ItemStcok_Report" xml:space="preserve">
+    <value>گزارش موجودی</value>
+  </data>
+  <data name="ItemStock" xml:space="preserve">
+    <value>موجودی کالا</value>
+  </data>
+  <data name="ItemStockChartType" xml:space="preserve">
+    <value>نوع نمایش چارت</value>
+  </data>
+  <data name="ItemStockChartType_Daily" xml:space="preserve">
+    <value>روزانه</value>
+  </data>
+  <data name="ItemStockChartType_Monthly" xml:space="preserve">
+    <value>ماهانه</value>
+  </data>
+  <data name="ItemStockChartType_Weekly" xml:space="preserve">
+    <value>هفتگی</value>
+  </data>
+  <data name="ItemStockChartType_Yearly" xml:space="preserve">
+    <value>سالانه</value>
+  </data>
+  <data name="ItemStock_Batch" xml:space="preserve">
+    <value>موجودی به تفکیک بتچ</value>
+  </data>
+  <data name="ItemStock_BatchAndWarehouse" xml:space="preserve">
+    <value>موجودی به تفکیک انبار و بتچ</value>
+  </data>
+  <data name="ItemStock_Incoming_Outcoming_Monthly" xml:space="preserve">
+    <value>نمودار ورودی و خروجی ماهیانه</value>
+  </data>
+  <data name="ItemStock_Incoming_Outcoming_Yearly" xml:space="preserve">
+    <value>نمودار ورودی و خروجی سالیانه</value>
+  </data>
+  <data name="ItemStock_Warehouse" xml:space="preserve">
+    <value>موجودی به تفکیک انبار</value>
+  </data>
+  <data name="Item_Add" xml:space="preserve">
+    <value>افزودن کالای جدید</value>
+  </data>
+  <data name="Item_Batch" xml:space="preserve">
+    <value>بتچ های ' {} '</value>
+  </data>
+  <data name="Item_Code" xml:space="preserve">
+    <value>کد کالا</value>
+  </data>
+  <data name="Item_Description" xml:space="preserve">
+    <value>توضیحات</value>
+  </data>
+  <data name="Item_Edit" xml:space="preserve">
+    <value>ویرایش کالا</value>
+  </data>
+  <data name="Item_Hashtag" xml:space="preserve">
+    <value>هشتگ ها</value>
+  </data>
+  <data name="Item_Hashtag_Editor" xml:space="preserve">
+    <value>هشتگ ها  (مقاومت 1 - خازن)</value>
+  </data>
+  <data name="Item_MainUnit" xml:space="preserve">
+    <value>واحد اصلی</value>
+  </data>
+  <data name="Item_Name" xml:space="preserve">
+    <value>نام کالا</value>
+  </data>
+  <data name="Item_Select" xml:space="preserve">
+    <value>انتخاب کالا</value>
+  </data>
+  <data name="Item_Status" xml:space="preserve">
+    <value>وضیعت</value>
+  </data>
+  <data name="Item_Suppliers" xml:space="preserve">
+    <value>تامیین کنندگان {}</value>
+  </data>
+  <data name="Item_Supplier_AverageInputQuantity" xml:space="preserve">
+    <value>میانگین تامیین</value>
+  </data>
+  <data name="Item_Supplier_InputQuantity" xml:space="preserve">
+    <value>مجموع تامیین {}</value>
+  </data>
+  <data name="Item_Supplier_LastTime" xml:space="preserve">
+    <value>آخرین تاریخ ورود</value>
+  </data>
+  <data name="Item_Supplier_OutputQuantity" xml:space="preserve">
+    <value>مجموع مصرف کالا</value>
+  </data>
+  <data name="Item_Tracking" xml:space="preserve">
+    <value>رهگیری کالا</value>
+  </data>
+  <data name="Item_TrackingOf" xml:space="preserve">
+    <value>رهگیری کالای ' {} '</value>
+  </data>
+  <data name="Item_Transaction" xml:space="preserve">
+    <value>حواله های کالای {}</value>
+  </data>
+  <data name="Karizlab" xml:space="preserve">
+    <value>کاریزلـب</value>
+  </data>
+  <data name="Kit_count" xml:space="preserve">
+    <value>تعداد کیت ها</value>
+  </data>
+  <data name="LaboratoryAdmin" xml:space="preserve">
+    <value>مدیر آزمایشگاه</value>
+  </data>
+  <data name="LaboratoryBuyer" xml:space="preserve">
+    <value>خریدار آزمایشگاه</value>
+  </data>
+  <data name="LaboratoryStorekeeper" xml:space="preserve">
+    <value>انباردار آزمایشگاه</value>
+  </data>
+  <data name="Labratory" xml:space="preserve">
+    <value>آزمایشگاه دار</value>
+  </data>
+  <data name="LastConfirim" xml:space="preserve">
+    <value>تایید نهایی</value>
+  </data>
+  <data name="LastConfirimed" xml:space="preserve">
+    <value>نهایی شده</value>
+  </data>
+  <data name="LastInventoryChange" xml:space="preserve">
+    <value>آخرین تغییر موجودی</value>
+  </data>
+  <data name="LessThanOrEqualsText" xml:space="preserve">
+    <value>LessThanOrEqualsText</value>
+  </data>
+  <data name="Lname" xml:space="preserve">
+    <value>نام خانوادگی</value>
+  </data>
+  <data name="Location" xml:space="preserve">
+    <value>نشانی</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>ورود</value>
+  </data>
+  <data name="LoginAccount" xml:space="preserve">
+    <value>ورود به حساب</value>
+  </data>
+  <data name="LoginAccountTitle" xml:space="preserve">
+    <value>نام کاربری و رمز عبور خود را تنظیم کنید</value>
+  </data>
+  <data name="LogindtoNull" xml:space="preserve">
+    <value>اطلاعات کاربری دریافتی ناقص است. لطفاً مجدداً تلاش کنید یا با پشتیبانی تماس بگیرید</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>خروج از حساب</value>
+  </data>
+  <data name="LotNumber" xml:space="preserve">
+    <value>شماره LOT</value>
+  </data>
+  <data name="MakeActive" xml:space="preserve">
+    <value>MakeActive</value>
+  </data>
+  <data name="MakeDeActive" xml:space="preserve">
+    <value>MakeDeActive</value>
+  </data>
+  <data name="Maliat_Avarez" xml:space="preserve">
+    <value>عوارض / مالیات</value>
+  </data>
+  <data name="MaximumAllowableInventory" xml:space="preserve">
+    <value>حداکثر موجودی</value>
+  </data>
+  <data name="MaximumAllowableInventory_Help" xml:space="preserve">
+    <value>موجودی است که سیستم اجازه صدور حواله ورود را نمیدهد و درصورت صدور حواله ، به صورت در انتظار تایید ثبت میشود تا سرپرست حواله را تایید نماید</value>
+  </data>
+  <data name="MaximumLenthRequired" xml:space="preserve">
+    <value>حداکثر {1} حرف راوارد نمایید</value>
+  </data>
+  <data name="MeliInfo" xml:space="preserve">
+    <value>شناسه ملی</value>
+  </data>
+  <data name="MinimumAllowableInventory" xml:space="preserve">
+    <value>حداقل موجودی</value>
+  </data>
+  <data name="MinimumAllowableInventory_Help" xml:space="preserve">
+    <value>موجودی است که سیستم اجازه صدور حواله خروج را نمیدهد و درصورت صدور حواله ، به صورت در انتظار تایید ثبت میشود تا سرپرست حواله را تایید نماید</value>
+  </data>
+  <data name="MinimumLenthRequired" xml:space="preserve">
+    <value>حداقل {1} حرف را وارد نمایید</value>
+  </data>
+  <data name="MissionFail" xml:space="preserve">
+    <value>خطایی به وجود آمده است.با پشتیبانی تماس بگیرید.</value>
+  </data>
+  <data name="MissionSuccess" xml:space="preserve">
+    <value>عملیات موفق</value>
+  </data>
+  <data name="MonthName" xml:space="preserve">
+    <value>نام ماه</value>
+  </data>
+  <data name="MustBeUnique" xml:space="preserve">
+    <value>باید یکتا باشد</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>نام</value>
+  </data>
+  <data name="NationID" xml:space="preserve">
+    <value>شناسه ملی</value>
+  </data>
+  <data name="Nearest_Expiration" xml:space="preserve">
+    <value>نزدیک ترین تاریخ انقضاء</value>
+  </data>
+  <data name="NextLevel" xml:space="preserve">
+    <value>مرحله بعد</value>
+  </data>
+  <data name="NoAccess" xml:space="preserve">
+    <value>دسترسی غیرمجاز</value>
+  </data>
+  <data name="NoExpire" xml:space="preserve">
+    <value>نامحدود</value>
+  </data>
+  <data name="NoItemAdded" xml:space="preserve">
+    <value>کالایی انتخاب نشده</value>
+  </data>
+  <data name="NoItemSellected" xml:space="preserve">
+    <value>هیچ آیتمی ثبت نشده</value>
+  </data>
+  <data name="NoRecordFound" xml:space="preserve">
+    <value>موردی یافت نشد</value>
+  </data>
+  <data name="notCansel" xml:space="preserve">
+    <value>سفارش لغو نشد</value>
+  </data>
+  <data name="NotChecked" xml:space="preserve">
+    <value>مشخص نشده</value>
+  </data>
+  <data name="NotifCanEdit" xml:space="preserve">
+    <value>اطلاعات خود را ویرایش کنید</value>
+  </data>
+  <data name="NoTimeBoost" xml:space="preserve">
+    <value>بدون زمان اعتبار</value>
+  </data>
+  <data name="NotSamePassword" xml:space="preserve">
+    <value>رمز مطابقت ندارد</value>
+  </data>
+  <data name="NotValidinput" xml:space="preserve">
+    <value>مقادیر نامعتبر است</value>
+  </data>
+  <data name="NumerPostalCode" xml:space="preserve">
+    <value>کد پستی 10 رقمی</value>
+  </data>
+  <data name="Oldest_Entry" xml:space="preserve">
+    <value>قدیمی ترین ورودی</value>
+  </data>
+  <data name="OpenOrders" xml:space="preserve">
+    <value>سفارشات فعال</value>
+  </data>
+  <data name="Operation" xml:space="preserve">
+    <value>عملیات</value>
+  </data>
+  <data name="Operation_Add_ButtonText" xml:space="preserve">
+    <value>ثبت</value>
+  </data>
+  <data name="Operation_Cancel_Button_Text" xml:space="preserve">
+    <value>انصراف</value>
+  </data>
+  <data name="Operation_Check" xml:space="preserve">
+    <value>برسی</value>
+  </data>
+  <data name="Operation_Edit" xml:space="preserve">
+    <value>ویرایش</value>
+  </data>
+  <data name="Operation_Edit_ButtonText" xml:space="preserve">
+    <value>بروزرسانی</value>
+  </data>
+  <data name="Operation_Print" xml:space="preserve">
+    <value>چاپ</value>
+  </data>
+  <data name="Operation_Remove" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="Operation_See" xml:space="preserve">
+    <value>مشاهده</value>
+  </data>
+  <data name="OpNotAccess" xml:space="preserve">
+    <value>شما به این عملیات دسترسی ندارید</value>
+  </data>
+  <data name="OrdeBefor" xml:space="preserve">
+    <value>درخواست شده</value>
+  </data>
+  <data name="OrderCanseled" xml:space="preserve">
+    <value>سفارش لغو شده</value>
+  </data>
+  <data name="OrderConfim" xml:space="preserve">
+    <value>تایید سفارش</value>
+  </data>
+  <data name="OrderConfirmation" xml:space="preserve">
+    <value>تاییدیه سفارش</value>
+  </data>
+  <data name="OrderDate" xml:space="preserve">
+    <value>تاریخ سفارش</value>
+  </data>
+  <data name="OrderDiteil" xml:space="preserve">
+    <value>جزئیات سفارش</value>
+  </data>
+  <data name="OrderDiteilWirte" xml:space="preserve">
+    <value>ثبت اطلاعات کالا</value>
+  </data>
+  <data name="OrderItemsSaved" xml:space="preserve">
+    <value>کالا های دریافتی ثبت شد</value>
+  </data>
+  <data name="OrderQuantity" xml:space="preserve">
+    <value>مقدار سفارش</value>
+  </data>
+  <data name="OrderQuantity_Help" xml:space="preserve">
+    <value>عددی است که نشان میدهد که تعداد مناسب برای سفارش مجدد چه مقدار میباشد</value>
+  </data>
+  <data name="Orders" xml:space="preserve">
+    <value>سفارشات</value>
+  </data>
+  <data name="OrderScoer" xml:space="preserve">
+    <value>ارزیابی سفارش</value>
+  </data>
+  <data name="OrdersDeliverd" xml:space="preserve">
+    <value>کالای تایید شده</value>
+  </data>
+  <data name="OrderStats" xml:space="preserve">
+    <value>وضعیت سفارش</value>
+  </data>
+  <data name="Outcoming_Item_Unit" xml:space="preserve">
+    <value>واحد خروج</value>
+  </data>
+  <data name="OutputBatch_AddNew" xml:space="preserve">
+    <value>ثبت بتچ خروجی جدید</value>
+  </data>
+  <data name="OutputBatch_Name" xml:space="preserve">
+    <value>نام بتچ خروجی</value>
+  </data>
+  <data name="OutputInLast30Day" xml:space="preserve">
+    <value>خروجی  30 روز اخیر</value>
+  </data>
+  <data name="OutputQuantity" xml:space="preserve">
+    <value>تعداد خروجی</value>
+  </data>
+  <data name="OverItemAllow" xml:space="preserve">
+    <value>مقدار مرجوعی بیشتر از تعداد کل مجاز است.</value>
+  </data>
+  <data name="Owner" xml:space="preserve">
+    <value>مالک</value>
+  </data>
+  <data name="OwnerFullName" xml:space="preserve">
+    <value> نام کامل مالک</value>
+  </data>
+  <data name="password" xml:space="preserve">
+    <value>رمز عبور</value>
+  </data>
+  <data name="Password1" xml:space="preserve">
+    <value>رمز عبور</value>
+  </data>
+  <data name="PasswordNotSaved" xml:space="preserve">
+    <value>رمز عبور شما ذخیره نشد </value>
+  </data>
+  <data name="PasswordPalceHolder" xml:space="preserve">
+    <value>رمز عبور را وارد کنید</value>
+  </data>
+  <data name="Pending" xml:space="preserve">
+    <value>در انتظار برسی</value>
+  </data>
+  <data name="PermissioModule" xml:space="preserve">
+    <value>نام بخش</value>
+  </data>
+  <data name="PermissionName" xml:space="preserve">
+    <value>نام دسترسی</value>
+  </data>
+  <data name="PersonName" xml:space="preserve">
+    <value>نام شخص حقیقی / حقوقی</value>
+  </data>
+  <data name="PersonnelCode" xml:space="preserve">
+    <value>PersonnelCode</value>
+  </data>
+  <data name="PhoneNumber" xml:space="preserve">
+    <value>شماره تماس</value>
+  </data>
+  <data name="plan" xml:space="preserve">
+    <value>حالت اشتراک</value>
+  </data>
+  <data name="Plan_Name" xml:space="preserve">
+    <value>نام پلن</value>
+  </data>
+  <data name="PostalCode" xml:space="preserve">
+    <value>کد پستی</value>
+  </data>
+  <data name="PreviousLevel" xml:space="preserve">
+    <value>مرحله قبل</value>
+  </data>
+  <data name="Product_Count" xml:space="preserve">
+    <value>تعداد کالا ها</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>تعداد</value>
+  </data>
+  <data name="Questions" xml:space="preserve">
+    <value>ارزیابی</value>
+  </data>
+  <data name="Range" xml:space="preserve">
+    <value>باید بزرگتر از {1} باشد</value>
+  </data>
+  <data name="rati_of_output_to_input_in_the_last_30_days" xml:space="preserve">
+    <value>نسبت خروجی به ورودی در 30 روز اخیر</value>
+  </data>
+  <data name="ReceiptNumber" xml:space="preserve">
+    <value>شماره فاکتور</value>
+  </data>
+  <data name="RecivedOrder" xml:space="preserve">
+    <value>سفارش دریافتی</value>
+  </data>
+  <data name="ReEnterpassword" xml:space="preserve">
+    <value>رمز خود را تکرار کنید</value>
+  </data>
+  <data name="register" xml:space="preserve">
+    <value>ساخت حساب کاربری</value>
+  </data>
+  <data name="RegisterDate" xml:space="preserve">
+    <value>تاریخ ورود</value>
+  </data>
+  <data name="RegistrationNumber" xml:space="preserve">
+    <value>شماره ثبت</value>
+  </data>
+  <data name="RelatedUnit" xml:space="preserve">
+    <value>واحد ها</value>
+  </data>
+  <data name="RemoveCategoryDesc" xml:space="preserve">
+    <value>آیا مطمعن هستید که میخواهید دسته بندی {} را حذف کنید</value>
+  </data>
+  <data name="RemoveCategoryTitle" xml:space="preserve">
+    <value>حذف دسته بندی</value>
+  </data>
+  <data name="RemoveDepartmentDesc" xml:space="preserve">
+    <value>آیا مطمعن هستید که میخواهید دپارتمان {} را حذف کنید</value>
+  </data>
+  <data name="RemoveDepartmentTitle" xml:space="preserve">
+    <value>حذف دپارتمان</value>
+  </data>
+  <data name="RemoveItemDesc" xml:space="preserve">
+    <value>آیا مطمعن هستید که میخواهید کالای  {} را حذف کنید</value>
+  </data>
+  <data name="RemoveItemTitle" xml:space="preserve">
+    <value>حذف کالا</value>
+  </data>
+  <data name="RemoveRequestItemDesc" xml:space="preserve">
+    <value>آیا مطمعن هستید که میخواهید  درخواست شماره {} را حذف کنید</value>
+  </data>
+  <data name="RemoveRequestTypeDesc" xml:space="preserve">
+    <value>آیا مطمعن هستید که میخواهید  {} را حذف کنید</value>
+  </data>
+  <data name="RemoveRequestTypeTitle" xml:space="preserve">
+    <value>حذف درخواست</value>
+  </data>
+  <data name="RemoveSub" xml:space="preserve">
+    <value>آیا مطمعنید میخواهید اشتراک{} را حذف کنید!!</value>
+  </data>
+  <data name="RemoveSupplierDesc" xml:space="preserve">
+    <value>آیا مطمعن هستید که میخواهید  {} را حذف کنید</value>
+  </data>
+  <data name="RemoveSupplierTitle" xml:space="preserve">
+    <value>حذف تامین کننده</value>
+  </data>
+  <data name="RemoveUnitDesc" xml:space="preserve">
+    <value>آیا مطمعن هستید که میخواهید واحد {} را حذف کنید</value>
+  </data>
+  <data name="RemoveUnitTitle" xml:space="preserve">
+    <value>حذف واحد</value>
+  </data>
+  <data name="RemoveUserDESC" xml:space="preserve">
+    <value>آیا مطمعنید میخواهید کاربر {} را حذف کنید!!</value>
+  </data>
+  <data name="RemoveWarehouseDesc" xml:space="preserve">
+    <value>آیا مطمعن هستید که میخواهید انبار {} را حذف کنید</value>
+  </data>
+  <data name="RemoveWarehouseTitle" xml:space="preserve">
+    <value>حذف انبار</value>
+  </data>
+  <data name="ReorderPoint" xml:space="preserve">
+    <value>نقطه سفارش مجدد</value>
+  </data>
+  <data name="ReorderPoint_Help" xml:space="preserve">
+    <value>موجودی است که نشان میدهد باید سفارش خرید برای تامین موجودی ثبت شود</value>
+  </data>
+  <data name="Report" xml:space="preserve">
+    <value>گزارش</value>
+  </data>
+  <data name="RequestionStatus_Approved" xml:space="preserve">
+    <value>تایید شده</value>
+  </data>
+  <data name="RequestionStatus_Pending" xml:space="preserve">
+    <value>در انتظار تایید</value>
+  </data>
+  <data name="RequestionStatus_Rejected" xml:space="preserve">
+    <value>رد شده</value>
+  </data>
+  <data name="RequestionStatus_SeenedPending" xml:space="preserve">
+    <value>مشاهده شده - در انتظار</value>
+  </data>
+  <data name="RequestItemsList" xml:space="preserve">
+    <value>درخواست های کالا</value>
+  </data>
+  <data name="RequestItem_Add" xml:space="preserve">
+    <value>درخواست جدید</value>
+  </data>
+  <data name="RequestItem_AddEdit" xml:space="preserve">
+    <value>ثبت اصلاحیه</value>
+  </data>
+  <data name="RequestItem_Cancel" xml:space="preserve">
+    <value>لغو درخواست</value>
+  </data>
+  <data name="RequestItem_CancelDesc" xml:space="preserve">
+    <value>آیا مطمعن میخواستید در خواست کالای شماره {} را کنسل کنید</value>
+  </data>
+  <data name="RequestItem_Created" xml:space="preserve">
+    <value>ثبت درخواست</value>
+  </data>
+  <data name="RequestItem_Date" xml:space="preserve">
+    <value>تاریخ درخواست</value>
+  </data>
+  <data name="RequestItem_Edit" xml:space="preserve">
+    <value>نیاز به ویرایش</value>
+  </data>
+  <data name="RequestItem_Edited" xml:space="preserve">
+    <value>ویرایش شده</value>
+  </data>
+  <data name="RequestItem_Edit_Button" xml:space="preserve">
+    <value>ارجاء برای اصلاحیه</value>
+  </data>
+  <data name="RequestItem_MakeReject" xml:space="preserve">
+    <value>رد درخواست</value>
+  </data>
+  <data name="RequestItem_MakeRejectTitle" xml:space="preserve">
+    <value>علت رد درخواست</value>
+  </data>
+  <data name="RequestItem_NeedEdit" xml:space="preserve">
+    <value>نیاز به اصلاحیه</value>
+  </data>
+  <data name="RequestItem_Number" xml:space="preserve">
+    <value>شماره درخواست</value>
+  </data>
+  <data name="RequestItem_Quantity" xml:space="preserve">
+    <value>تعداد درخواست</value>
+  </data>
+  <data name="RequestItem_See" xml:space="preserve">
+    <value>مشاهده درخواست</value>
+  </data>
+  <data name="RequestItem_SelectOutputBatches" xml:space="preserve">
+    <value>بتچ های خروجی را تعیین کنید</value>
+  </data>
+  <data name="RequestItem_SendForRepairNote" xml:space="preserve">
+    <value>علت ارجاء</value>
+  </data>
+  <data name="RequestItem_SendToRepair" xml:space="preserve">
+    <value>برای اصلاح ارسال شود ؟</value>
+  </data>
+  <data name="RequestItem_Status" xml:space="preserve">
+    <value>وضیعت</value>
+  </data>
+  <data name="RequestItem_Type" xml:space="preserve">
+    <value>نوع درخواست</value>
+  </data>
+  <data name="RequestItem_User" xml:space="preserve">
+    <value>درخواست کننده</value>
+  </data>
+  <data name="RequestItem_Warehouse" xml:space="preserve">
+    <value>درخواست به انبار</value>
+  </data>
+  <data name="RequestTypeList" xml:space="preserve">
+    <value>انواع درخواست خروج از انبار</value>
+  </data>
+  <data name="RequestType_Add" xml:space="preserve">
+    <value>افزودن درخواست جدید</value>
+  </data>
+  <data name="RequestType_Edit" xml:space="preserve">
+    <value>ویرایش درخواست</value>
+  </data>
+  <data name="RequestType_Name" xml:space="preserve">
+    <value>نام درخواست</value>
+  </data>
+  <data name="RequestType_Select" xml:space="preserve">
+    <value>انتخاب نوع درخواست کالا</value>
+  </data>
+  <data name="RequestType_Status" xml:space="preserve">
+    <value>نوع درخواست</value>
+  </data>
+  <data name="Required" xml:space="preserve">
+    <value>باید پر شود</value>
+  </data>
+  <data name="Reservation" xml:space="preserve">
+    <value>رزرو</value>
+  </data>
+  <data name="ReservationList" xml:space="preserve">
+    <value>رزرو ها</value>
+  </data>
+  <data name="Reservation_Add" xml:space="preserve">
+    <value>رزرو جدید</value>
+  </data>
+  <data name="Reservation_Add_Incoming_Item" xml:space="preserve">
+    <value>ثبت کالای جدید درحواله رزرو</value>
+  </data>
+  <data name="Reservation_Cancel" xml:space="preserve">
+    <value>لغو رزرو</value>
+  </data>
+  <data name="Reservation_cancel_Header" xml:space="preserve">
+    <value>لغو رسید رزرو</value>
+  </data>
+  <data name="Reservation_ConvertToTransaction" xml:space="preserve">
+    <value>تبدیل حواله</value>
+  </data>
+  <data name="Reservation_CreatedDate" xml:space="preserve">
+    <value>تاریخ ایجاد</value>
+  </data>
+  <data name="Reservation_CreatedUserName" xml:space="preserve">
+    <value>ایجاد کننده</value>
+  </data>
+  <data name="Reservation_ExpiryDate" xml:space="preserve">
+    <value>تاریخ انقضاء</value>
+  </data>
+  <data name="Reservation_Person" xml:space="preserve">
+    <value>رزرو برای</value>
+  </data>
+  <data name="Reservation_ReceiptNumber" xml:space="preserve">
+    <value>شماره رسید</value>
+  </data>
+  <data name="Reservation_ReservationReceiptStatus" xml:space="preserve">
+    <value>وضیعت</value>
+  </data>
+  <data name="Reservation_See" xml:space="preserve">
+    <value>مشاهده رسید رزرو</value>
+  </data>
+  <data name="Reservation_WarehouseName" xml:space="preserve">
+    <value>نام انبار</value>
+  </data>
+  <data name="RestPasword" xml:space="preserve">
+    <value>بازنشانی رمز عبور</value>
+  </data>
+  <data name="ReturnBackNumber" xml:space="preserve">
+    <value>تعداد مرجوعی</value>
+  </data>
+  <data name="Returned" xml:space="preserve">
+    <value>مرجوعی  </value>
+  </data>
+  <data name="ReturnedForRepair" xml:space="preserve">
+    <value>مرجوعی برای بازنگری</value>
+  </data>
+  <data name="ReturnedOrder" xml:space="preserve">
+    <value>ثبت مرجوعی</value>
+  </data>
+  <data name="Returned_product" xml:space="preserve">
+    <value>کالاهای مرجوعی</value>
+  </data>
+  <data name="ReturnForce" xml:space="preserve">
+    <value>مرجوع بدون ارزیابی</value>
+  </data>
+  <data name="ReturnItem" xml:space="preserve">
+    <value>آیا این کالا مرجوع شود؟</value>
+  </data>
+  <data name="ReturnItemnow" xml:space="preserve">
+    <value>این کالا مرجوع شود؟</value>
+  </data>
+  <data name="ReturnToHistory" xml:space="preserve">
+    <value>مشاهده تاریخچه سفارش</value>
+  </data>
+  <data name="RoleList" xml:space="preserve">
+    <value>سطوح دسترسی</value>
+  </data>
+  <data name="Role_Add" xml:space="preserve">
+    <value>افزودن سطح جدید</value>
+  </data>
+  <data name="Role_AddDepartment" xml:space="preserve">
+    <value>الصاق دپارتمان</value>
+  </data>
+  <data name="Role_Code" xml:space="preserve">
+    <value>Role_Code</value>
+  </data>
+  <data name="Role_Code1" xml:space="preserve">
+    <value>کد سطح</value>
+  </data>
+  <data name="Role_Department" xml:space="preserve">
+    <value>دپارتمان سطح</value>
+  </data>
+  <data name="Role_Edit" xml:space="preserve">
+    <value>ویرایش سطح</value>
+  </data>
+  <data name="Role_Name" xml:space="preserve">
+    <value>Role_Name</value>
+  </data>
+  <data name="Role_Name1" xml:space="preserve">
+    <value>نام سطح</value>
+  </data>
+  <data name="Role_Remove_Desc" xml:space="preserve">
+    <value>آیا مطمعن هستید که میخواهید سطح {} را حذف کنید</value>
+  </data>
+  <data name="Role_Remove_tilte" xml:space="preserve">
+    <value>حذف سطح</value>
+  </data>
+  <data name="Role_Select" xml:space="preserve">
+    <value>انتخاب دسترسی</value>
+  </data>
+  <data name="Row" xml:space="preserve">
+    <value>ردیف</value>
+  </data>
+  <data name="RowNumber" xml:space="preserve">
+    <value>ردیف</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>ذخیره</value>
+  </data>
+  <data name="SaveNumbber" xml:space="preserve">
+    <value>شماره ثبت</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>جستجو</value>
+  </data>
+  <data name="SearchCity" xml:space="preserve">
+    <value>جستجو شهر</value>
+  </data>
+  <data name="SearchPermission" xml:space="preserve">
+    <value>جست و جوی سطح دسترسی</value>
+  </data>
+  <data name="SearchSuppleirName" xml:space="preserve">
+    <value>  جستجو نام تامین کننده</value>
+  </data>
+  <data name="Search_Placeholder" xml:space="preserve">
+    <value>Search_Placeholder</value>
+  </data>
+  <data name="SeeAcceptItems" xml:space="preserve">
+    <value>مشاهده تایید فنی</value>
+  </data>
+  <data name="SeeBatchOfItem" xml:space="preserve">
+    <value>بتچ ها</value>
+  </data>
+  <data name="SeeFactor" xml:space="preserve">
+    <value>مشاهده فاکتور</value>
+  </data>
+  <data name="SeeResult" xml:space="preserve">
+    <value>مشاهده سفارش</value>
+  </data>
+  <data name="SeeTransaction" xml:space="preserve">
+    <value>نمایش حواله</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>انتخاب</value>
+  </data>
+  <data name="selected" xml:space="preserve">
+    <value>انتخاب شد</value>
+  </data>
+  <data name="SelectItemFirst" xml:space="preserve">
+    <value>ابتدا کالا را انتخاب نمایید</value>
+  </data>
+  <data name="SelectReturnedItem" xml:space="preserve">
+    <value>انتخاب کالای مرجوعی</value>
+  </data>
+  <data name="SelectTransaction" xml:space="preserve">
+    <value>انتخاب حواله</value>
+  </data>
+  <data name="Select_User" xml:space="preserve">
+    <value>انتخاب کاربر</value>
+  </data>
+  <data name="SellerInfo" xml:space="preserve">
+    <value>مشخصات فروشنده</value>
+  </data>
+  <data name="Sellreceipt" xml:space="preserve">
+    <value>صورت حساب  فروش</value>
+  </data>
+  <data name="SendItem" xml:space="preserve">
+    <value>ارسال کالا</value>
+  </data>
+  <data name="Sent" xml:space="preserve">
+    <value>ارسال شده</value>
+  </data>
+  <data name="SentOrderByBuyer" xml:space="preserve">
+    <value>دریافت شده توسط خریدار</value>
+  </data>
+  <data name="SentOrderBySuplaier" xml:space="preserve">
+    <value>فرستاده شده توسط تامین کننده</value>
+  </data>
+  <data name="ServerNotReachable" xml:space="preserve">
+    <value>سرور دسترس نیست.</value>
+  </data>
+  <data name="SetPasword" xml:space="preserve">
+    <value>تعیین رمز عبور</value>
+  </data>
+  <data name="StepComponent_Next" xml:space="preserve">
+    <value>StepComponent_Next</value>
+  </data>
+  <data name="StepComponent_Previous" xml:space="preserve">
+    <value>StepComponent_Pervious</value>
+  </data>
+  <data name="Stock" xml:space="preserve">
+    <value>موجودی</value>
+  </data>
+  <data name="StockReport" xml:space="preserve">
+    <value>گزارش موجودی</value>
+  </data>
+  <data name="StockReportOFWarehouse" xml:space="preserve">
+    <value>گزارش موجودی انبار {}</value>
+  </data>
+  <data name="SubmitCode" xml:space="preserve">
+    <value>شماره ثبت</value>
+  </data>
+  <data name="SubmitPassword" xml:space="preserve">
+    <value>تنظیم رمز عبور</value>
+  </data>
+  <data name="SubmitPasswordTitle" xml:space="preserve">
+    <value>رمز عبوری را که میخواهید تنظیم کنید را وارد نمایید</value>
+  </data>
+  <data name="SubmitReturnedItem" xml:space="preserve">
+    <value>ثبت کالاهای مرجوعی</value>
+  </data>
+  <data name="Subscription" xml:space="preserve">
+    <value>اشتراک</value>
+  </data>
+  <data name="Sub_list" xml:space="preserve">
+    <value>اشتراک ها</value>
+  </data>
+  <data name="Sub_mode" xml:space="preserve">
+    <value>حالت اشتراک</value>
+  </data>
+  <data name="Sub_Name" xml:space="preserve">
+    <value>نام اشتراک</value>
+  </data>
+  <data name="Sub_Remove" xml:space="preserve">
+    <value>حذف اشتراک</value>
+  </data>
+  <data name="SuccessCanseled" xml:space="preserve">
+    <value>سفارش با موفیت لغو شد</value>
+  </data>
+  <data name="SuccessFullyRemoved" xml:space="preserve">
+    <value>با موفقیت حذف شد</value>
+  </data>
+  <data name="SuccessFullySaved" xml:space="preserve">
+    <value>با موفقیت ثبت شد</value>
+  </data>
+  <data name="SuccessOP" xml:space="preserve">
+    <value>عملیات موفق</value>
+  </data>
+  <data name="SuccessReturned" xml:space="preserve">
+    <value>با موفقیت مرجوع شد</value>
+  </data>
+  <data name="Suplaire" xml:space="preserve">
+    <value>تأمین‌کننده</value>
+  </data>
+  <data name="SuplaireStats" xml:space="preserve">
+    <value>وضعیت تامیین کننده</value>
+  </data>
+  <data name="Suplairs" xml:space="preserve">
+    <value>تامین کنندگان</value>
+  </data>
+  <data name="SupplierAdmin" xml:space="preserve">
+    <value>مدیر تأمین‌کننده</value>
+  </data>
+  <data name="SupplierList" xml:space="preserve">
+    <value>تامین کنندگان</value>
+  </data>
+  <data name="SupplierListOrder" xml:space="preserve">
+    <value> لیست تامین کننده</value>
+  </data>
+  <data name="SupplierPannel" xml:space="preserve">
+    <value>پنل تامین کننده</value>
+  </data>
+  <data name="Suppliers" xml:space="preserve">
+    <value>تامین کنندگان</value>
+  </data>
+  <data name="Suppliers_RelatedItem" xml:space="preserve">
+    <value>لیست کالا های تامیینی توسط {}</value>
+  </data>
+  <data name="Supplier_Add" xml:space="preserve">
+    <value>ثبت تامین کننده</value>
+  </data>
+  <data name="Supplier_Address" xml:space="preserve">
+    <value>آدرس</value>
+  </data>
+  <data name="Supplier_ContactInfo" xml:space="preserve">
+    <value>اطلاعات تماس</value>
+  </data>
+  <data name="Supplier_Edit" xml:space="preserve">
+    <value>ویرایش تامین کننده</value>
+  </data>
+  <data name="Supplier_Grade" xml:space="preserve">
+    <value>گرید</value>
+  </data>
+  <data name="Supplier_Name" xml:space="preserve">
+    <value>نام تامین کننده</value>
+  </data>
+  <data name="Supplier_RelatedItem" xml:space="preserve">
+    <value>لیست کالا های تامینی</value>
+  </data>
+  <data name="Supplier_RelatedTransActionDetail" xml:space="preserve">
+    <value>مشاهده حواله های مربوط</value>
+  </data>
+  <data name="Supplier_Select" xml:space="preserve">
+    <value>انتخاب انبار</value>
+  </data>
+  <data name="SystemUserInfo" xml:space="preserve">
+    <value>وضعیت در سامانه</value>
+  </data>
+  <data name="TelePhone" xml:space="preserve">
+    <value>شماره تلفن</value>
+  </data>
+  <data name="Too" xml:space="preserve">
+    <value>تا تاریخ</value>
+  </data>
+  <data name="TotalReturnedBackNumber" xml:space="preserve">
+    <value>مقدار کلی مرجوعی</value>
+  </data>
+  <data name="Tranaction_AddNewitem" xml:space="preserve">
+    <value> افزودن کالای جدید</value>
+  </data>
+  <data name="Transaction" xml:space="preserve">
+    <value>انبار</value>
+  </data>
+  <data name="TransactionDate" xml:space="preserve">
+    <value>تاریخ ثبت</value>
+  </data>
+  <data name="TransactionList" xml:space="preserve">
+    <value>انبار</value>
+  </data>
+  <data name="TransactionLocating" xml:space="preserve">
+    <value>باید همه ی ورودی مکان یابی شود</value>
+  </data>
+  <data name="Transactions" xml:space="preserve">
+    <value>گزارش ورود و خروج</value>
+  </data>
+  <data name="TransactionSaveNoItem" xml:space="preserve">
+    <value>هیچ کالایی وجود ندارد</value>
+  </data>
+  <data name="Transaction_Add_Adjustment" xml:space="preserve">
+    <value>ثبت اصلاحیه</value>
+  </data>
+  <data name="Transaction_Add_Incoming" xml:space="preserve">
+    <value>ورود کالا</value>
+  </data>
+  <data name="Transaction_Add_Incoming_Item" xml:space="preserve">
+    <value>ثبت کالای جدید در حواله</value>
+  </data>
+  <data name="Transaction_Add_Outcoming" xml:space="preserve">
+    <value>خروج کالا</value>
+  </data>
+  <data name="Transaction_Adjustment" xml:space="preserve">
+    <value>اصلاحیه</value>
+  </data>
+  <data name="Transaction_AutoLocating" xml:space="preserve">
+    <value>مکان یابی خودکار</value>
+  </data>
+  <data name="Transaction_Code" xml:space="preserve">
+    <value>کد حواله</value>
+  </data>
+  <data name="Transaction_Date" xml:space="preserve">
+    <value>تاریخ تراکنش</value>
+  </data>
+  <data name="Transaction_Deliverer" xml:space="preserve">
+    <value>تحویل دهنده</value>
+  </data>
+  <data name="Transaction_Description" xml:space="preserve">
+    <value>توضیحات</value>
+  </data>
+  <data name="Transaction_Incoming" xml:space="preserve">
+    <value>حواله ورود</value>
+  </data>
+  <data name="Transaction_Incoming_Lactioning" xml:space="preserve">
+    <value>مکان یابی حواله ورود</value>
+  </data>
+  <data name="Transaction_Incoming_LocatingHeader" xml:space="preserve">
+    <value>مکان یابی حواله ورود کالای {1} با بتچ {2}</value>
+  </data>
+  <data name="Transaction_Incoming_Person" xml:space="preserve">
+    <value>تحویل دهنده</value>
+  </data>
+  <data name="Transaction_InputQuantity" xml:space="preserve">
+    <value>میزان ورود</value>
+  </data>
+  <data name="Transaction_IsLocated" xml:space="preserve">
+    <value>مکان یابی</value>
+  </data>
+  <data name="Transaction_locating_NotChecked" xml:space="preserve">
+    <value>برای هر ورودی باید بعد ورود اطلاعات برسی را بزنید</value>
+  </data>
+  <data name="Transaction_locating_Repeated" xml:space="preserve">
+    <value>تکراری است</value>
+  </data>
+  <data name="Transaction_ManualLocating" xml:space="preserve">
+    <value>مکان یابی دستی</value>
+  </data>
+  <data name="Transaction_Outcoming_Lactioning" xml:space="preserve">
+    <value>مکان یابی حواله خروج</value>
+  </data>
+  <data name="Transaction_Outcoming_Person" xml:space="preserve">
+    <value>تحویل گیرنده</value>
+  </data>
+  <data name="Transaction_OutGoing" xml:space="preserve">
+    <value>حواله خروج</value>
+  </data>
+  <data name="Transaction_Receiver" xml:space="preserve">
+    <value>تحویل گیرنده</value>
+  </data>
+  <data name="Transaction_RegisterUserFullName" xml:space="preserve">
+    <value>کاربر ثبت کننده</value>
+  </data>
+  <data name="Transaction_RelatedPerson" xml:space="preserve">
+    <value>تحویل گیرنده-تحویل دهنده</value>
+  </data>
+  <data name="Transaction_SaverUser" xml:space="preserve">
+    <value>کاربر ثبت کننده</value>
+  </data>
+  <data name="Transaction_See_Incoming" xml:space="preserve">
+    <value>مشاهده حواله ورودی</value>
+  </data>
+  <data name="Transaction_See_Outcoming" xml:space="preserve">
+    <value>مشاهده حواله خروجی</value>
+  </data>
+  <data name="Transaction_Status" xml:space="preserve">
+    <value>وضیعت</value>
+  </data>
+  <data name="Transaction_Type" xml:space="preserve">
+    <value>نوع حواله</value>
+  </data>
+  <data name="Transaction_UserName" xml:space="preserve">
+    <value>کاربر ثبت کننده</value>
+  </data>
+  <data name="Transaction_Warehouse" xml:space="preserve">
+    <value>انبار</value>
+  </data>
+  <data name="True" xml:space="preserve">
+    <value>بلی</value>
+  </data>
+  <data name="UnitList" xml:space="preserve">
+    <value>واحد ها</value>
+  </data>
+  <data name="UnitSelect" xml:space="preserve">
+    <value>انتخاب واحد</value>
+  </data>
+  <data name="Unit_Add" xml:space="preserve">
+    <value>افزودن واحد</value>
+  </data>
+  <data name="Unit_Edit" xml:space="preserve">
+    <value>ویرایش واحد</value>
+  </data>
+  <data name="Unit_Name" xml:space="preserve">
+    <value>نام واحد</value>
+  </data>
+  <data name="Unit_Select" xml:space="preserve">
+    <value>انتخاب واحد</value>
+  </data>
+  <data name="Unit_Symbol" xml:space="preserve">
+    <value>نماد واحد</value>
+  </data>
+  <data name="UnlocatedItemNumber" xml:space="preserve">
+    <value>تعداد مکان یابی نشده</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>کاربر</value>
+  </data>
+  <data name="UserActiveStats" xml:space="preserve">
+    <value>وضعیت کاربر</value>
+  </data>
+  <data name="UserCount" xml:space="preserve">
+    <value>تعداد کاربران</value>
+  </data>
+  <data name="UserHadSub" xml:space="preserve">
+    <value>کاربر دارای اشتراک است</value>
+  </data>
+  <data name="UserID0" xml:space="preserve">
+    <value>کاربری انتخاب نشده است</value>
+  </data>
+  <data name="UserInfo" xml:space="preserve">
+    <value>اطلاعات شخصی</value>
+  </data>
+  <data name="UserList" xml:space="preserve">
+    <value>کاربران</value>
+  </data>
+  <data name="UserManagment" xml:space="preserve">
+    <value>مدیریت کاربران</value>
+  </data>
+  <data name="UserName" xml:space="preserve">
+    <value>نام کاربری</value>
+  </data>
+  <data name="UserName1" xml:space="preserve">
+    <value>نام کاربری</value>
+  </data>
+  <data name="UserNameNotUniqe" xml:space="preserve">
+    <value>نام کاربری تکراری است</value>
+  </data>
+  <data name="UserNameNotUnique" xml:space="preserve">
+    <value>این نام کاربری گرفته شده است</value>
+  </data>
+  <data name="UserNamePlaceHolder" xml:space="preserve">
+    <value>نام کاربری را وارد کنید</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>کاربران</value>
+  </data>
+  <data name="User_Active" xml:space="preserve">
+    <value>کاربر فعال</value>
+  </data>
+  <data name="User_Add" xml:space="preserve">
+    <value>افزودن کاربر جدید</value>
+  </data>
+  <data name="User_Count" xml:space="preserve">
+    <value>تعداد کاربر</value>
+  </data>
+  <data name="User_Department" xml:space="preserve">
+    <value>نام دپارتمان</value>
+  </data>
+  <data name="User_Edit" xml:space="preserve">
+    <value>ویرایش اطلاعات کاربر</value>
+  </data>
+  <data name="User_ExpierDatetime" xml:space="preserve">
+    <value>تاریخ انقضا</value>
+  </data>
+  <data name="User_FirstName" xml:space="preserve">
+    <value>User_FirstName</value>
+  </data>
+  <data name="User_FirstName1" xml:space="preserve">
+    <value>نام</value>
+  </data>
+  <data name="User_FullName" xml:space="preserve">
+    <value>User_FullName</value>
+  </data>
+  <data name="User_FullName1" xml:space="preserve">
+    <value>نام کاربر</value>
+  </data>
+  <data name="User_FullName2" xml:space="preserve">
+    <value>نام و نام خانوادگی</value>
+  </data>
+  <data name="User_LastName" xml:space="preserve">
+    <value>User_LastName</value>
+  </data>
+  <data name="User_LastName1" xml:space="preserve">
+    <value>نام خانوادگی</value>
+  </data>
+  <data name="User_Password" xml:space="preserve">
+    <value>رمز عبور</value>
+  </data>
+  <data name="User_PasswordChange" xml:space="preserve">
+    <value>تغییر رمز عبور</value>
+  </data>
+  <data name="User_PasswordRetry" xml:space="preserve">
+    <value>تکرار رمز عبور</value>
+  </data>
+  <data name="User_PersonnalCode" xml:space="preserve">
+    <value>کد پرسنلی</value>
+  </data>
+  <data name="User_PersonnelCode" xml:space="preserve">
+    <value>کد پرسنلی</value>
+  </data>
+  <data name="User_Remove_Desc" xml:space="preserve">
+    <value>آیا مطمعن هستید که میخواهید کاربر {} را حذف کنید</value>
+  </data>
+  <data name="User_Remove_tilte" xml:space="preserve">
+    <value>حذف کاربر</value>
+  </data>
+  <data name="User_Role" xml:space="preserve">
+    <value>نام سطح</value>
+  </data>
+  <data name="User_Select" xml:space="preserve">
+    <value>User_Select</value>
+  </data>
+  <data name="User_Username" xml:space="preserve">
+    <value>نام کاربری</value>
+  </data>
+  <data name="Validation_Date" xml:space="preserve">
+    <value>تاریخ انقضا</value>
+  </data>
+  <data name="Validation_PasswordFormat" xml:space="preserve">
+    <value>رمز عبور باید حداقل 8 کاراکتر باشد، شامل حداقل یک حرف بزرگ، یک حرف کوچک، دو نماد و دو رقم.</value>
+  </data>
+  <data name="Validation_PasswordMustBeSave" xml:space="preserve">
+    <value>تکرار رمز عبور درست نیست.</value>
+  </data>
+  <data name="Validation_time" xml:space="preserve">
+    <value>زمان اعتبار</value>
+  </data>
+  <data name="ValidUntil" xml:space="preserve">
+    <value>تاریخ اعتبار</value>
+  </data>
+  <data name="VerificationItem" xml:space="preserve">
+    <value>تایید فنی</value>
+  </data>
+  <data name="WarehouseList" xml:space="preserve">
+    <value>انبار ها</value>
+  </data>
+  <data name="WareHouseMapError_CannoRemovePart" xml:space="preserve">
+    <value>نمیتوان رَک {0} را حذف کرد</value>
+  </data>
+  <data name="WareHouseMapError_CannotMinimized" xml:space="preserve">
+    <value>نمیتوان تعداد ستون یا سطر رَک {0} را کاهش داد.</value>
+  </data>
+  <data name="Warehouse_Add" xml:space="preserve">
+    <value>افزودن انبار</value>
+  </data>
+  <data name="Warehouse_AddNewPart" xml:space="preserve">
+    <value>افزودن رَک جدید</value>
+  </data>
+  <data name="Warehouse_AddUsers" xml:space="preserve">
+    <value>افزودن انباردار</value>
+  </data>
+  <data name="Warehouse_Capacity" xml:space="preserve">
+    <value>ظرفیت</value>
+  </data>
+  <data name="Warehouse_Configuration" xml:space="preserve">
+    <value>تنظیمات انبار</value>
+  </data>
+  <data name="Warehouse_Edit" xml:space="preserve">
+    <value>ویرایش انبار</value>
+  </data>
+  <data name="Warehouse_InventoryOutType" xml:space="preserve">
+    <value>نوع خروج کالا از انبار</value>
+  </data>
+  <data name="Warehouse_InventoryOutType_Custom" xml:space="preserve">
+    <value>انتخاب کاربر</value>
+  </data>
+  <data name="Warehouse_InventoryOutType_FEFO" xml:space="preserve">
+    <value>اولین تاریخ انقضا-اولین خروج (FEFO)</value>
+  </data>
+  <data name="Warehouse_InventoryOutType_FIFO" xml:space="preserve">
+    <value>اولین ورود-اولین خروج (FIFO)</value>
+  </data>
+  <data name="Warehouse_InventoryOutType_Lifo" xml:space="preserve">
+    <value>آخرین ورود-اولین خروج (LIFO) </value>
+  </data>
+  <data name="Warehouse_Location" xml:space="preserve">
+    <value>مکان انبار</value>
+  </data>
+  <data name="Warehouse_MapConfiguration" xml:space="preserve">
+    <value>تنظیم ساختار انبار</value>
+  </data>
+  <data name="Warehouse_Mapconfiguration_ColumnNumber" xml:space="preserve">
+    <value>شماره ستون</value>
+  </data>
+  <data name="Warehouse_Mapconfiguration_ColumnSize" xml:space="preserve">
+    <value>تعداد ستون</value>
+  </data>
+  <data name="Warehouse_Mapconfiguration_PartName" xml:space="preserve">
+    <value>نام رَک</value>
+  </data>
+  <data name="Warehouse_Mapconfiguration_RowNumber" xml:space="preserve">
+    <value>شماره ردیف</value>
+  </data>
+  <data name="Warehouse_Mapconfiguration_RowSize" xml:space="preserve">
+    <value>تعداد سطر</value>
+  </data>
+  <data name="Warehouse_Name" xml:space="preserve">
+    <value>نام انبار</value>
+  </data>
+  <data name="Warehouse_Select" xml:space="preserve">
+    <value>انتخاب انبار</value>
+  </data>
+  <data name="Warehouse_Users" xml:space="preserve">
+    <value>انبارداران</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>هشدار</value>
+  </data>
+  <data name="WrongInfo" xml:space="preserve">
+    <value> اطلاعات شما اشتباه می باشد .</value>
+  </data>
+  <data name="Year" xml:space="preserve">
+    <value>سال</value>
+  </data>
+  <data name="YouDontHaveAccess" xml:space="preserve">
+    <value>شما به این بخش دسترسی ندارید</value>
+  </data>
+  <data name="YourOrder" xml:space="preserve">
+    <value>سفارش شما</value>
+  </data>
+</root>

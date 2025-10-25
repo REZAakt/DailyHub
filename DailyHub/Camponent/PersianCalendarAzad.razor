@@ -1,0 +1,284 @@
+﻿@using System.Globalization
+
+<div class="popup-overlay" style="display:@(isVisiblePersianCalendar ? "flex" : "none" );" @onclick="OnOutsidePersianCalendarClick">
+    @* بستن پاپ آپ وقتی بیرون از پاپ آپ کلیک شود *@    
+    <div style="background-color:#e3f2fd" class="popup-content" @onclick:stopPropagation>
+        @*  stopPropagation برای جلوگیری از اجرای رویداد کلیک تگ پدرها در تگ فرزند *@
+        <div class="calendar-header">
+            <button class="calendar-nav-btn" @onclick="PreviousMonth">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24">
+                    <path fill="#03a9f4" stroke="#00f" stroke-width="1.5" d="M9 6l6 6-6 6V6z" />
+                </svg>
+                @* <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#03a9f4" viewBox="0 0 24 24">
+                    <path d="M9 6l6 6-6 6V6z" />
+                </svg> *@
+
+                ماه قبل</button>
+
+            <div>
+                <select class="calendar-select" value="@selectedYear" @onchange="YearChanged">
+                    @for (int y = 1300; y <= 1500; y++)
+                    {
+                        <option value="@y">@y</option>
+                    }
+                </select>
+            </div>
+
+            <div>
+                <select class="calendar-select" value="@selectedMonth" @onchange="MonthChanged">
+                    @for (int m = 1; m <= 12; m++)
+                    {
+                        <option value="@m">@GetMonthName(m)</option>
+                    }
+                </select>
+                <div class="calendar-nav-select"></div>
+            </div>
+            <button class="calendar-nav-btn" @onclick="NextMonth">ماه بعد
+                @* <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#03a9f4" viewBox="0 0 24 24">
+                    <path d="M15 18l-6-6 6-6v12z" />
+                </svg> *@
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24">
+                    <path fill="#03a9f4" stroke="#00f" stroke-width="1.5" d="M15 18l-6-6 6-6v12z" />
+                </svg>
+            </button>
+        </div>
+        <div class="calendar-table">
+        <table>
+            <thead>
+                <tr>
+                    @foreach (var day in daysOfWeek)
+                        {
+                            @if (day == "ش")
+                            {
+                                <th style="border-radius:0 8px 8px 0px">@day</th>
+                            }
+                            @if (day != "ش" && day != "ج")
+                            {
+                                <th>@day</th>
+                            }
+                            @if (day == "ج")
+                            {
+                                <th style="border-radius:8px 0 0 8px">@day</th>
+                            }
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var week in weeks)
+                {
+                    <tr>
+                        @foreach (var day in week)
+                        {
+                            var dayTowDigit = day;
+                            @if (day.Length == 1)
+                            {
+                                dayTowDigit = "0" + day;
+                            }
+                            <td @onclick="() => SelectDateAsync(day)"
+                                    class="@(dayTowDigit == selectedDay ? "selected-day" : day.Length == 0 ? "empty" : "")" >
+                                @day
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+        </div>
+        <div class="calendar-footer">
+        <button class="calendar-btn" @onclick="AcceptDate">تایید</button>
+        <button class="calendar-btn" @onclick="CancelDate">انصراف</button>
+        <button class="calendar-btn" @onclick="SetToday">امروز</button>
+        </div>
+    </div>
+</div>
+@code {
+    [Parameter]
+    public string InitialDate { get; set; } = "";
+
+    private bool isVisiblePersianCalendar = false;
+
+    [Parameter] public EventCallback<string> OnDateSelected { get; set; }
+
+    private int selectedYear;
+    private int selectedMonth;
+    private string selectedDay = "01"; // مقدار روز انتخاب شده
+
+    private string[] daysOfWeek = { "ش", "ی‌", "د", "س‌", "چ", "پ‌", "ج" };
+    private List<List<string>> weeks = new();
+
+    public string SelectedDate => $"{selectedYear}/{selectedMonth:D2}/{selectedDay:D2}";
+
+    protected override async Task OnInitializedAsync()
+    {
+    }
+
+    private void YearChanged(ChangeEventArgs e)
+    {
+        selectedYear = int.Parse(e.Value.ToString());
+        GenerateCalendar(selectedYear, selectedMonth);
+    }
+
+    private void MonthChanged(ChangeEventArgs e)
+    {
+        selectedMonth = int.Parse(e.Value.ToString());
+        GenerateCalendar(selectedYear, selectedMonth);
+    }
+
+    private void GenerateCalendar(int year, int month)
+    {
+        weeks.Clear();
+        var persianCalendar = new PersianCalendar();
+
+        DateTime firstDayOfMonth = persianCalendar.ToDateTime(year, month, 1, 0, 0, 0, 0);
+
+        // تبدیل ایندکس روز هفته به حالت "شنبه = 0"
+        int firstDayOfWeek = ((int)firstDayOfMonth.DayOfWeek + 1) % 7;
+
+        int daysInMonth = persianCalendar.GetDaysInMonth(year, month);
+
+        List<string> week = new List<string>();
+
+        for (int i = 0; i < firstDayOfWeek; i++)
+            week.Add("");
+
+        for (int day = 1; day <= daysInMonth; day++)
+        {
+            week.Add(day.ToString());
+            if (week.Count == 7)
+            {
+                weeks.Add(week);
+                week = new List<string>();
+            }
+        }
+
+        if (week.Count > 0)
+        {
+            while (week.Count < 7)
+                week.Add("");
+            weeks.Add(week);
+        }
+
+        // اگر روز قبلی در ماه جدید وجود نداشته باشد، آخرین روز ماه را انتخاب کن
+        int newDaysInMonth = persianCalendar.GetDaysInMonth(year, month);
+        if (int.Parse(selectedDay) > newDaysInMonth)
+        {
+            selectedDay = newDaysInMonth.ToString();
+        }
+
+    }
+
+    private void PreviousMonth()
+    {
+        if (selectedMonth == 1)
+        {
+            selectedMonth = 12;
+            selectedYear--;
+        }
+        else
+        {
+            selectedMonth--;
+        }
+        GenerateCalendar(selectedYear, selectedMonth);
+    }
+
+    private void NextMonth()
+    {
+        if (selectedMonth == 12)
+        {
+            selectedMonth = 1;
+            selectedYear++;
+        }
+        else
+        {
+            selectedMonth++;
+        }
+        GenerateCalendar(selectedYear, selectedMonth);
+    }
+
+    private async Task SelectDateAsync(string day)
+    {
+        if (!string.IsNullOrEmpty(day))
+        {
+            if (day.Length == 1)
+                selectedDay = "0" + day;
+            else
+                selectedDay = day;
+
+            //await OnDateSelected.InvokeAsync(SelectedDate);
+            //isVisiblePersianCalendar = false;
+        }
+    }
+
+    private string GetMonthName(int month)
+    {
+        string[] monthNames = {
+            "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور",
+            "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"
+    };
+        return monthNames[month - 1];
+    }
+
+    public void ShowPersianCalendar()
+    {
+        if (InitialDate != "")
+        {
+            var parts = InitialDate.Split('/');
+
+            selectedYear = int.Parse(parts[0]);
+            selectedMonth = int.Parse(parts[1]);
+            selectedDay = parts[2];
+        }
+        else
+        {
+            var persianCalendar = new PersianCalendar();
+            var now = DateTime.Now;
+            // selectedYear = now.Year;//DateTime.Now به دلیل CultureInfo("fa-IR") شمسی برمیگرداند که تابع now.Year توقع تاریخ میلادی دارد پس اشتباه جواب میدهد.
+            // selectedMonth = now.Month;
+            // selectedDay = now.Day.ToString(); // روز جاری انتخاب شود
+
+            selectedYear = persianCalendar.GetYear(now);
+            selectedMonth = persianCalendar.GetMonth(now);
+            selectedDay = persianCalendar.GetDayOfMonth(now).ToString(); // روز جاری انتخاب شود
+        }
+        GenerateCalendar(selectedYear, selectedMonth);
+
+        isVisiblePersianCalendar = true;
+
+    }
+
+    public void OnOutsidePersianCalendarClick()
+    {
+        isVisiblePersianCalendar = false;
+    }
+    private void SetToday()
+    {
+        var persianCalendar = new PersianCalendar();
+        var now = DateTime.Now;
+
+        selectedYear = persianCalendar.GetYear(now);
+        selectedMonth = persianCalendar.GetMonth(now);
+        selectedDay = persianCalendar.GetDayOfMonth(now).ToString(); // روز جاری انتخاب شود
+
+        GenerateCalendar(selectedYear, selectedMonth);
+    }
+    private void CancelDate()
+    {
+        var persianCalendar = new PersianCalendar();
+
+        if (InitialDate != "")
+        {
+            var parts = InitialDate.Split('/');
+
+            selectedYear = int.Parse(parts[0]);
+            selectedMonth = int.Parse(parts[1]);
+            selectedDay = parts[2];
+        }
+        GenerateCalendar(selectedYear, selectedMonth);
+        isVisiblePersianCalendar = false;
+    }
+    public async Task AcceptDate()
+    {
+        await OnDateSelected.InvokeAsync(SelectedDate);
+        isVisiblePersianCalendar = false;
+    }
+}

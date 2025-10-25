@@ -1,0 +1,20 @@
+﻿<button class="star-button" @onclick="OnClick" title="@Tooltip">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="@FillColor" width="24" height="24">
+        <path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.782 1.402 8.175L12 18.897l-7.336 3.87 1.402-8.175L.132 9.21l8.2-1.192z" />
+    </svg>
+</button>
+
+@code {
+    [Parameter] public EventCallback OnStarClicked { get; set; }
+    [Parameter] public bool IsFavorite { get; set; } = false;
+    [Parameter] public string Tooltip { get; set; } = $"{MainText.AddToFavarate}";
+
+    private string FillColor => IsFavorite ? "#d69d00" : "none";
+
+    private async Task OnClick()
+    {
+        IsFavorite = !IsFavorite;
+        if (OnStarClicked.HasDelegate)
+            await OnStarClicked.InvokeAsync(null);
+    }
+}
