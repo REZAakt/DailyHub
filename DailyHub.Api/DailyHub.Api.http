@@ -1,0 +1,6 @@
+@DailyHub.Api_HostAddress = http://localhost:5211
+
+GET {{DailyHub.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+	  <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="9.0.10" />
+	  <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="9.0.10" />
+	  <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.10" />
+	  <PackageReference Include="Microsoft.AspNetCore.Components" Version="9.0.10" />
+	  <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.10" />
+	  <PackageReference Include="Microsoft.Extensions.Localization" Version="9.0.10" />
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.10" PrivateAssets="all" />
+    <PackageReference Include="Radzen.Blazor" Version="8.1.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DailyHub.Shared\DailyHub.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
+  </ItemGroup>
+
+</Project>
