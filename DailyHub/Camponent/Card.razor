@@ -1,0 +1,72 @@
+﻿<div class="card @Class" role="group" aria-label="@Title" style="@Style">
+    <div class="card-header">
+        <div class="card-title" style="font-size:clamp(14px, 16px, 19px);font-weight:800;">@Title</div>
+
+        @if (IconFragment is not null)
+        {
+            <div class="card-icon" aria-hidden="true">@IconFragment</div>
+        }
+        else if (!string.IsNullOrEmpty(Icon) || !string.IsNullOrEmpty(IconUrl))
+        {
+            <div class="card-icon" aria-hidden="true">
+                @if (!string.IsNullOrEmpty(Icon))
+                {
+                    <RadzenIcon Icon="@Icon" IconColor="@IconColor" style="@($"font-size:{IconFontSize}!important;")" />
+                }
+                else
+                {
+                    <img src="@IconUrl" alt="" style="@($"width:{ImageSize}; height:{ImageSize};")" />
+                }
+            </div>
+        }
+    </div>
+
+    <div class="card-body">
+        @* محتوای اصلی کارت (مثلاً جدول) *@
+        @if (ValueTemplate is not null)
+        {
+            @* اگر می‌خواهید جدول در body قرار بگیرد و مقدار در footer باشد، قالب را جدا کنید.
+           در این مثال ValueTemplate را در footer می‌گذاریم، ولی شما می‌توانید محتوای بزرگ را اینجا هم قرار دهید. *@
+
+            @* اگر تمایل دارید جدول داخل body باشد، قرار دهید:
+           <RadzenDataGrid ...>...</RadzenDataGrid>
+        *@
+        }
+    </div>
+
+    <div class="card-content">
+        @if (ValueTemplate is not null)
+        {
+            @ValueTemplate(Value)
+        }
+        else if (Value != null)
+        {
+            <span class="card-value" style="@($"color:{ValueColor};")">@Value</span>
+        }
+    </div>
+</div>
+
+
+@code {
+    // عنوان کارت
+    [Parameter] public string Title { get; set; } = string.Empty;
+
+    // آیکون
+    [Parameter] public string Icon { get; set; }
+    [Parameter] public string Style { get; set; } = string.Empty;
+    [Parameter] public string IconColor { get; set; } = "#000";
+    [Parameter] public string ValueColor { get; set; } = "#000";
+    [Parameter] public string IconUrl { get; set; }
+    [Parameter] public RenderFragment IconFragment { get; set; }
+
+    // اندازه‌ها
+    [Parameter] public string IconFontSize { get; set; } = "1.5rem";
+    [Parameter] public string ImageSize { get; set; } = "1.5rem";
+
+    // مقدار کارت (هر نوعی می‌تواند باشد)
+    [Parameter] public object Value { get; set; }
+    [Parameter] public RenderFragment<object> ValueTemplate { get; set; }
+
+    // کلاس CSS اضافه
+    [Parameter] public string Class { get; set; } = string.Empty;
+}

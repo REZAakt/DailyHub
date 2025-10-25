@@ -1,16 +1,42 @@
 ﻿@inherits LayoutComponentBase
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
+<RadzenLayout>
+    <RadzenHeader Style="background-color:white; height:40px;">
 
-        <article class="content px-4">
+        <RadzenRow Gap="0px" style="width:100%; height:15px;">
+            <RadzenColumn style="width:100%;background-color:palevioletred;" Size="4">
+            </RadzenColumn>
+            <RadzenColumn style="width:100%;background-color:darkslategray;" Size="4">
+                <RadzenLabel Text="Header"  />
+            </RadzenColumn>
+            <RadzenColumn style="width:100%;background-color:blueviolet;" Size="4">
+            </RadzenColumn>
+        </RadzenRow>
+
+        <RadzenRow style="width:100%;background-color:skyblue; height:20px;">
+                <RadzenMenu >
+                    <RadzenMenuItem Text="Counter" Icon="category" IconColor="#7586B1" Path="/counter" Style=" font-size:16px" />
+                    <RadzenMenuItem Text="Home" Icon="category" IconColor="#7586B1" Path="/" Style=" font-size:16px" />
+                    <RadzenMenuItem Text="Weather" Icon="category" IconColor="#7586B1" Path="/weather" Style=" font-size:16px" />
+                    <RadzenMenuItem Text="Home" Icon="category" IconColor="#7586B1" Path="/" Style=" font-size:16px" />
+                    <RadzenMenuItem Text="Weather" Icon="category" IconColor="#7586B1" Path="/weather" Style=" font-size:16px" />
+                </RadzenMenu>
+        </RadzenRow>
+      
+    </RadzenHeader>
+
+    <RadzenBody>
+        <div class="rz-p-12" style="height:100%; width:100%;">
             @Body
-        </article>
-    </main>
-</div>
+        </div>
+    </RadzenBody>
+
+    @*  <RadzenFooter>
+        Footer
+    </RadzenFooter> *@
+</RadzenLayout>
+
+@code {
+
+
+}

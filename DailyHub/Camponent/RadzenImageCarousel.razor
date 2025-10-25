@@ -1,0 +1,367 @@
+﻿@using System.Timers
+@using Radzen
+@using Microsoft.AspNetCore.Components.Web
+
+@inherits ComponentBase
+
+@if (imagesPreloaded)
+{
+<div class="ric-card" style="background:transparent; --ric-theme-color:@(string.IsNullOrWhiteSpace(ThemeColor) ? "#FFFFFF" : ThemeColor); display:@(IsVisible ? "block" : "none");">
+    <div class="ric-viewport" @onmouseenter="PauseAutoPlay" @onmouseleave="ResumeAutoPlay" @onpointerdown="OnPointerDown" @onpointerup="OnPointerUp" @onpointermove="OnPointerMove" @onpointercancel="OnPointerCancel">
+        <div class="ric-slider" style="@($"transform: translateX(-{currentIndex * 100}%);")">
+            @foreach (var img in RenderedItems)
+            {
+                <div class="ric-slide">
+                    <img src="@img.Url" alt="@img.Alt" />
+                    @if (ShowTitle && !string.IsNullOrEmpty(img.Title))
+                    {
+                        <div class="ric-caption">@img.Title</div>
+                    }
+                </div>
+            }
+        </div>
+
+        @* arrows overlay *@
+        @if (ShowArrows && !DisableArrows)
+        {
+            <RadzenButton ButtonStyle="ButtonStyle.Secondary" Class="ric-arrow ric-left" Icon="chevron_left" Size="ButtonSize.Large" Click="@(async ()=> await Prev())" Style="background:rgba(255,255,255,0.08);backdrop-filter:blur(4px);border:none;" />
+            <RadzenButton ButtonStyle="ButtonStyle.Secondary" Class="ric-arrow ric-right" Icon="chevron_right" Size="ButtonSize.Large" Click="@(async ()=> await Next())" Style="background:rgba(255,255,255,0.08);backdrop-filter:blur(4px);border:none;" />
+        }
+
+        @* dots overlay on top of images (inside a glass card) *@
+        @if (ShowDots && !DisableDots)
+        {
+            <div class="ric-dots-card">
+                <div class="ric-dots">
+                    @for (int i = 0; i < RenderedItems.Count; i++)
+                    {
+                        var item = RenderedItems[i];
+                        var separator = item.Url.Contains("?") ? "&" : "?";
+                        var src = item.Url + separator + "v=" + i;
+
+                        <div class="ric-slide" @key="item.Url">
+                            <img src="@src"
+                                 alt="@item.Alt"
+                                
+                                 onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;800&quot; height=&quot;400&quot;><rect fill=&quot;%23eee&quot; width=&quot;100%25&quot; height=&quot;100%25&quot;/><text x=&quot;50%25&quot; y=&quot;50%25&quot; dominant-baseline=&quot;middle&quot; text-anchor=&quot;middle&quot; fill=&quot;%23999&quot; font-size=&quot;20&quot;>Image not found</text></svg>'" />
+                            @if (!string.IsNullOrEmpty(item.Title))
+                            {
+                                <div class="ric-caption">@item.Title</div>
+                            }
+                        </div>
+                    }
+
+                </div>
+            </div>
+        }
+    </div>
+</div>
+}
+else
+{
+    <div class="loading">در حال بارگذاری تصاویر...</div>
+}
+
+@code {
+    // ---------------------- پارامترهای ورودی ----------------------
+    [Parameter] public IEnumerable<string>? ImageUrls { get; set; }
+    [Parameter] public List<ImageItem>? Items { get; set; }
+    [Parameter] public bool ShowDots { get; set; } = true;
+    [Parameter] public bool ShowArrows { get; set; } = true;
+    [Parameter] public bool DisableDots { get; set; } = false;
+    [Parameter] public bool DisableArrows { get; set; } = false;
+    [Parameter] public string ThemeColor { get; set; } = "#FFFFFF";
+    [Parameter] public bool AutoPlay { get; set; } = false;
+    [Parameter] public int AutoPlayInterval { get; set; } = 3000;
+    [Parameter] public bool IsVisible { get; set; } = true;
+    [Parameter] public bool ShowTitle { get; set; } = false;
+
+    private List<ImageItem> RenderedItems = new();
+    private int currentIndex = 0;
+    private CancellationTokenSource? autoPlayCts;
+
+    // swipe handling
+    private bool pointerDown = false;
+    private double pointerStartX = 0;
+    private double pointerCurrentX = 0;
+    private const double SwipeThreshold = 50; // px
+
+    private bool imagesPreloaded = false;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        RenderedItems.Clear();
+        if (Items?.Count > 0) RenderedItems.AddRange(Items);
+        else if (ImageUrls != null) RenderedItems.AddRange(ImageUrls.Select(u => new ImageItem { Url = u }));
+
+        if (!RenderedItems.Any())
+            RenderedItems.Add(new ImageItem { Url = "data:image/svg+xml;...", Alt = "no image" });
+
+        await PreloadImages(); // preload
+
+        if (AutoPlay) StartAutoPlay();
+    }
+
+
+    [Inject] IJSRuntime JS { get; set; }
+
+    private async Task PreloadImages()
+    {
+        var urls = RenderedItems.Select(x => x.Url).ToArray(); // مهم: ToArray()
+        await JS.InvokeVoidAsync("preloadImages", urls);
+
+        imagesPreloaded = true;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public async Task Next()
+    {
+        if (!IsVisible || RenderedItems.Count == 0) return;
+        currentIndex = (currentIndex + 1) % RenderedItems.Count;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public async Task Prev()
+    {
+        if (!IsVisible || RenderedItems.Count == 0) return;
+        currentIndex = (currentIndex - 1 + RenderedItems.Count) % RenderedItems.Count;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public async Task GoTo(int index)
+    {
+        if (!IsVisible) return;
+        currentIndex = Math.Clamp(index, 0, RenderedItems.Count - 1);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private void StartAutoPlay()
+    {
+        StopAutoPlay();
+        autoPlayCts = new CancellationTokenSource();
+        _ = AutoPlayLoop(autoPlayCts.Token);
+    }
+
+    private void StopAutoPlay()
+    {
+        if (autoPlayCts != null)
+        {
+            try { autoPlayCts.Cancel(); } catch { }
+            autoPlayCts.Dispose();
+            autoPlayCts = null;
+        }
+    }
+
+    private async Task AutoPlayLoop(CancellationToken ct)
+    {
+        try
+        {
+            while (!ct.IsCancellationRequested && AutoPlay && RenderedItems.Count > 1)
+            {
+                await Task.Delay(AutoPlayInterval, ct);
+                if (ct.IsCancellationRequested) break;
+                await Next();
+            }
+        }
+        catch (TaskCanceledException) { }
+    }
+
+    private void PauseAutoPlay() => StopAutoPlay();
+    private void ResumeAutoPlay() { if (AutoPlay) StartAutoPlay(); }
+
+    public void Dispose() { StopAutoPlay(); }
+
+    // Pointer handlers for swipe
+    private void OnPointerDown(Microsoft.AspNetCore.Components.Web.PointerEventArgs e)
+    {
+        pointerDown = true;
+        pointerStartX = e.ClientX;
+        pointerCurrentX = pointerStartX;
+    }
+
+    // قبلاً: private async void OnPointerUp(Microsoft.AspNetCore.Components.Web.PointerEventArgs e)
+    private async Task OnPointerUp(PointerEventArgs e)
+    {
+        if (!pointerDown) return;
+        pointerDown = false;
+        var dx = e.ClientX - pointerStartX;
+        if (Math.Abs(dx) > SwipeThreshold)
+        {
+            if (dx < 0) await Next(); else await Prev();
+        }
+    }
+
+
+    private void OnPointerMove(Microsoft.AspNetCore.Components.Web.PointerEventArgs e)
+    {
+        if (!pointerDown) return;
+        pointerCurrentX = e.ClientX;
+        // optional: could implement live dragging visual feedback
+    }
+
+    private void OnPointerCancel(Microsoft.AspNetCore.Components.Web.PointerEventArgs e) => pointerDown = false;
+
+    public class ImageItem
+    {
+        public string Url { get; set; } = string.Empty;
+        public string? Title { get; set; }
+        public string? Alt { get; set; }
+    }
+}
+
+<style>
+    /* کلیات کارت: بدون border، گوشه‌های گرد شدید، و شیشه‌ای بودن کنترل‌ها */
+    .ric-card {
+        border-radius: 18px;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+    }
+
+    .ric-viewport {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        min-height: 200px;
+        aspect-ratio: 16/9;
+        background: transparent;
+        z-index: 0;
+        overflow: hidden;
+    }
+
+    .ric-slider {
+        display: flex;
+        transition: transform 500ms cubic-bezier(.22,.9,.3,1);
+        height: 100%;
+        flex-wrap: nowrap; /* خیلی مهم */
+    }
+
+    .ric-slide {
+        flex: 0 0 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+        .ric-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+    .ric-caption {
+        position: absolute;
+        left: 12px;
+        bottom: 12px;
+        z-index: 50;
+        background: rgba(0,0,0,0.35);
+        color: var(--ric-theme-color, #fff);
+        padding: 8px 12px;
+        border-radius: 8px;
+        backdrop-filter: blur(4px);
+    }
+
+    /* arrows */
+    .ric-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 80;
+        border-radius: 999px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    }
+
+    .ric-left {
+        left: 12px;
+    }
+
+    .ric-right {
+        right: 12px;
+    }
+
+    .ric-arrow:hover {
+        transform: translateY(-50%) scale(1.03);
+        opacity: 0.95;
+    }
+
+    /* dots card (glass) */
+    .ric-dots-card {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 12px;
+        z-index: 85;
+        display: flex;
+        padding: 6px 10px;
+        border-radius: 12px;
+        background: rgba(255,255,255,0.06);
+        backdrop-filter: blur(6px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+
+    .ric-dots {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .ric-dot {
+        width: clamp(8px,1.6vw,14px);
+        height: clamp(8px,1.6vw,14px);
+        border-radius: 50%;
+        border: none;
+        background: rgba(255,255,255,0.65);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        cursor: pointer;
+        transition: transform 200ms ease, opacity 200ms ease;
+    }
+
+        .ric-dot:hover {
+            transform: scale(1.18);
+            opacity: 0.95;
+        }
+
+        .ric-dot.active {
+            background: var(--ric-theme-color, #fff);
+            transform: scale(1.35);
+        }
+
+    /* responsive adjustments */
+    @@media (max-width:600px) {
+        .ric-caption {
+            font-size: 12px;
+            padding: 6px 10px;
+        }
+
+        .ric-arrow {
+            padding: 6px;
+        }
+    }
+
+    :root {
+        --ric-theme-color: #ffffff;
+    }
+
+    .ric-slider {
+        display: flex;
+        transition: transform 500ms cubic-bezier(.22,.9,.3,1);
+        height: 100%;
+        flex-wrap: nowrap;
+    }
+
+    .ric-slide {
+        min-width: 100%;
+        flex: 0 0 100%;
+    }
+
+    .ric-viewport {
+        overflow: hidden; /* مهم */
+        aspect-ratio: 16/9;
+        min-height: 220px;
+        position: relative;
+    }
+
+</style>

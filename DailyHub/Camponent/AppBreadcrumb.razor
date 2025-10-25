@@ -1,0 +1,52 @@
+﻿@using Radzen.Blazor
+@inject NavigationManager Navigation
+
+<div class="rz-m-12" dir="rtl" >
+    <RadzenBreadCrumb Style="color:#4E6182; font-weight:bold;">
+        @foreach (var item in Breadcrumbs)
+        {
+            <RadzenBreadCrumbItem Path="@item.Path" Text="@item.Text" />
+        }
+    </RadzenBreadCrumb>
+</div>
+
+@code {
+    private List<BreadcrumbItem> Breadcrumbs = new();
+
+    protected override void OnInitialized()
+    {
+        var uri = Navigation.ToBaseRelativePath(Navigation.Uri);
+        var segments = uri.Split("/", StringSplitOptions.RemoveEmptyEntries);
+
+        string path = "/";
+        Breadcrumbs.Add(new BreadcrumbItem { Path = "/", Text = "داشبرد" });
+
+        foreach (var seg in segments)
+        {
+            path += seg + "/";
+
+            // اینجا می‌تونی ترجمه دلخواه برای هر segment بدی
+            var text = TranslateSegment(seg);
+
+            Breadcrumbs.Add(new BreadcrumbItem { Path = path, Text = text });
+        }
+    }
+
+    private string TranslateSegment(string seg)
+    {
+        // اینجا می‌تونی دستی برای هر مسیر یه ترجمه بزاری
+        return seg.ToLower() switch
+        {
+            "products" => "محصولات",
+            "details" => "جزئیات",
+            "about" => "درباره ما",
+            _ => seg // پیش‌فرض همون اسم URL
+        };
+    }
+
+    public class BreadcrumbItem
+    {
+        public string Path { get; set; } = "/";
+        public string Text { get; set; } = "";
+    }
+}

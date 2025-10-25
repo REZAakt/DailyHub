@@ -1,0 +1,119 @@
+﻿@using Radzen.Blazor
+@using Microsoft.AspNetCore.Components.Web
+
+<style>
+    .MainContainer {
+        display: flex;
+        flex-flow: column;
+        gap: 0px;
+        height:100%;
+        overflow-y: hidden;
+        overflow-x: hidden;
+    }
+
+    .list-border {
+        border: hidden !important;
+        /* border-radius: 15px; */
+        /* padding: 5px; */
+    }
+
+    .list-footer {
+        margin-right: 5px;
+        /* border-radius: 15px; */
+        /* padding: 5px; */
+    }
+
+    .list-In-border {
+        /* border:hidden!important; */
+        border-radius: 10px;
+        /* padding: 5px; */
+    }
+
+    @@media (max-width: 768px) {
+        .MainContainer {
+            /* border:hidden!important; */
+        }
+    }
+</style>
+
+<div class="page-root" style="@Style">
+@*     <div class="basepage-gap">
+        <ol class="breadcrumb">
+            @if (TopBarRoot is not null && TopBarRoot.Count > 0)
+            {
+                @for (int i = 0; i < TopBarRoot.Count - 1; i++)
+                {
+                    var index = i;
+                    <li>
+                        <a href="@TopBarRoot[index].Address"
+                           @onclick="@(() => TopBarRoot[index].ClickEvent.HasValue
+                                      ? TopBarRoot[index].ClickEvent!.Value.InvokeAsync()
+                                      : Task.CompletedTask)">
+                            @TopBarRoot[index].Text
+                        </a>
+                    </li>
+                }
+
+                <li>
+                    <a href="@TopBarRoot.Last().Address" style="color:gray;">
+                        @TopBarRoot.Last().Text
+                    </a>
+                </li>
+            }
+        </ol>
+    </div> *@
+
+    <div class="MainContainer basepage-container" >
+        <div class="basepage-header">
+            @TopBarContents
+        </div>
+        <div class="basepage-body">
+            @ChildContent
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .a_btnlink2 {
+        font-size: small;
+        white-space: normal; /* اجازه بده متن چند خطی بشه */
+        word-break: break-word; /* بشکنه اگر کلمه خیلی طولانی بود */
+        overflow-wrap: break-word; /* سازگاری بهتر */
+        text-align: center;
+        justify-content: center;
+        display: flex;
+    }
+
+    @@media (max-width: 768px) {
+        .a_btnlink2 {
+            font-size: 12px;
+        }
+    }
+</style>
+<RadzenTooltip />
+<RadzenNotification />
+@if (IsLoading)
+{
+    <Waiting />
+}
+
+@code {
+    public record TopBarArg(string? Address, string Text, EventCallback? ClickEvent = null);
+    [Parameter] public List<TopBarArg> TopBarRoot { get; set; } = [];
+    [Parameter] public RenderFragment? TopBarContents { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string Style { get; set; } = string.Empty;
+
+    #region IsLoading
+    [Parameter] public bool IsLoading { get; set; } = false;
+    [Parameter]
+    public EventCallback<bool> IsLoadingChanged { get; set; }
+    private async Task OnIsLoadingChanged(bool IsLoadingTime)
+    {
+        // Notify parent about the change.
+        await IsLoadingChanged.InvokeAsync(IsLoadingTime);
+    }
+    #endregion
+
+}
