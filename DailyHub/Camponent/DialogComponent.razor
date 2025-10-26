@@ -1,0 +1,171 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+@using Radzen.Blazor
+
+<div class="fixed inset-0 z-[999] bg-[black]/60 !block" style="z-index:1002">
+    <div class="flex items-center justify-center div-in1" style="width:100vW;height:100vh;">
+        <div class="relative">
+            <div class="panel max-w-5xl w-[100%] h-[90%]  overflow-hidden rounded-lg border-0 p-0 md:w-full div-in4 @Class" id="@id" style="max-height:90vh;display: grid;grid-template-rows: auto 1fr;">
+                <button type="button"
+                        class="absolute top-4 text-white-dark hover:text-dark ltr:right-4 rtl:left-4 no-print"
+                        @onclick="() => OnClosed.InvokeAsync()">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         width="24px"
+                         height="24px"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.5"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
+                         class="h-6 w-6">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+                @if (IsBackEnabled)
+                {
+                    <!-- Additional Button -->
+                    <button type="button" @onclick=@(() => IsBackEnabledInvoke.InvokeAsync())
+                            class="absolute top-4 text-white-dark hover:text-dark ltr:left-4 rtl:right-4 hover:text-primary" style="margin-top:5px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5 rtl:rotate-180">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"></path>
+                        </svg>
+                    </button>
+                }
+
+                <h3 class="bg-[#fbfbfb] py-3 text-lg font-medium ltr:pl-5 ltr:pr-[50px] rtl:pr-5 rtl:pl-[50px] dark:bg-[#121c2c]" style="padding-right:40px;font-size:16px;">
+                    @Header
+                </h3>
+                @* style="max-height:100vh; @Style" *@
+                <div style="grid-row-start:2;overflow-y:auto;overflow-x:hidden;margin-bottom:10px;">
+                    @ChildContent
+                </div>
+            </div>
+            @if (IsLoading)
+            {
+                <Waiting />
+            }
+        </div>
+
+    </div>
+
+</div>
+<RadzenNotification />
+<style>
+    .div-in1 {
+        padding: 0rem 1.5rem 0rem 1.5rem;
+    }
+
+    .div-in4 {
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    @@media print {
+        .div-in4 {
+            height: auto !important;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .div-in1 {
+            padding: 0rem;
+        }
+
+        .div-in4 {
+            margin-top: 0rem;
+            margin-bottom: 0rem;
+            width: 100vW;
+            height: 100vh;
+        }
+    }
+</style>
+@code {
+    [Parameter] public string Header { get; set; } = "";
+    [Parameter] public string id { get; set; } = "";
+
+    #region IsLoading
+    [Parameter] public bool IsLoading { get; set; } = false;
+    [Parameter]
+    public EventCallback<bool> IsLoadingChanged { get; set; }
+    private async Task OnIsLoadingChanged(bool IsLoadingTime)
+    {
+        // Notify parent about the change.
+        await IsLoadingChanged.InvokeAsync(IsLoadingTime);
+    }
+    #endregion
+    #region IsBackEnabled
+    [Parameter] public bool IsBackEnabled { get; set; } = false;
+    [Parameter]
+    public EventCallback<bool> IsBackEnabledChanged { get; set; }
+    private async Task OnIsBackEnabledChanged(bool IsBackEnabledTime)
+    {
+        // Notify parent about the change.
+        await IsBackEnabledChanged.InvokeAsync(IsBackEnabledTime);
+    }
+    #endregion
+    [Parameter] public EventCallback IsBackEnabledInvoke { get; set; }
+
+
+    #region OnClosed
+    [Parameter] public EventCallback OnClosed { get; set; }
+    #endregion
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public string? Class { get; set; } // Custom CSS classes
+
+    [Parameter]
+    public string? Style { get; set; } // Custom inline styles
+
+
+    [Parameter]
+    public bool IsVisible { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsVisibleChanged { get; set; }
+
+    #region Timer
+    [Parameter] public bool EnableTimer { get; set; } = false;
+    [Parameter] public int TimerDuration { get; set; } = 60000; // Default to 1 minute (60000 ms)
+    private Timer? _timer;
+
+    protected override void OnParametersSet()
+    {
+        if (EnableTimer)
+        {
+            StartTimer();
+        }
+        else
+        {
+            StopTimer();
+        }
+    }
+
+    private void StartTimer()
+    {
+        StopTimer(); // Ensure any existing timer is stopped
+        _timer = new Timer(async _ => await OnTimerElapsed(), null, TimerDuration, Timeout.Infinite);
+    }
+
+    private void StopTimer()
+    {
+        _timer?.Dispose();
+        _timer = null;
+    }
+
+    private async Task OnTimerElapsed()
+    {
+        await InvokeAsync(async () =>
+        {
+            await OnClosed.InvokeAsync();
+        });
+    }
+
+    public void Dispose()
+    {
+        StopTimer();
+    }
+    #endregion
+}

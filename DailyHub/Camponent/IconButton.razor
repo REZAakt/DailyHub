@@ -1,0 +1,28 @@
+﻿@inject TooltipService tooltipService
+
+<button type="button"
+        @onmouseenter="@(args =>{ if (ToolTip != null) {ShowTooltip(htmlButton, new TooltipOptions(){Position= TooltipPosition.Top, Duration= null, Style = "background: black;"}, ToolTip);}} )"
+        @onmouseleave="@(args =>tooltipService.Close())"
+        class="rz-variant-filled rz-primary rz-shade-default @Class"
+        style="@Style"
+        @ref="htmlButton" @onclick=@(args => Clicked.InvokeAsync())>
+    @ChildContent
+</button>
+
+@code {
+
+    [Parameter] public EventCallback Clicked { get; set; }
+    [Parameter] public string? ToolTip { get; set; }
+    [Parameter]
+    public string? Class { get; set; } // Custom CSS classes
+
+    [Parameter]
+    public string? Style { get; set; } // Custom inline styles
+
+    ElementReference htmlButton;
+    void ShowTooltip(ElementReference elementReference, TooltipOptions options = null, string Tooltip = "") => tooltipService.Open(elementReference, Tooltip, options);
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+}

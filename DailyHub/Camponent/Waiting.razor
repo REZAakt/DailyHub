@@ -1,0 +1,24 @@
+﻿<div id="app">
+    <div class="loader is-active" aria-hidden="false">
+        <div class="justify-content-center">
+            <div class="jimu-primary-loading" aria-label="Loading" role="status"></div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* فقط وقتی is-active هست، تمام‌صفحه و بلاک‌کننده می‌شود */
+    .loader.is-active {
+        position: fixed; /* کل ویوپورت */
+        inset: 0; /* top/right/bottom/left = 0 */
+        z-index: 999999; /* بالاتر از همه */
+        background: transparent; /* کاملاً شفاف؛ ظاهر تغییر نمی‌کند */
+        pointer-events: auto; /* تمام کلیک‌ها را می‌گیرد */
+    }
+
+        /* رویدادها روی محتوای داخل لودر غیرفعال شود تا خود لایهٔ لودر گیرندهٔ کلیک باشد */
+        .loader.is-active * {
+            pointer-events: none;
+        }
+
+</style>

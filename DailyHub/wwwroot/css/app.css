@@ -1,5 +1,11 @@
-html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+﻿html, body {
+    /*    font-family: Vazir, Tahoma, Arial, sans-serif;*/
+    direction: rtl;
+    text-align: right;
+    margin: 0;
+    user-select: none;
+    background: linear-gradient(180deg, #ffffff 0%, #e9f5ff 40%, #f9ebf7 100%);
+    font-family: 'Shabnam-FD', 'irsans', Arial, sans-serif !important;
 }
 
 h1:focus {
@@ -111,4 +117,205 @@ code {
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
+}
+
+/* From Uiverse.io by SchawnnahJ */
+.loader {
+    position: relative;
+    width: 2.5em;
+    height: 2.5em;
+    transform: rotate(165deg);
+}
+
+    .loader:before, .loader:after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        display: block;
+        width: 0.5em;
+        height: 0.5em;
+        border-radius: 0.25em;
+        transform: translate(-50%, -50%);
+    }
+
+    .loader:before {
+        animation: before8 2s infinite;
+    }
+
+    .loader:after {
+        animation: after6 2s infinite;
+    }
+
+@keyframes before8 {
+    0% {
+        width: 0.5em;
+        box-shadow: 1em -0.5em rgba(225, 20, 98, 0.75), -1em 0.5em rgba(111, 202, 220, 0.75);
+    }
+
+    35% {
+        width: 2.5em;
+        box-shadow: 0 -0.5em rgba(225, 20, 98, 0.75), 0 0.5em rgba(111, 202, 220, 0.75);
+    }
+
+    70% {
+        width: 0.5em;
+        box-shadow: -1em -0.5em rgba(225, 20, 98, 0.75), 1em 0.5em rgba(111, 202, 220, 0.75);
+    }
+
+    100% {
+        box-shadow: 1em -0.5em rgba(225, 20, 98, 0.75), -1em 0.5em rgba(111, 202, 220, 0.75);
+    }
+}
+
+@keyframes after6 {
+    0% {
+        height: 0.5em;
+        box-shadow: 0.5em 1em rgba(61, 184, 143, 0.75), -0.5em -1em rgba(233, 169, 32, 0.75);
+    }
+
+    35% {
+        height: 2.5em;
+        box-shadow: 0.5em 0 rgba(61, 184, 143, 0.75), -0.5em 0 rgba(233, 169, 32, 0.75);
+    }
+
+    70% {
+        height: 0.5em;
+        box-shadow: 0.5em -1em rgba(61, 184, 143, 0.75), -0.5em 1em rgba(233, 169, 32, 0.75);
+    }
+
+    100% {
+        box-shadow: 0.5em 1em rgba(61, 184, 143, 0.75), -0.5em -1em rgba(233, 169, 32, 0.75);
+    }
+}
+
+.loader {
+    position: absolute;
+    top: calc(50% - 1.25em);
+    left: calc(50% - 1.25em);
+}
+.overlay {
+    position: fixed; /* روی کل صفحه */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: white;
+    display: flex; /* برای وسط‌چین کردن */
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* مطمئن شو روی همه عناصره */
+}
+
+.rz-navigation-item-text{
+    color:black;
+}
+
+/* رنگ و ضخامت و فاصله‌ی خط رو اینجا تنظیم کن */
+:root {
+    --menu-accent: #f9ebf7; /* رنگ خط و متن در حالت hover/active */
+    --menu-underline-height: 3px;
+    --menu-underline-offset: 4px; /* فاصله‌ی خط تا متن */
+}
+
+.rz-menu .rz-navigation-item-link {
+    position: relative;
+    padding-bottom: calc(var(--menu-underline-height) + var(--menu-underline-offset));
+    transition: color .25s ease;
+    color: #000; /* رنگ پیش‌فرض متن */
+    text-decoration: none;
+}
+
+    /* خودِ خطِ انیمیشنی */
+    .rz-menu .rz-navigation-item-link::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+        width: 100%;
+        height: var(--menu-underline-height);
+        background: var(--menu-accent);
+        border-radius: 999px; /* گوشه‌های گرد */
+        transform: translateX(-50%) scaleX(0); /* از وسط، صفر تا کامل */
+        transform-origin: center center; /* شروع از وسط */
+        transition: transform .35s cubic-bezier(.22,.61,.36,1);
+        pointer-events: none; /* خط کلیک نگیرد */
+    }
+
+/* هاور: خط از وسط باز می‌شود و رنگ متن عوض می‌شود */
+.rz-menu .rz-navigation-item:hover .rz-navigation-item-link {
+    color: var(--menu-accent);
+}
+
+    .rz-menu .rz-navigation-item:hover .rz-navigation-item-link::after {
+        transform: translateX(-50%) scaleX(1);
+    }
+
+/* آیتم فعال (صفحه‌ی جاری): خط بماند و متن همرنگ خط باشد */
+.rz-menu .rz-navigation-item-link.active {
+    color: var(--menu-accent);
+    font-weight: 500;
+}
+
+    .rz-menu .rz-navigation-item-link.active::after {
+        transform: translateX(-50%) scaleX(1);
+    }
+
+/* آیکن‌ها هم‌زمان با متن همرنگ شوند */
+.rz-menu .rz-navigation-item-link .rz-navigation-item-icon {
+    transition: color .25s ease;
+    color: #6F7279; /* پیش‌فرضِ آیکن */
+}
+
+.rz-menu .rz-navigation-item:hover .rz-navigation-item-icon,
+.rz-menu .rz-navigation-item-link.active .rz-navigation-item-icon {
+    color: var(--menu-accent) !important;
+}
+
+.app-header {
+    background-color: #e02180;
+}
+
+/* ردیف لوگو */
+.header-top {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 0;
+}
+
+.logo-col {
+    text-align: center;
+}
+
+.logo {
+    display: inline-block;
+    max-height: 40px; /* بسته به اندازه لوگوت قابل تغییره */
+}
+
+/* ردیف منو */
+.nav-row {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 8px;
+}
+
+/* خود منو */
+.menu-col {
+    text-align: center;
+}
+
+.rz-navigation-item-text {
+    font-weight:400;
+    font-size:14px;
+    color:white;
+}
+
+.rz-navigation-item-wrapper {
+    display:flex;
+    justify-content:right;
+}
+
+.rz-menu-toggle-item{
+    direction:ltr;
 }
