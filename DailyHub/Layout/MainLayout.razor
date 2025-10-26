@@ -1,32 +1,44 @@
 ﻿@inherits LayoutComponentBase
 
-<RadzenLayout>
-    <RadzenHeader Style="background-color:white; height:40px;">
-
-        <RadzenRow Gap="0px" style="width:100%; height:15px;">
-            <RadzenColumn style="width:100%;background-color:palevioletred;" Size="4">
-            </RadzenColumn>
-            <RadzenColumn style="width:100%;background-color:darkslategray;" Size="4">
-                <RadzenLabel Text="Header"  />
-            </RadzenColumn>
-            <RadzenColumn style="width:100%;background-color:blueviolet;" Size="4">
+<RadzenLayout Style="background-color: transparent;">
+    <RadzenHeader class="app-header" >
+        <!-- ردیف لوگو -->
+        <RadzenRow class="header-top" Style="padding: 0;" JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center">
+            <RadzenColumn Size="12" class="logo-col">
+                <RadzenImage Path="/images/Logo.svg" class="logo" />
             </RadzenColumn>
         </RadzenRow>
 
-        <RadzenRow style="width:100%;background-color:skyblue; height:20px;">
-                <RadzenMenu >
-                    <RadzenMenuItem Text="Counter" Icon="category" IconColor="#7586B1" Path="/counter" Style=" font-size:16px" />
-                    <RadzenMenuItem Text="Home" Icon="category" IconColor="#7586B1" Path="/" Style=" font-size:16px" />
-                    <RadzenMenuItem Text="Weather" Icon="category" IconColor="#7586B1" Path="/weather" Style=" font-size:16px" />
-                    <RadzenMenuItem Text="Home" Icon="category" IconColor="#7586B1" Path="/" Style=" font-size:16px" />
-                    <RadzenMenuItem Text="Weather" Icon="category" IconColor="#7586B1" Path="/weather" Style=" font-size:16px" />
+        <!-- ردیف منو -->
+        <RadzenRow class="nav-row" JustifyContent="JustifyContent.Center" Style="padding:0px;">
+            <RadzenColumn Size="12" class="menu-col">
+                <RadzenMenu Style="background-color:transparent;">
+                    <RadzenMenuItem Text="خانــه" Icon="home" IconColor="#FCFCFC" Path="/Home" Style="font-size:16px; color:white !important; margin-right:10px; font-weight:400;" />
+                    <RadzenMenuItem Text="اخبــار" Icon="newsmode" IconColor="#FCFCFC" Path="/News/NewsMainPage" Style=" font-size:16px;color:white;margin-right:10px;font-weight:400;" />
+                    <RadzenMenuItem Text="تقویم" Icon="calendar_month" IconColor="#FCFCFC" Path="/Calendar/CalendarMainPage" Style=" font-size:16px;color:white;margin-right:10px;font-weight:400;" />
+                    <RadzenMenuItem Text="آب و هوا" Icon="clear_day" IconColor="#FCFCFC" Path="/Weather/WeatherMainPage" Style=" font-size:16px;color:white;margin-right:10px;font-weight:400;" />
+                    <RadzenMenuItem Text="چی کار می تونم بکنم برات ؟" Icon="automation" IconColor="#FCFCFC" Path="/AI/AiMainPage" Style=" font-size:16px;color:white;margin-right:10px;font-weight:400;" />
                 </RadzenMenu>
+            </RadzenColumn>
         </RadzenRow>
-      
     </RadzenHeader>
 
-    <RadzenBody>
-        <div class="rz-p-12" style="height:100%; width:100%;">
+@*     <RadzenSidebar FullHeight="true" Responsive="false" @bind-Expanded="@sidebarExpanded" style="position: absolute; z-index: 3">
+        <RadzenStack AlignItems="AlignItems.End" class="rz-p-2">
+            <RadzenButton Icon="west" Variant="Variant.Text" ButtonStyle="ButtonStyle.Secondary" Click="@(() => sidebarExpanded = false)" />
+        </RadzenStack>
+        <RadzenPanelMenu>
+            <RadzenPanelMenuItem Text="خانــه" Icon="home" IconColor="#6F7279" Path="/Home" Style="font-size:16px; color:white !important; margin-right:10px; font-weight:400;" />
+            <RadzenPanelMenuItem Text="اخبــار" Icon="newsmode" IconColor="#6F7279" Path="/News/NewsMainPage" Style=" font-size:16px;color:white;margin-right:10px;font-weight:400;" />
+            <RadzenPanelMenuItem Text="تقویم" Icon="calendar_month" IconColor="#6F7279" Path="/Calendar/CalendarMainPage" Style=" font-size:16px;color:white;margin-right:10px;font-weight:400;" />
+            <RadzenPanelMenuItem Text="آب و هوا" Icon="clear_day" IconColor="#6F7279" Path="/Weather/WeatherMainPage" Style=" font-size:16px;color:white;margin-right:10px;font-weight:400;" />
+            <RadzenPanelMenuItem Text="چی کار می تونم بکنم برات ؟" Icon="automation" IconColor="#6F7279" Path="/AI/AiMainPage" Style=" font-size:16px;color:white;margin-right:10px;font-weight:400;" />
+        </RadzenPanelMenu>
+      
+    </RadzenSidebar> *@
+
+    <RadzenBody Style=" background-color:transparent;">
+        <div class="rz-p-12" style="height:100%; width:100%; background-color:transparent;">
             @Body
         </div>
     </RadzenBody>
@@ -37,6 +49,6 @@
 </RadzenLayout>
 
 @code {
-
+    bool sidebarExpanded = false;
 
 }
