@@ -320,3 +320,7 @@ code {
     direction:ltr;
 }
 
+.rz-header {
+    transition: max-height .35s ease, opacity .25s ease;
+    overflow: hidden;
+}
