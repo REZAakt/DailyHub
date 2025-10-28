@@ -1,5 +1,30 @@
 ﻿@page "/AI/AiMainPage"
 
+<BasePage IsLoading="IsLoading">
+    <HeaderContent>
+
+    </HeaderContent>
+    <ChildContent>
+    </ChildContent>
+</BasePage>
+
 @code {
+    public bool IsLoading { get; set; } = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoading = true;
+
+        IsLoading = false;
+    }
+
+    #region Notifcation
+
+    void ShowNotification(NotificationMessage message)
+    {
+        NotificationService.Notify(message);
+    }
+
+    #endregion
 
 }
