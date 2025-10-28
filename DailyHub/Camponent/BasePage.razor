@@ -1,93 +1,192 @@
-﻿@using Microsoft.AspNetCore.Components
-@using System.Linq
+﻿@using Radzen.Blazor
 
-<!-- نوار روت که به بالای صفحه چسبیده و در فضای خالی بالا قرار می‌گیرد -->
-<div class="basepage-gap">
-    <ol class="breadcrumb">
-        @if (TopBarRoot is not null && TopBarRoot.Count > 0)
+<div class="site-base-container @CssClass" style="@Style">
+    <div class="site-inner-content">
+        @if (HeaderContent is not null)
         {
-            @for (int i = 0; i < TopBarRoot.Count - 1; i++)
-            {
-                var index = i;
-                <li>
-                    <a href="@TopBarRoot[index].Address"
-                       @onclick="@(() => TopBarRoot[index].ClickEvent.HasValue
-                                      ? TopBarRoot[index].ClickEvent!.Value.InvokeAsync()
-                                      : Task.CompletedTask)">
-                        @TopBarRoot[index].Text
-                    </a>
-                </li>
-            }
-
-            <li>
-                <a href="@TopBarRoot.Last().Address" style="color:gray;">
-                    @TopBarRoot.Last().Text
-                </a>
-            </li>
+            <div class="site-header">
+                @HeaderContent
+            </div>
         }
-    </ol>
-</div>
-
-<div class="basepage-container">
-    <!-- Header داخل کارت سفید -->
-    <div class="basepage-header">
-        <div class="header-extra flex justify-between ">
-            @TopBarContents
+        <div class="site-body">
+            @ChildContent
         </div>
-    </div>
+        <div class="site-footer">
+            <div class="glow-container">
+                <div class="footer-content">
 
-    <!-- Body -->
-    <div class="MainContainer">
-        @ChildContent
+                    <h2 class="footer-title">Designed & Built by</h2>
+
+                    <div class="footer-creators">
+                        <div class="creator-box">
+                            <h3>Reza Akbarpour</h3>
+                            <div class="social-icons">
+                                <a href="tel:+989123456789" title="Call">
+                                    <i class="fas fa-phone"></i>
+                                </a>
+                                <a href="https://www.instagram.com/reza.akbarpourr/" target="_blank" title="Instagram">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="https://t.me/REZA_akT" target="_blank" title="Telegram">
+                                    <i class="fab fa-telegram"></i>
+                                </a>
+                                <a href="https://www.linkedin.com/in/reza-akbarpour-64ab3b217/" target="_blank" title="LinkedIn">
+                                    <i class="fab fa-linkedin"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="creator-box">
+                            <h3>Mohammad Allahgholipour</h3>
+                            <div class="social-icons">
+                                <a href="tel:+989198765432" title="Call">
+                                    <i class="fas fa-phone"></i>
+                                </a>
+                                <a href="https://instagram.com/mohammad_username" target="_blank" title="Instagram">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="https://t.me/mohammad_username" target="_blank" title="Telegram">
+                                    <i class="fab fa-telegram"></i>
+                                </a>
+                                <a href="https://linkedin.com/in/mohammad_username" target="_blank" title="LinkedIn">
+                                    <i class="fab fa-linkedin"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="footer-copy">
+                        © 2025 All rights reserved.
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 
 <RadzenTooltip />
 <RadzenNotification />
-
-@code {
-    public record TopBarArg(string? Address, string Text, EventCallback? ClickEvent = null);
-
-    [Parameter] public IReadOnlyList<TopBarArg> TopBarRoot { get; set; } = Array.Empty<TopBarArg>();
-    [Parameter] public RenderFragment? TopBarContents { get; set; }
-    [Parameter] public RenderFragment? ChildContent { get; set; }
+@if (IsLoading)
+{
+    <Waiting />
 }
 
-
 <style>
-
-    .MainContainer {
-        height: 100%;
+    .site-base-container {
         display: flex;
-        flex-flow: column;
-        gap: 0px;
-        overflow-y: hidden;
-        overflow-x: hidden;
-        border-radius: 15px;
-        padding: 5px;
+        justify-content: center; /* محتوا وسط */
+        align-items: flex-start; /* از بالا شروع شود */
+        width: 100%;
+        min-height: 100vh; /* حداقل ارتفاع صفحه کامل */
+        overflow-y: auto;
+        padding: 0px;
+        box-sizing: border-box;
+        background-color: transparent;
     }
 
-    .list-border {
-        border: hidden !important;
-        /* border-radius: 15px; */
-        /* padding: 5px; */
+    .site-inner-content {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 0px;
     }
 
-    .list-footer {
-        margin-right: 5px;
-        /* border-radius: 15px; */
-        /* padding: 5px; */
+    .site-header {
+        /* استایل دلخواه برای هدر */
     }
 
-    .list-In-border {
-        /* border:hidden!important; */
-        border-radius: 10px;
-        /* padding: 5px; */
+    .site-body {
+        flex-grow: 1;
     }
 
+    .site-footer {
+        flex-grow: 1;
+        border-radius:20px;
+        margin:1rem;
+        /* background: linear-gradient(180deg, #E9F5FF 0%, #FAFAFA 100%); */
+    }
     @@media (max-width: 768px) {
-        .MainContainer {
-            /* border:hidden!important; */
-        }
+        .site-inner-content
+
+    {
+        width: 100%;
     }
+
+    }
+
+    .footer-content {
+        color: white;
+        text-align: center;
+        padding: 60px 20px 30px 20px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .footer-title {
+        font-size: 28px;
+        margin-bottom: 40px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
+    .footer-creators {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 40px;
+        margin-bottom: 40px;
+    }
+
+    .creator-box {
+        min-width: 220px;
+    }
+
+        .creator-box h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+    .social-icons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+    }
+
+        .social-icons a {
+            color: white;
+            font-size: 20px;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+            .social-icons a:hover {
+                transform: scale(1.2);
+                color: #ffd700; /* طلایی ملایم برای افکت hover */
+            }
+
+    .footer-copy {
+        font-size: 14px;
+        opacity: 0.7;
+        margin-top: 20px;
+    }
+
 </style>
+
+@code {
+    [Parameter] public RenderFragment? HeaderContent { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string CssClass { get; set; } = string.Empty;
+    [Parameter] public string Style { get; set; } = string.Empty;
+
+    #region IsLoading
+    [Parameter] public bool IsLoading { get; set; } = false;
+    [Parameter]
+    public EventCallback<bool> IsLoadingChanged { get; set; }
+    private async Task OnIsLoadingChanged(bool IsLoadingTime)
+    {
+        await IsLoadingChanged.InvokeAsync(IsLoadingTime);
+    }
+    #endregion
+}

@@ -273,8 +273,9 @@ code {
 }
 
 .app-header {
-    background-color: #e02180;
+    background: linear-gradient(to right, #008b9d, #6a68e0, #3a0cbe);
 }
+
 
 /* ردیف لوگو */
 .header-top {
@@ -323,4 +324,57 @@ code {
 .rz-header {
     transition: max-height .35s ease, opacity .25s ease;
     overflow: hidden;
+}
+
+
+.glow-container {
+    position: relative;
+    width: 100%;
+    border-radius: 20px;
+    height: 100%;
+    box-shadow: 0 0px 22px rgba(0, 0, 0, 0.16);
+    overflow: hidden;
+    background: radial-gradient( circle, rgb(8, 0, 98), rgb(62, 0, 152, 0.89) );
+}
+
+    .glow-container::before,
+    .glow-container::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 200%;
+        height: 200%;
+        background: conic-gradient( from 0deg, #ff293a, #e93022, #e0772e, #a8eb39, #27a7dc, #6e39dc, #d93226, #d92231 );
+        transform: translate(-50%, -50%);
+        animation: glow-rotate 8s linear infinite;
+        filter: blur(50px);
+        opacity: 0.8;
+    }
+
+    .glow-container::after {
+        width: 180%;
+        height: 180%;
+        animation: glow-rotate-reverse 10s linear infinite;
+        opacity: 0.6;
+    }
+
+@keyframes glow-rotate {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+@keyframes glow-rotate-reverse {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) rotate(-360deg);
+    }
 }

@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
+    <ApplicationIcon>wwwroot\images\DH.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>

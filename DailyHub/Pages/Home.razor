@@ -1,7 +1,54 @@
 ﻿@page "/Home"
 
-<PageTitle>Home</PageTitle>
+<BasePage IsLoading="IsLoading">
+    <HeaderContent>
+        <video autoplay loop muted playsinline
+               style="width: 10%; height: 10%; object-fit: cover; justify-content:end;">
+            <source src="/images/cloudy_Sun.webm" type="video/webm">
+            مرورگر شما از ویدیو پشتیبانی نمی‌کند.
+        </video>
+    </HeaderContent>
+    <ChildContent>
+        <video autoplay loop muted playsinline
+               style="width: 10%; height: 10%; object-fit: cover; justify-content:end;">
+            <source src="/images/cloudy_Sun.webm" type="video/webm">
+            مرورگر شما از ویدیو پشتیبانی نمی‌کند.
+        </video>
+        <RadzenText Text="این صفحه داشبرده" Style="margin:5rem 1rem;" />
+        <RadzenText Text="این صفحه داشبرده" Style="margin:5rem 1rem;" />
+        <RadzenText Text="این صفحه داشبرده" Style="margin:5rem 1rem;" />
+        <RadzenText Text="این صفحه داشبرده" Style="margin:5rem 1rem;" />
+        <RadzenText Text="این صفحه داشبرده" Style="margin:5rem 1rem;" />
+        <RadzenText Text="این صفحه داشبرده" Style="margin:5rem 1rem;" />
+        <RadzenText Text="این صفحه داشبرده" Style="margin:5rem 1rem;" />
+        <RadzenText Text="این صفحه داشبرده" Style="margin:5rem 1rem;" />
+        <RadzenText Text="این صفحه داشبرده" Style="margin:5rem 1rem;" />
+        <RadzenText Text="این صفحه داشبرده" Style="margin:5rem 1rem;" />
+        <video autoplay loop muted playsinline
+               style="width: 10%; height: 10%; object-fit: cover; justify-content:end;">
+            <source src="/images/cloudy_Sun.webm" type="video/webm">
+            مرورگر شما از ویدیو پشتیبانی نمی‌کند.
+        </video>
+    </ChildContent>
+</BasePage>
 
-<h1>Hello, world!</h1>
+@code {
+    public bool IsLoading { get; set; } = true;
 
-Welcome to your new app.
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoading = true;
+
+        IsLoading = false;
+    }
+
+    #region Notifcation
+
+    void ShowNotification(NotificationMessage message)
+    {
+        NotificationService.Notify(message);
+    }
+
+    #endregion
+
+}

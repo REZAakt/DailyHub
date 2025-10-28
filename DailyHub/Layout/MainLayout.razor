@@ -3,57 +3,29 @@
 
 <RadzenLayout Style="background-color: transparent;">
 
-    @if (windowWidth > 768)
-    {
-        <RadzenHeader class="app-header">
-            <!-- ردیف لوگو -->
-            <RadzenRow class="header-top" Style="padding: 0;" JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center">
-                <RadzenColumn Size="12" class="logo-col">
-                    <RadzenImage Path="/images/Logo.svg" class="logo" />
-                </RadzenColumn>
-            </RadzenRow>
+    <RadzenHeader class="app-header" style="@HeaderBackground">
+        <RadzenRow class="header-top" Style="padding: 0; height:100%;" JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center">
+            <RadzenColumn Size="8" Style="width:100%;" class="menu-col">
+                <RadzenMenu Style="background-color:transparent;">
+                    <RadzenMenuItem Text="خانــه" Icon="home" IconColor="#FCFCFC" Path="/Home"
+                                    Style="font-size:16px; color:white !important; margin-right:10px; font-weight:400;" />
+                    <RadzenMenuItem Text="تقویم" Icon="calendar_month" IconColor="#FCFCFC" Path="/Calendar/CalendarMainPage"
+                                    Style="font-size:16px;color:white;margin-right:10px;font-weight:400;" />
+                    <RadzenMenuItem Text="اخبــار" Icon="newsmode" IconColor="#FCFCFC" Path="/News/NewsMainPage"
+                                    Style="font-size:16px;color:white;margin-right:10px;font-weight:400;" />
+                    <RadzenMenuItem Text="آب و هوا" Icon="clear_day" IconColor="#FCFCFC" Path="/Weather/WeatherMainPage"
+                                    Style="font-size:16px;color:white;margin-right:10px;font-weight:400;" />
+                    <RadzenMenuItem Text="چی کار می‌تونم بکنم برات؟" Icon="automation" IconColor="#FCFCFC" Path="/AI/AiMainPage"
+                                    Style="font-size:16px;color:white;margin-right:10px;font-weight:400;" />
+                </RadzenMenu>
+            </RadzenColumn>
 
-            <!-- ردیف منو -->
-            <RadzenRow class="nav-row" JustifyContent="JustifyContent.Center" Style="padding:0px;">
-                <RadzenColumn Size="12" class="menu-col">
-                    <RadzenMenu Style="background-color:transparent;">
-                        <RadzenMenuItem Text="خانــه" Icon="home" IconColor="#FCFCFC" Path="/Home" Style="font-size:16px; color:white !important; margin-right:10px; font-weight:400;" />
-                        <RadzenMenuItem Text="اخبــار" Icon="newsmode" IconColor="#FCFCFC" Path="/News/NewsMainPage" Style=" font-size:16px;color:white;margin-right:10px;font-weight:400;" />
-                        <RadzenMenuItem Text="تقویم" Icon="calendar_month" IconColor="#FCFCFC" Path="/Calendar/CalendarMainPage" Style=" font-size:16px;color:white;margin-right:10px;font-weight:400;" />
-                        <RadzenMenuItem Text="آب و هوا" Icon="clear_day" IconColor="#FCFCFC" Path="/Weather/WeatherMainPage" Style=" font-size:16px;color:white;margin-right:10px;font-weight:400;" />
-                        <RadzenMenuItem Text="چی کار می تونم بکنم برات ؟" Icon="automation" IconColor="#FCFCFC" Path="/AI/AiMainPage" Style=" font-size:16px;color:white;margin-right:10px;font-weight:400;" />
-                    </RadzenMenu>
-                </RadzenColumn>
-            </RadzenRow>
-        </RadzenHeader>
-    }
-    @if (windowWidth <= 768)
-    {
-        <RadzenHeader class="app-header">
-            <!-- ردیف لوگو -->
-            <RadzenRow class="header-top" Style="padding: 0; height:100%;" JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center">
-                <RadzenColumn Size="3" Style="width:100%;" class="menu-col">
-                    <RadzenMenu Style="background-color:transparent;">
-                        <RadzenMenuItem Text="خانــه" Icon="home" IconColor="#FCFCFC" Path="/Home" Style="font-size:16px; color:white !important; margin-right:10px; font-weight:400;" />
-                        <RadzenMenuItem Text="اخبــار" Icon="newsmode" IconColor="#FCFCFC" Path="/News/NewsMainPage" Style=" font-size:16px;color:white;margin-right:10px;font-weight:400;" />
-                        <RadzenMenuItem Text="تقویم" Icon="calendar_month" IconColor="#FCFCFC" Path="/Calendar/CalendarMainPage" Style=" font-size:16px;color:white;margin-right:10px;font-weight:400;" />
-                        <RadzenMenuItem Text="آب و هوا" Icon="clear_day" IconColor="#FCFCFC" Path="/Weather/WeatherMainPage" Style=" font-size:16px;color:white;margin-right:10px;font-weight:400;" />
-                        <RadzenMenuItem Text="چی کار می تونم بکنم برات ؟" Icon="automation" IconColor="#FCFCFC" Path="/AI/AiMainPage" Style=" font-size:16px;color:white;margin-right:10px;font-weight:400;" />
-                    </RadzenMenu>
-                </RadzenColumn>
-
-                <RadzenColumn Size="6"
-                              Style="width:100%;height:100%; display:flex; justify-content:center; align-items:flex-start; margin-top:5px; ">
-                    <RadzenImage Path="/images/Logo.svg"
-                                 Style="display:block; margin:0; padding:0; align-self:flex-start;" />
-                </RadzenColumn>
-
-                <RadzenColumn Size="3" Style="width:100%;" class="logo-col">
-
-                </RadzenColumn>
-            </RadzenRow>
-        </RadzenHeader>
-    }
+            <RadzenColumn Size="4" Style="width:100%;height:100%; display:flex; align-items:flex-start; margin-top:5px;justify-content: end;padding-left: 10px; " class="logo-col">
+                <RadzenImage Path="/images/Logo.svg"
+                             Style="display:block; margin:0; padding:0; align-self:flex-start;" />
+            </RadzenColumn>
+        </RadzenRow>
+    </RadzenHeader>
 
     @*     <RadzenSidebar FullHeight="true" Responsive="false" @bind-Expanded="@sidebarExpanded" style="position: absolute; z-index: 3">
         <RadzenStack AlignItems="AlignItems.End" class="rz-p-2">
@@ -69,8 +41,8 @@
 
     </RadzenSidebar> *@
 
-    <RadzenBody Style=" background-color:transparent;">
-        <div class="rz-p-12" style="height:100%; width:100%; background-color:transparent;">
+    <RadzenBody Style=" background-color:transparent; padding: 0;">
+        <div class="rz-p-12" style="height:100%; width:100%; background-color:transparent;padding: 0 !important;">
             @Body
         </div>
     </RadzenBody>
@@ -82,6 +54,31 @@
 
 @code {
     bool sidebarExpanded = false;
+    private string HeaderBackground = "";
+
+    protected override void OnInitialized()
+    {
+        SetHeaderBackground();
+        Navigation.LocationChanged += (s, e) =>
+        {
+            SetHeaderBackground();
+            StateHasChanged();
+        };
+    }
+    private void SetHeaderBackground()
+    {
+        var path = Navigation.ToBaseRelativePath(Navigation.Uri).ToLower();
+
+        HeaderBackground = path switch
+        {
+            "" or "home" => "background: linear-gradient(to right, #008b9d, #6a68e0, #d82383);",
+            "news/newsmainpage" => "background: linear-gradient(to right, #008b9d, #6a68e0, #940524);", // نارنجی-قرمز
+            "calendar/calendarmainpage" => "background: linear-gradient(to right, #008b9d, #6a68e0, #0da071);", // آبی تیره
+            "weather/weathermainpage" => "background: linear-gradient(to right, #008b9d, #6a68e0, #008cd3);", // آبی آسمانی
+            "ai/aimainpage" => "background: linear-gradient(to right,#008b9d, #6a68e0, #3a0cbe);", // سبز-بنفش
+            _ => "background: linear-gradient(to right, #6a11cb, #2575fc);" // پیش‌فرض
+        };
+    }
 
     #region CurrentWindow
     private int windowWidth;
