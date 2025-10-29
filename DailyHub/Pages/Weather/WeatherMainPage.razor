@@ -1,21 +1,69 @@
-﻿@page "/Weather/WeatherMainPage"
+﻿@inject DailyHub.Client.Services.WeatherRealtimeService Wx
+@page "/Weather/WeatherMainPage"
+@using DailyHub.Shared.Dto.Weather
 
 <BasePage IsLoading="IsLoading">
     <HeaderContent>
 
     </HeaderContent>
     <ChildContent>
+
+
+        <h3>آب‌وهوا (بابل)</h3>
+
+        @if (_data is null)
+        {
+            <p>در حال دریافت...</p>
+        }
+        else
+        {
+            <div class="card">
+                <h4>امروز</h4>
+                <div>دما: @_data.Now.TemperatureC.ToString("0.0") °C</div>
+                <div>کمینه/بیشینه: @_data.Now.TodayMinC.ToString("0.0") / @_data.Now.TodayMaxC.ToString("0.0") °C</div>
+                <div>بارش امروز: @_data.Now.TodayPrecipMm.ToString("0.0") mm</div>
+                <div>کُد وضعیت: @_data.Now.WeatherCode</div>
+            </div>
+
+            <h4 style="margin-top:1rem;">۷ روز آینده</h4>
+            <ul>
+                @foreach (var d in _data.Daily)
+                {
+                    <li>@d.Date: @d.MinC.ToString("0.#") / @d.MaxC.ToString("0.#") °C — بارش: @d.PrecipMm.ToString("0.#") mm</li>
+                }
+            </ul>
+        }
+
+
     </ChildContent>
 </BasePage>
 
 @code {
     public bool IsLoading { get; set; } = true;
+    private WeatherForecastDto? _data;
 
     protected override async Task OnInitializedAsync()
     {
         IsLoading = true;
+        Wx.OnWeatherUpdated += dto =>
+        {
+            _data = dto;
+            InvokeAsync(StateHasChanged);
+        };
 
+        await Wx.StartAsync();
+
+        // هر بار لود صفحه یکبار درخواست:
+        await Wx.SubscribeAsync(36.5513, 52.6793, 7);
         IsLoading = false;
+    }
+
+
+
+    public async ValueTask DisposeAsync()
+    {
+        Wx.OnWeatherUpdated -= dto => { };
+        await Wx.DisposeAsync();
     }
 
     #region Notifcation

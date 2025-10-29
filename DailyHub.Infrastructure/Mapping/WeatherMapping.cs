@@ -8,8 +8,8 @@ namespace DailyHub.Infrastructure.Mapping;
 
 using DailyHub.Shared.Dto.News;
 
-public static class NewsMapping
-{
-    public static IReadOnlyList<NewsItemDto> ToDto(object _)
-        => throw new NotImplementedException();
-}
+//public static class NewsMapping
+//{
+//    public static IReadOnlyList<NewsItemDto> ToDto(object _)
+//        => throw new NotImplementedException();
+//}
