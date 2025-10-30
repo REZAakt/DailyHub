@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace DailyHub.Infrastructure.DI;
 
+using DailyHub.Infrastructure.Caching;
 using DailyHub.Infrastructure.Http;
 using DailyHub.Infrastructure.Providers.Weather;
 using DailyHub.Shared.Abstractions.Weather;
@@ -38,6 +39,7 @@ public static class InfrastructureServiceCollectionExtensions
             return new OpenMeteoProvider(f.CreateClient(HttpClientNames.OpenMeteo));
         });
 
+        services.AddScoped<IWeatherCache, WeatherCache>();
 
         return services;
     }

@@ -11,6 +11,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddOpenApi();
 builder.Services.AddCors(o => o.AddDefaultPolicy(p => p
     .AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
+builder.Services.AddMemoryCache();
 
 builder.Services.AddSignalR(o =>
 {

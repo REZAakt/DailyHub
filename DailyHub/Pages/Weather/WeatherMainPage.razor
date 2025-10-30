@@ -1,78 +1,323 @@
-﻿@inject DailyHub.Client.Services.WeatherRealtimeService Wx
-@page "/Weather/WeatherMainPage"
+﻿@page "/Weather/WeatherMainPage"
 @using DailyHub.Shared.Dto.Weather
+@inject DailyHub.Client.Services.WeatherRealtimeService Wx
+
+<style>
+    .wx-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: clamp(12px, 2vw, 20px); /* فاصله از چهار طرف صفحه */
+        max-width: 1200px;
+        margin: 0 auto; /* محتوا وسط صفحه و محدود */
+    }
+
+    .wx-card, .wx-side {
+        border-radius: 16px;
+        padding: 1rem;
+        box-shadow: 0 0px 15px rgba(0,0,0,.03); /* سایه نرم و یکنواخت */
+        background: #fff;
+    }
+
+    .wx-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: .5rem;
+    }
+
+    .wx-city {
+        font-size: 1.4rem;
+        font-weight: 900;
+    }
+
+    .wx-time {
+        font-size: .9rem;
+        opacity: .7;
+    }
+
+    .wx-loading {
+        padding: .5rem 0;
+    }
+
+    .wx-today {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .wx-today-left {
+        display: flex;
+        flex-direction: column;
+        gap: .35rem;
+        flex: 1;
+    }
+
+    .wx-temp-now {
+        font-size: 2.2rem;
+        font-weight: 900;
+        line-height: 1.2;
+    }
+
+    .wx-temp-range, .wx-precip, .wx-code {
+        font-size: .95rem;
+    }
+
+    .wx-today-right {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
+
+    .wx-video {
+        width: 180px;
+        height: 140px;
+        object-fit: cover;
+        border-radius: 12px;
+    }
+
+    .wx-side-title {
+        font-weight: 800;
+        margin-bottom: .75rem;
+    }
+
+    .wx-side-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: .5rem .75rem;
+        font-size: .95rem;
+    }
+
+    .min-grid .rz-datatable-table {
+        min-width: 640px;
+    }
+
+    /* --- موبایل --- */
+    @@media (max-width: 768px) {
+        .wx-title
+
+    {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: .25rem;
+    }
+
+    /* ردیف بالایی حتماً زیر هم بیاید */
+    .wx-row {
+        flex-direction: column !important;
+    }
+        /* تضمین استک‌شدن ستون‌ها */
+        .wx-row .rz-column {
+            flex: 0 0 100% !important;
+            max-width: 100% !important;
+        }
+
+    .wx-today {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .wx-today-right {
+        justify-content: stretch;
+    }
+
+    .wx-video {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16/9;
+        object-fit: cover;
+        border-radius: 12px;
+    }
+
+    .wx-wrap {
+        padding: 12px;
+    }
+    /* کمی جمع‌وجورتر در موبایل */
+    .wx-card, .wx-side {
+            box-shadow: 0 0px 15px rgba(0,0,0,.03);
+    }
+    /* سایه نرم‌تر */
+    }
+</style>
+
 
 <BasePage IsLoading="IsLoading">
-    <HeaderContent>
+    <HeaderContent></HeaderContent>
 
-    </HeaderContent>
     <ChildContent>
+        <div dir="rtl" class="wx-wrap">
+            <RadzenRow class="wx-row" Style="align-items: stretch; gap: 1rem;">
 
+                <RadzenColumn Size="9" SizeMd="9" SizeSm="12">
+                    <RadzenCard class="wx-card">
+                        <div class="wx-title">
+                            <span class="wx-city">بابل</span>
+                            @if (_data is not null)
+                            {
+                                <span class="wx-time">آخرین بروزرسانی: @_data.Now.AsOfUtc.ToLocalTime()</span>
+                            }
+                        </div>
 
-        <h3>آب‌وهوا (بابل)</h3>
+                        @if (_data is null)
+                        {
+                            <div class="wx-loading">در حال دریافت...</div>
+                        }
+                        else
+                        {
+                            <div class="wx-today">
+                                <div class="wx-today-left">
+                                    <div class="wx-temp-now">@_data.Now.TemperatureC.ToString("0.#") °C</div>
+                                    <div class="wx-temp-range">
+                                        کمینه/بیشینه امروز:
+                                        <b>@_data.Now.TodayMinC.ToString("0.#")</b> /
+                                        <b>@_data.Now.TodayMaxC.ToString("0.#") °C</b>
+                                    </div>
+                                    <div class="wx-precip">بارش امروز: @_data.Now.TodayPrecipMm.ToString("0.#") mm</div>
+                                    <div class="wx-code">کُد وضعیت: @_data.Now.WeatherCode — @GetWeatherLabel(_data.Now.WeatherCode)</div>
+                                </div>
 
-        @if (_data is null)
-        {
-            <p>در حال دریافت...</p>
-        }
-        else
-        {
-            <div class="card">
-                <h4>امروز</h4>
-                <div>دما: @_data.Now.TemperatureC.ToString("0.0") °C</div>
-                <div>کمینه/بیشینه: @_data.Now.TodayMinC.ToString("0.0") / @_data.Now.TodayMaxC.ToString("0.0") °C</div>
-                <div>بارش امروز: @_data.Now.TodayPrecipMm.ToString("0.0") mm</div>
-                <div>کُد وضعیت: @_data.Now.WeatherCode</div>
-            </div>
+                                <div class="wx-today-right">
+                                    <video autoplay loop muted playsinline class="wx-video">
+                                        <source src="@GetWeatherVideo(_data.Now.WeatherCode)" type="video/webm" />
+                                        مرورگر شما از ویدیو پشتیبانی نمی‌کند.
+                                    </video>
+                                    <!--
+                                        راهنمای نگاشت ویدیو (هرکدام را با فایل خودت جایگزین کن):
+                                        - آفتابی (wmo: 0): /videos/clear_sun.webm
+                                        - کمی ابری/ابری سبک (wmo: 1-3, 45): /videos/cloudy_Sun.webm
+                                        - مه (45, 48): /videos/fog.webm
+                                        - باران سبک/متوسط (51-61): /videos/rain_light.webm
+                                        - باران شدید/رگبار (63-67, 80-82): /videos/rain_heavy.webm
+                                        - برف (71-77, 85-86): /videos/snow.webm
+                                        - طوفان/رعدوبرق (95-99): /videos/thunder.webm
+                                    -->
+                                </div>
+                            </div>
+                        }
+                    </RadzenCard>
+                </RadzenColumn>
 
-            <h4 style="margin-top:1rem;">۷ روز آینده</h4>
-            <ul>
-                @foreach (var d in _data.Daily)
-                {
-                    <li>@d.Date: @d.MinC.ToString("0.#") / @d.MaxC.ToString("0.#") °C — بارش: @d.PrecipMm.ToString("0.#") mm</li>
-                }
-            </ul>
-        }
+                <RadzenColumn Size="3" SizeMd="3" SizeSm="12">
+                    <RadzenCard class="wx-side">
+                        <div class="wx-side-title">خلاصه امروز</div>
+                        @if (_data is null)
+                        {
+                            <div class="wx-skel"></div>
+                        }
+                        else
+                        {
+                            <div class="wx-side-grid">
+                                <div>دما اکنون</div>     <div>@_data.Now.TemperatureC.ToString("0.#") °C</div>
+                                <div>کمینه/بیشینه</div> <div>@_data.Now.TodayMinC.ToString("0.#") / @_data.Now.TodayMaxC.ToString("0.#") °C</div>
+                                <div>بارش</div>          <div>@_data.Now.TodayPrecipMm.ToString("0.#") mm</div>
+                                <div>وضعیت</div>         <div>@GetWeatherLabel(_data.Now.WeatherCode)</div>
+                            </div>
+                        }
+                    </RadzenCard>
+                </RadzenColumn>
+            </RadzenRow>
 
+            <!-- جدول ۷ روز آینده -->
+            <RadzenCard class="wx-card" Style="margin-top:1rem;">
+                <div class="wx-section-title">پیش‌بینی ۷ روز آینده</div>
+                <RadzenDataGrid TItem="WeatherDayDto"
+                                Data="@(_data?.Daily ?? Array.Empty<WeatherDayDto>())"
+                                class="min-grid"
+                                AllowPaging="true" PageSize="7"
+                                AllowSorting="true"
+                                FilterMode="FilterMode.Simple"
+                                RowRender="@(args => { if (args.Index % 2 == 1) args.Attributes["style"]="background: var(--rz-base-200);"; })">
+                    <Columns>
+                        <RadzenDataGridColumn TItem="WeatherDayDto" Property="Date" Title="تاریخ" Width="140px" />
+                        <RadzenDataGridColumn TItem="WeatherDayDto" Title="کمینه (°C)" TextAlign="TextAlign.Center" Width="120px">
+                            <Template Context="d">@d.MinC.ToString("0.#")</Template>
+                        </RadzenDataGridColumn>
+                        <RadzenDataGridColumn TItem="WeatherDayDto" Title="بیشینه (°C)" TextAlign="TextAlign.Center" Width="120px">
+                            <Template Context="d">@d.MaxC.ToString("0.#")</Template>
+                        </RadzenDataGridColumn>
+                        <RadzenDataGridColumn TItem="WeatherDayDto" Title="بارش (mm)" TextAlign="TextAlign.Center" Width="120px">
+                            <Template Context="d">@d.PrecipMm.ToString("0.#")</Template>
+                        </RadzenDataGridColumn>
+                        <RadzenDataGridColumn TItem="WeatherDayDto" Title="وضعیت" Width="180px">
+                            <Template Context="d">@GetWeatherLabel(d.WeatherCode)</Template>
+                        </RadzenDataGridColumn>
+                    </Columns>
+                </RadzenDataGrid>
+            </RadzenCard>
 
+            <!-- چارت Min / Max -->
+            <RadzenCard class="wx-card" Style="margin-top:1rem;">
+                <div class="wx-section-title">نمودار کمینه/بیشینه دما (۷ روز)</div>
+                <RadzenChart Style="height: 340px;">
+                    <RadzenLineSeries TItem="WeatherDayDto"
+                                      Data="@(_data?.Daily ?? Array.Empty<WeatherDayDto>())"
+                                      CategoryProperty="Date"
+                                      ValueProperty="MinC"
+                                      Title="کمینه" />
+                    <RadzenLineSeries TItem="WeatherDayDto"
+                                      Data="@(_data?.Daily ?? Array.Empty<WeatherDayDto>())"
+                                      CategoryProperty="Date"
+                                      ValueProperty="MaxC"
+                                      Title="بیشینه" />
+                    <RadzenCategoryAxis Padding="10" />
+                    <RadzenValueAxis />
+                    <RadzenLegend Position="LegendPosition.Bottom" />
+                </RadzenChart>
+            </RadzenCard>
+        </div>
     </ChildContent>
 </BasePage>
 
 @code {
     public bool IsLoading { get; set; } = true;
     private WeatherForecastDto? _data;
+    private Action<WeatherForecastDto>? _handler;
 
     protected override async Task OnInitializedAsync()
     {
-        IsLoading = true;
-        Wx.OnWeatherUpdated += dto =>
+        _handler = dto =>
         {
             _data = dto;
+            IsLoading = false;
             InvokeAsync(StateHasChanged);
         };
+        Wx.OnWeatherUpdated += _handler;
 
         await Wx.StartAsync();
-
-        // هر بار لود صفحه یکبار درخواست:
-        await Wx.SubscribeAsync(36.5513, 52.6793, 7);
-        IsLoading = false;
+        await Wx.SubscribeAsync(36.5513, 52.6793, 7); // بابل
     }
-
-
 
     public async ValueTask DisposeAsync()
     {
-        Wx.OnWeatherUpdated -= dto => { };
+        if (_handler is not null) Wx.OnWeatherUpdated -= _handler;
         await Wx.DisposeAsync();
     }
 
-    #region Notifcation
-
-    void ShowNotification(NotificationMessage message)
+    // نگاشت ساده‌ی کد WMO به برچسب فارسی
+    private static string GetWeatherLabel(int code) => code switch
     {
-        NotificationService.Notify(message);
-    }
+        0 => "صاف/آفتابی",
+        1 or 2 or 3 => "کمی تا نیمه‌ابری",
+        45 or 48 => "مه/مه‌کدر",
+        51 or 53 or 55 or 56 or 57 => "باران ریز",
+        61 or 63 or 65 or 66 or 67 => "باران",
+        71 or 73 or 75 or 77 => "برف",
+        80 or 81 or 82 => "رگبار باران",
+        85 or 86 => "رگبار برف",
+        95 or 96 or 99 => "رعدوبرق",
+        _ => "نامشخص"
+    };
 
-    #endregion
-
+    // آدرس ویدیوی متناظر با کُد هوا
+    private static string GetWeatherVideo(int code) => code switch
+    {
+        0 => "/images/sunny.webm",
+        1 or 2 or 3 or 45 => "/images/cloudy_Sun.webm",
+        48 => "/images/Fog.webm",
+        63 or 65 or 66 or 67 or 80 or 81 or 82 or 51 or 53 or 55 or 56 or 57 or 61 => "/images/rain_heavy.webm",
+        71 or 73 or 75 or 77 or 85 or 86 => "/images/snow.webm",
+        95 or 96 or 99 => "/images/thunder.webm",
+        _ => "/images/cloudy_Sun.webm"
+    };
 }
+
