@@ -13,9 +13,15 @@
         margin: 0 auto; /* محتوا وسط صفحه و محدود */
     }
 
+    .wx-section-title {
+        margin: 5px;
+        font-weight: 700;
+        font-size: 16px;
+    }
+
     .wx-card, .wx-side {
         border-radius: 16px;
-        height:100%;
+        height: 100%;
         min-width: 100%;
         padding: 1rem;
         box-shadow: 0 0px 15px rgba(0,0,0,.03); /* سایه نرم و یکنواخت */
@@ -70,8 +76,8 @@
         display: flex;
         justify-content: flex-end;
         align-items: center;
-        max-width:150px;
-        max-height:150px;
+        max-width: 150px;
+        max-height: 150px;
     }
 
     .wx-video {
@@ -95,6 +101,11 @@
 
     .min-grid .rz-datatable-table {
         min-width: 640px;
+    }
+
+    .ChartClass {
+        height: 340px;
+        margin: 0px 1rem;
     }
 
     /* --- موبایل --- */
@@ -121,8 +132,8 @@
 
         .wx-today-right {
             justify-content: stretch;
-            width:155px;
-            height:155px;
+            width: 155px;
+            height: 155px;
         }
 
         .wx-video {
@@ -142,12 +153,21 @@
             box-shadow: 0 0px 15px rgba(0,0,0,.03);
         }
         /* سایه نرم‌تر */
+        .ChartClass {
+            height: 340px;
+            margin: 0px 1px;
+        }
     }
 </style>
 
 
 <BasePage IsLoading="IsLoading">
-    <HeaderContent></HeaderContent>
+    <HeaderContent>
+        <RadzenAlert AlertStyle="AlertStyle.Danger" @bind-Visible="_offline" ShowIcon="false" Variant="Variant.Flat" Shade="Shade.Lighter"
+                     style="margin:1rem 1rem; border-radius:18px;width:98%; box-shadow: 0 0px 30px rgba(0, 0, 0, 0.1) !important;">
+            <RadzenText style="color:red; font-weight:800; font-size:16px;" Text="  اتصال شما برقرار نشد. ابتدا از اتصال به اینترنت اطمینان حاصل کنید و صفحه را  (Refresh)  کنید ." />
+        </RadzenAlert>
+    </HeaderContent>
 
     <ChildContent>
         <div dir="rtl" class="wx-wrap">
@@ -202,8 +222,8 @@
                     </RadzenCard>
                 </RadzenColumn>
 
-                <RadzenColumn Size="12" SizeMd="3"  SizeSm="12">
-                    <RadzenCard class="wx-side" >
+                <RadzenColumn Size="12" SizeMd="3" SizeSm="12">
+                    <RadzenCard class="wx-side">
                         <div class="wx-side-title">خلاصه امروز</div>
                         @if (_data is null)
                         {
@@ -252,44 +272,75 @@
 
             <!-- چارت Min / Max -->
             <RadzenCard class="wx-card" Style="margin-top:1rem;">
-                <div class="wx-section-title">نمودار کمینه/بیشینه دما (۷ روز)</div>
-                <RadzenChart Style="height: 340px;">
-                    <RadzenLineSeries TItem="WeatherDayDto"
+                <div class="wx-section-title"> نمودار کمینه / بیشینه دما       ( ۷ روز )  </div>
+                <RadzenChart class="ChartClass">
+                    <RadzenLineSeries TItem="WeatherDayDto" LineType="LineType.Solid" Interpolation="Interpolation.Spline" Smooth="true"
                                       Data="@(_data?.Daily ?? Array.Empty<WeatherDayDto>())"
-                                      CategoryProperty="Date"
+                                      CategoryProperty="Date" Stroke="#01D6DD"
                                       ValueProperty="MinC"
-                                      Title="کمینه" />
-                    <RadzenLineSeries TItem="WeatherDayDto"
+                                      Title="کمینه">
+
+                        <RadzenMarkers Visible="true" MarkerType="MarkerType.Square" />
+                        <RadzenSeriesDataLabels Visible="true">
+                        </RadzenSeriesDataLabels>
+                    </RadzenLineSeries>
+
+                    <RadzenLineSeries TItem="WeatherDayDto" LineType="LineType.Solid" Interpolation="Interpolation.Spline" Smooth="true"
                                       Data="@(_data?.Daily ?? Array.Empty<WeatherDayDto>())"
                                       CategoryProperty="Date"
-                                      ValueProperty="MaxC"
-                                      Title="بیشینه" />
-                    <RadzenCategoryAxis Padding="10" />
-                    <RadzenValueAxis />
-                    <RadzenLegend Position="LegendPosition.Bottom" />
+                                      ValueProperty="MaxC" Stroke="#D20103"
+                                      Title="بیشینه">
+                        <RadzenMarkers Visible="true" MarkerType="MarkerType.Square" />
+                        <RadzenSeriesDataLabels Visible="true">
+                        </RadzenSeriesDataLabels>
+                    </RadzenLineSeries>
+
+                    <RadzenCategoryAxis  LabelAutoRotation="15" Stroke="#060270" StrokeWidth="2" TickDistance="50"/>
+                    <RadzenValueAxis Stroke="#060270" StrokeWidth="2"/>
+                    <RadzenLegend Position="LegendPosition.Right" />
                 </RadzenChart>
             </RadzenCard>
         </div>
     </ChildContent>
 </BasePage>
 
+@if (_offline)
+{
+    <RadzenAlert Severity="AlertSeverity.Warning">اتصال برقرار نیست — بعداً دوباره تلاش کنید.</RadzenAlert>
+}
+
+
 @code {
     public bool IsLoading { get; set; } = true;
     private WeatherForecastDto? _data;
     private Action<WeatherForecastDto>? _handler;
+    private bool _offline = false;
 
     protected override async Task OnInitializedAsync()
     {
+        IsLoading = true;
+
         _handler = dto =>
         {
             _data = dto;
+            _offline = false;          // به محض دریافت داده یعنی اتصال اوکی
             IsLoading = false;
             InvokeAsync(StateHasChanged);
         };
         Wx.OnWeatherUpdated += _handler;
 
-        await Wx.StartAsync();
-        await Wx.SubscribeAsync(36.5513, 52.6793, 7); // بابل
+        try
+        {
+            await Wx.StartAsync();
+            await Wx.SubscribeAsync(36.5513, 52.6793, 7); // بابل
+        }
+        catch (Exception ex)
+        {
+            _offline = true;           // هر خطایی در اتصال/استریم
+            IsLoading = false;
+            Console.Error.WriteLine($"Subscribe failed: {ex.Message}");
+            StateHasChanged();
+        }
     }
 
     public async ValueTask DisposeAsync()
