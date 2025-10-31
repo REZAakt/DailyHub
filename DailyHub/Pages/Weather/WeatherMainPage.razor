@@ -7,13 +7,16 @@
         display: flex;
         flex-direction: column;
         gap: 1rem;
+        min-width: 100%;
         padding: clamp(12px, 2vw, 20px); /* فاصله از چهار طرف صفحه */
-        max-width: 1200px;
+        max-width: 1500px;
         margin: 0 auto; /* محتوا وسط صفحه و محدود */
     }
 
     .wx-card, .wx-side {
         border-radius: 16px;
+        height:100%;
+        min-width: 100%;
         padding: 1rem;
         box-shadow: 0 0px 15px rgba(0,0,0,.03); /* سایه نرم و یکنواخت */
         background: #fff;
@@ -23,7 +26,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: .5rem;
+        margin-bottom: 1rem;
     }
 
     .wx-city {
@@ -67,6 +70,8 @@
         display: flex;
         justify-content: flex-end;
         align-items: center;
+        max-width:150px;
+        max-height:150px;
     }
 
     .wx-video {
@@ -94,49 +99,49 @@
 
     /* --- موبایل --- */
     @@media (max-width: 768px) {
-        .wx-title
+        .wx-title {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: .25rem;
+        }
+        /* ردیف بالایی حتماً زیر هم بیاید */
+        .wx-row {
+            flex-direction: column !important;
+        }
+            /* تضمین استک‌شدن ستون‌ها */
+            .wx-row .rz-column {
+                flex: 0 0 100% !important;
+                max-width: 100% !important;
+            }
 
-    {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: .25rem;
-    }
-
-    /* ردیف بالایی حتماً زیر هم بیاید */
-    .wx-row {
-        flex-direction: column !important;
-    }
-        /* تضمین استک‌شدن ستون‌ها */
-        .wx-row .rz-column {
-            flex: 0 0 100% !important;
-            max-width: 100% !important;
+        .wx-today {
+            flex-direction: column;
+            align-items: stretch;
         }
 
-    .wx-today {
-        flex-direction: column;
-        align-items: stretch;
-    }
+        .wx-today-right {
+            justify-content: stretch;
+            width:155px;
+            height:155px;
+        }
 
-    .wx-today-right {
-        justify-content: stretch;
-    }
+        .wx-video {
+            width: 100%;
+            height: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            border-radius: 12px;
+        }
 
-    .wx-video {
-        width: 100%;
-        height: auto;
-        aspect-ratio: 16/9;
-        object-fit: cover;
-        border-radius: 12px;
-    }
-
-    .wx-wrap {
-        padding: 12px;
-    }
-    /* کمی جمع‌وجورتر در موبایل */
-    .wx-card, .wx-side {
+        .wx-wrap {
+            padding: 12px;
+        }
+        /* کمی جمع‌وجورتر در موبایل */
+        .wx-card, .wx-side {
+            min-width: 100%;
             box-shadow: 0 0px 15px rgba(0,0,0,.03);
-    }
-    /* سایه نرم‌تر */
+        }
+        /* سایه نرم‌تر */
     }
 </style>
 
@@ -148,7 +153,7 @@
         <div dir="rtl" class="wx-wrap">
             <RadzenRow class="wx-row" Style="align-items: stretch; gap: 1rem;">
 
-                <RadzenColumn Size="9" SizeMd="9" SizeSm="12">
+                <RadzenColumn Size="12" SizeMd="9" SizeSm="12">
                     <RadzenCard class="wx-card">
                         <div class="wx-title">
                             <span class="wx-city">بابل</span>
@@ -197,8 +202,8 @@
                     </RadzenCard>
                 </RadzenColumn>
 
-                <RadzenColumn Size="3" SizeMd="3" SizeSm="12">
-                    <RadzenCard class="wx-side">
+                <RadzenColumn Size="12" SizeMd="3"  SizeSm="12">
+                    <RadzenCard class="wx-side" >
                         <div class="wx-side-title">خلاصه امروز</div>
                         @if (_data is null)
                         {
