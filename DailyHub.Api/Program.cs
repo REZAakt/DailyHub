@@ -1,6 +1,8 @@
 ﻿using DailyHub.Api.Endpoints;
 using DailyHub.Api.Hubs;
+using DailyHub.Infrastructure.Caching;
 using DailyHub.Infrastructure.DI;
+using DailyHub.Shared.Abstractions.News;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,8 +11,21 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddOpenApi();
-builder.Services.AddCors(o => o.AddDefaultPolicy(p => p
-    .AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
+//builder.Services.AddCors(o => o.AddDefaultPolicy(p => p
+//    .AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials()
+            .SetIsOriginAllowed(_ => true);
+    });
+});
+
 builder.Services.AddMemoryCache();
 
 builder.Services.AddSignalR(o =>
@@ -26,6 +41,10 @@ builder.Services.AddSignalR(o =>
     // o.PayloadSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
     // o.PayloadSerializerOptions.Converters.Add(new TimeOnlyJsonConverter());
 });
+
+builder.Services.AddHttpClient("rss");
+builder.Services.AddScoped<INewsProvider, RssNewsProvider>();
+builder.Services.AddScoped<INewsCache, NewsCache>();
 
 builder.Services.AddDailyHubInfrastructure();
 
@@ -49,5 +68,5 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapWeatherEndpoints();
 app.MapHub<WeatherHub>("/hubs/weather");  // باید بعد از UseCors و قبل از Run بیاد
-
+app.MapHub<NewsHub>("/hubs/news");
 app.Run();

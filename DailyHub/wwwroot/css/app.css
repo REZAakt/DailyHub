@@ -383,3 +383,8 @@ code {
 .rz-card {
     box-shadow: 0 0px 30px rgba(0, 0, 0, 0.1) !important;
 }
+
+.rz-tabs .rz-tabs-panels {
+    overflow: auto;
+    max-height: calc(100vh - 220px);
+}

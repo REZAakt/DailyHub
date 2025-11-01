@@ -206,16 +206,6 @@
                                         <source src="@GetWeatherVideo(_data.Now.WeatherCode)" type="video/webm" />
                                         مرورگر شما از ویدیو پشتیبانی نمی‌کند.
                                     </video>
-                                    <!--
-                                        راهنمای نگاشت ویدیو (هرکدام را با فایل خودت جایگزین کن):
-                                        - آفتابی (wmo: 0): /videos/clear_sun.webm
-                                        - کمی ابری/ابری سبک (wmo: 1-3, 45): /videos/cloudy_Sun.webm
-                                        - مه (45, 48): /videos/fog.webm
-                                        - باران سبک/متوسط (51-61): /videos/rain_light.webm
-                                        - باران شدید/رگبار (63-67, 80-82): /videos/rain_heavy.webm
-                                        - برف (71-77, 85-86): /videos/snow.webm
-                                        - طوفان/رعدوبرق (95-99): /videos/thunder.webm
-                                    -->
                                 </div>
                             </div>
                         }
@@ -274,24 +264,25 @@
             <RadzenCard class="wx-card" Style="margin-top:1rem;">
                 <div class="wx-section-title"> نمودار کمینه / بیشینه دما       ( ۷ روز )  </div>
                 <RadzenChart class="ChartClass">
+                    <RadzenChartTooltipOptions Shared="true" />
                     <RadzenLineSeries TItem="WeatherDayDto" LineType="LineType.Solid" Interpolation="Interpolation.Spline" Smooth="true"
                                       Data="@(_data?.Daily ?? Array.Empty<WeatherDayDto>())"
                                       CategoryProperty="Date" Stroke="#01D6DD"
                                       ValueProperty="MinC"
                                       Title="کمینه">
 
-                        <RadzenMarkers Visible="true" MarkerType="MarkerType.Square" />
+                        <RadzenMarkers Visible="true" MarkerType="MarkerType.Circle" />
                         <RadzenSeriesDataLabels Visible="true">
                         </RadzenSeriesDataLabels>
                     </RadzenLineSeries>
 
                     <RadzenLineSeries TItem="WeatherDayDto" LineType="LineType.Solid" Interpolation="Interpolation.Spline" Smooth="true"
                                       Data="@(_data?.Daily ?? Array.Empty<WeatherDayDto>())"
-                                      CategoryProperty="Date"
+                                      CategoryProperty="Date" 
                                       ValueProperty="MaxC" Stroke="#D20103"
                                       Title="بیشینه">
-                        <RadzenMarkers Visible="true" MarkerType="MarkerType.Square" />
-                        <RadzenSeriesDataLabels Visible="true">
+                        <RadzenMarkers Visible="true" MarkerType="MarkerType.Circle" />
+                        <RadzenSeriesDataLabels Visible="true" >
                         </RadzenSeriesDataLabels>
                     </RadzenLineSeries>
 

@@ -1,30 +1,119 @@
 ﻿@page "/News/NewsMainPage"
+@using DailyHub.Shared.Dto.News
+@inject NewsRealtimeService News
+
 
 <BasePage IsLoading="IsLoading">
     <HeaderContent>
+        <RadzenAlert AlertStyle="AlertStyle.Danger" @bind-Visible="_offline" ShowIcon="false" Variant="Variant.Flat" Shade="Shade.Lighter"
+                     style="margin:1rem 1rem; border-radius:18px;width:98%;">
+            <RadzenText style="color:red; font-weight:800; font-size:16px;"
+                        Text="اتصال برقرار نشد. اینترنت را چک کنید و دوباره تلاش کنید." />
+        </RadzenAlert>
 
+        <div class="mb-2" style="opacity:.7; margin-inline:1rem;">
+            @(Items is null ? "دریافت خبر..." : $"تعداد خبر: {Items.Count}")
+        </div>
     </HeaderContent>
+
     <ChildContent>
+        <div dir="rtl" style="padding: 12px; max-width: 1100px; margin: 0 auto;">
+            <RadzenCard style="padding: .75rem 1rem; border-radius: 14px;">
+                <div style="display:flex; align-items:center; justify-content:space-between; gap:.5rem; margin-bottom:.75rem;">
+                    <div style="font-weight:900;">آخرین اخبار (دسته: همه)</div>
+                    <RadzenButton Icon="refresh" Text="بروزرسانی" Click="Refresh" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" />
+                </div>
+
+                @if (Items is null)
+                {
+                    <div style="opacity:.6; padding:.5rem;">در حال دریافت...</div>
+                }
+                else if (Items.Count == 0)
+                {
+                    <div style="opacity:.6; padding:.5rem;">خبری برای نمایش نیست.</div>
+                }
+                else
+                {
+                    <RadzenDataList TItem="NewsItemDto"
+                                    Data="@Items"
+                                    AllowPaging="true"
+                                    PageSize="10"
+                                    Style="max-height: calc(100vh - 320px); overflow:auto; padding-inline:2px;">
+                        <Template Context="n">
+                            <RadzenCard class="news-card" style="margin-bottom:.75rem;padding:1rem;border-radius:12px;border:1px solid var(--rz-base-300);">
+                                <div style="font-weight:800;margin-bottom:.25rem">@n.Title</div>
+
+                                <div style="opacity:.85;margin-bottom:.5rem">
+                                    @Truncate(StripHtml(n.Summary), 220)
+                                </div>
+
+                                @if (!string.IsNullOrWhiteSpace(n.Link))
+                                {
+                                    <a href="@n.Link" target="_blank">ادامه خبر</a>
+                                }
+                            </RadzenCard>
+                        </Template>
+                    </RadzenDataList>
+                }
+            </RadzenCard>
+        </div>
     </ChildContent>
 </BasePage>
 
 @code {
     public bool IsLoading { get; set; } = true;
+    private bool _offline;
+    private List<NewsItemDto>? Items;
+    private const string Category = "all";
 
     protected override async Task OnInitializedAsync()
     {
-        IsLoading = true;
+        try
+        {
+            News.OnNewsUpdated += (cat, list) =>
+            {
+                if (!string.Equals(cat, Category, StringComparison.OrdinalIgnoreCase))
+                    return;
 
-        IsLoading = false;
+                Items = list ?? new();
+                _offline = false;
+                IsLoading = false;
+                InvokeAsync(StateHasChanged);
+            };
+
+            await News.StartAsync();
+            await News.SubscribeAsync(Category);     // فقط دسته‌ی "همه"
+        }
+        catch
+        {
+            _offline = true;
+            IsLoading = false;
+        }
     }
 
-    #region Notifcation
-
-    void ShowNotification(NotificationMessage message)
+    private async Task Refresh()
     {
-        NotificationService.Notify(message);
+        try
+        {
+            await News.SubscribeAsync(Category, force: true);
+            _offline = false;
+        }
+        catch
+        {
+            _offline = true;
+        }
     }
 
-    #endregion
-
+    // کمکی‌ها برای نمایش خلاصه تمیز
+    private static string StripHtml(string? html)
+    {
+        if (string.IsNullOrEmpty(html)) return "";
+        // حذف تگ‌های ساده‌ی HTML
+        return System.Text.RegularExpressions.Regex.Replace(html, "<.*?>", string.Empty);
+    }
+    private static string Truncate(string? s, int max)
+    {
+        if (string.IsNullOrEmpty(s) || s.Length <= max) return s ?? "";
+        return s.Substring(0, max) + "…";
+    }
 }
