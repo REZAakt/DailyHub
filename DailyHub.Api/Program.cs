@@ -50,12 +50,17 @@ builder.Services.AddDailyHubInfrastructure();
 
 var app = builder.Build();
 
+app.MapGet("/", () => "Hello World!");
 // --- Middleware ---
 app.UseHttpsRedirection();
 app.UseCors();
+//app.UseCors("AllowAll");
 
 app.UseSwagger();
 app.UseSwaggerUI();
+
+
+
 
 // --- Dev only ---
 if (app.Environment.IsDevelopment())

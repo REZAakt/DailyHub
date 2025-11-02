@@ -6,14 +6,12 @@
 <BasePage IsLoading="IsLoading">
     <HeaderContent>
         <RadzenAlert AlertStyle="AlertStyle.Danger" @bind-Visible="_offline" ShowIcon="false" Variant="Variant.Flat" Shade="Shade.Lighter"
-                     style="margin:1rem 1rem; border-radius:18px;width:98%;">
-            <RadzenText style="color:red; font-weight:800; font-size:16px;"
-                        Text="اتصال برقرار نشد. اینترنت را چک کنید و دوباره تلاش کنید." />
+                     style="margin:1rem 1rem; border-radius:18px;width:98%; box-shadow: 0 0px 30px rgba(0, 0, 0, 0.1) !important;">
+            <RadzenText style="color:red; font-weight:800; font-size:16px;" Text="  اتصال شما برقرار نشد. ابتدا از اتصال به اینترنت اطمینان حاصل کنید و صفحه را  (Refresh)  کنید ." />
         </RadzenAlert>
-
-        <div class="mb-2" style="opacity:.7; margin-inline:1rem;">
+   @*      <div class="mb-2" style="opacity:.7; margin-inline:1rem;">
             @(Items is null ? "دریافت خبر..." : $"تعداد خبر: {Items.Count}")
-        </div>
+        </div> *@
     </HeaderContent>
 
     <ChildContent>
