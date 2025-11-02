@@ -1,30 +1,320 @@
 ﻿@page "/Crypto/CryptoMainPage"
+@using DailyHub.Shared.Dto.Crypto
+
+@inject CryptoRealtimeService Crypto
 
 <BasePage IsLoading="IsLoading">
     <HeaderContent>
-
+        <RadzenAlert AlertStyle="AlertStyle.Danger" @bind-Visible="_offline" ShowIcon="false" Variant="Variant.Flat" Shade="Shade.Lighter"
+                     style="margin:1rem 1rem; border-radius:18px;width:98%; box-shadow: 0 0px 30px rgba(0, 0, 0, 0.1) !important;">
+            <RadzenText style="color:red; font-weight:800; font-size:16px;" Text="  اتصال شما برقرار نشد. ابتدا از اتصال به اینترنت اطمینان حاصل کنید و صفحه را  (Refresh)  کنید ." />
+        </RadzenAlert>
     </HeaderContent>
+
     <ChildContent>
+        <RadzenStack Orientation="Orientation.Vertical" Gap="1rem" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center" Style="width:100%; height:100%;" Wrap="FlexWrap.Wrap">
+
+            <RadzenCard Style="padding:1rem; max-width:1600px; margin:0 auto;border-radius:20px; width:97%;">
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:1rem; margin:0.2rem 0.5rem 0.8rem 0.5rem;">
+                    <div style="font-weight:900; font-size:18px;">قیمت رمزارزها</div>
+                    <RadzenButton Icon="refresh" Text="بروزرسانی" Click="Refresh" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" />
+                </div>
+                @if (Items is null)
+                {
+                    <div>در حال دریافت…</div>
+                }
+                else if (Items.Count == 0)
+                {
+                    <div>داده‌ای برای نمایش نیست.</div>
+                }
+                else
+                {
+                    @if (windowWidth > 800)
+                    {
+                        <RadzenDataGrid TItem="CryptoItemDto" Data="@Items" AllowPaging="true" PageSize="10" Responsive="false">
+                            <Columns>
+                                <RadzenDataGridColumn TItem="CryptoItemDto" Title="#" Width="40px">
+                                    <Template Context="c">@Items.IndexOf(c) + 1</Template>
+                                </RadzenDataGridColumn>
+
+                                <RadzenDataGridColumn TItem="CryptoItemDto" Title="نام" Width="220px">
+                                    <Template Context="c">
+                                        <div style="display:flex; align-items:center; gap:.5rem;">
+                                            <img src="@c.Image" style="width:28px;height:28px;border-radius:50%;" />
+                                            <div>
+                                                <div style="font-weight:800">@c.Name (@c.Symbol.ToUpper())</div>
+                                                <div style="font-size:12px; opacity:.7;">@c.LastUpdated:g</div>
+                                            </div>
+                                        </div>
+                                    </Template>
+                                </RadzenDataGridColumn>
+
+                                <RadzenDataGridColumn TItem="CryptoItemDto" Title="قیمت (USD)" Width="130px">
+                                    <Template Context="c">@c.CurrentPrice.ToString("N2")</Template>
+                                </RadzenDataGridColumn>
+
+                                <RadzenDataGridColumn TItem="CryptoItemDto" Title="۷ روز " Width="100px">
+                                    <Template Context="c">
+                                        @{
+                                            var v = c.PriceChangePct7d;
+                                        }
+                                        @if (v is null)
+                                        {
+                                            <span>—</span>
+                                        }
+                                        else
+                                        {
+                                            <span style="font-weight:700;color:@(v >= 0 ? "green" : "red")">@v.Value.ToString("0.##")%</span>
+                                        }
+                                    </Template>
+                                </RadzenDataGridColumn>
+
+                                <RadzenDataGridColumn TItem="CryptoItemDto" Title="۳۰ روز " Width="100px">
+                                    <Template Context="c">
+                                        @{
+                                            var v = c.PriceChangePct30d;
+                                        }
+                                        @if (v is null)
+                                        {
+                                            <span>—</span>
+                                        }
+                                        else
+                                        {
+                                            <span style="font-weight:700;color:@(v >= 0 ? "green" : "red")">@v.Value.ToString("0.##")%</span>
+                                        }
+                                    </Template>
+                                </RadzenDataGridColumn>
+
+                                <RadzenDataGridColumn TItem="CryptoItemDto" Title="۲۰۰ روز " Width="110px">
+                                    <Template Context="c">
+                                        @{
+                                            var v = c.PriceChangePct200d;
+                                        }
+                                        @if (v is null)
+                                        {
+                                            <span>—</span>
+                                        }
+                                        else
+                                        {
+                                            <span style="font-weight:700;color:@(v >= 0 ? "green" : "red")">@v.Value.ToString("0.##")%</span>
+                                        }
+                                    </Template>
+                                </RadzenDataGridColumn>
+
+                                <RadzenDataGridColumn TItem="CryptoItemDto" Title="حجم ۲۴ساعت" Width="140px">
+                                    <Template Context="c">@c.TotalVolume.ToString("N0")</Template>
+                                </RadzenDataGridColumn>
+                            </Columns>
+                        </RadzenDataGrid>
+                    }
+                    @if (windowWidth < 800)
+                    {
+                        <RadzenDataList TItem="CryptoItemDto" Data="@Items" AllowPaging="true" PageSize="10"
+                                        Style="width:100%;"
+                                        Class="crypto-list">
+
+                            <Template Context="c">
+                                <div class="crypto-card">
+                                    <div class="crypto-header">
+                                        <img src="@c.Image" alt="@c.Name" class="crypto-img" />
+                                        <div class="crypto-name">
+                                            <div class="name">@c.Name (@c.Symbol.ToUpper())</div>
+                                            <div class="time">@c.LastUpdated:g</div>
+                                        </div>
+                                        <div class="index">#@(@Items.IndexOf(c) + 1)</div>
+                                    </div>
+
+                                    <div class="crypto-body">
+                                        <div><b>قیمت:</b> @c.CurrentPrice.ToString("N2") <span class="usd">USD</span></div>
+                                        <div>
+                                            <b>۷ روز:</b> <span style="color:@(c.PriceChangePct7d >= 0 ? "green" : "red")">
+                                                @(c.PriceChangePct7d?.ToString("0.##") ?? "—")%
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <b>۳۰ روز:</b> <span style="color:@(c.PriceChangePct30d >= 0 ? "green" : "red")">
+                                                @(c.PriceChangePct30d?.ToString("0.##") ?? "—")%
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <b>۲۰۰ روز:</b> <span style="color:@(c.PriceChangePct200d >= 0 ? "green" : "red")">
+                                                @(c.PriceChangePct200d?.ToString("0.##") ?? "—")%
+                                            </span>
+                                        </div>
+                                        <div><b>حجم ۲۴س:</b> @c.TotalVolume.ToString("N0")</div>
+                                    </div>
+                                </div>
+                            </Template>
+
+                        </RadzenDataList>
+                    }
+                }
+            </RadzenCard>
+
+            @* 1) قیمت (USD) همه کوین‌ها *@
+            <RadzenCard Style="padding:1rem; max-width:1600px; margin:0 auto;border-radius:20px; width:97%;">
+                <div style="font-weight:900; margin-bottom:.5rem;">قیمت (USD)</div>
+                <RadzenChart  Style="width:100%; height:480px;">
+                    <RadzenCategoryAxis LabelAutoRotation="15" Stroke="#060270" StrokeWidth="2" TickDistance="50" />
+                    <RadzenValueAxis Stroke="#060270" StrokeWidth="2" Formatter="@(v => string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:N0}", v))" />
+                    <RadzenColumnSeries TItem="CryptoItemDto"
+                                        Data="@(Items ?? new())"
+                                        CategoryProperty="Name"
+                                        ValueProperty="CurrentPrice"
+                                        Title="قیمت (USD)"
+                                        Stroke="#DDA201" />
+                    <RadzenLegend Position="LegendPosition.Right" />
+                </RadzenChart>
+            </RadzenCard>
+
+            @* 2) چارت خطی: درصد تغییرات ۷ / ۳۰ / ۲۰۰ روز *@
+            <RadzenCard Style="padding:1rem; max-width:1600px; margin:1rem auto;border-radius:20px; width:97%;">
+                <div style="font-weight:900; margin-bottom:.5rem;">درصد تغییرات (۷، ۳۰ و ۲۰۰ روزه)</div>
+                <RadzenChart  Style="width:100%; height:520px;">
+                    <RadzenCategoryAxis LabelAutoRotation="15" Stroke="#060270" StrokeWidth="2" TickDistance="50" />
+                    <RadzenValueAxis Stroke="#060270" StrokeWidth="2" />
+                    <RadzenLegend Position="LegendPosition.Right" />
+                    @* سه سری خطی روی یک چارت؛ با داده‌های تبدیل‌شده به عدد (null => 0) *@
+                    <RadzenLineSeries TItem="CryptoChartRow"
+                                      Data="@ChartRows" Interpolation="Interpolation.Spline"  
+                                      CategoryProperty="Name"
+                                      ValueProperty="Pct7d" Smooth="true"
+                                      Title=" ۷ روز"
+                                      LineType="LineType.Solid"
+                                      Stroke="#0f9d58" />
+                    <RadzenLineSeries TItem="CryptoChartRow"
+                                      Data="@ChartRows"
+                                      CategoryProperty="Name"
+                                      ValueProperty="Pct30d" Smooth="true"
+                                      Title=" ۳۰ روز"
+                                      LineType="LineType.Solid"
+                                      Stroke="#AA03D8" />
+                    <RadzenLineSeries TItem="CryptoChartRow"
+                                      Data="@ChartRows"
+                                      CategoryProperty="Name" 
+                                      ValueProperty="Pct200d"
+                                      Title=" ۲۰۰ روز" Smooth="true"
+                                      LineType="LineType.Solid"
+                                      Stroke="#e53935" />
+                    <RadzenLegend Position="LegendPosition.Right" />
+                </RadzenChart>
+            </RadzenCard>
+
+            @* 3) حجم ۲۴ساعت (نمودار دایره‌ای) *@
+            <RadzenCard Style="padding:1rem; max-width:1600px; margin:0 auto;border-radius:20px; width:97%;">
+                <div style="font-weight:900; margin-bottom:.5rem;">سهم رمزارزها از حجم معاملات ۲۴ساعت</div>
+
+                <RadzenChart Style="width:100%; height:560px;">
+                    <RadzenPieSeries TItem="CryptoItemDto"
+                                     Data="@(Items?.OrderByDescending(x => x.TotalVolume).ToList() ?? new())"
+                                     CategoryProperty="Name"
+                                     ValueProperty="TotalVolume"
+                                     Title="سهم حجم ۲۴ساعت"
+                                     
+                                     StrokeWidth="1" />
+
+                    <RadzenLegend Position="LegendPosition.Right" />
+                </RadzenChart>
+            </RadzenCard>
+
+        </RadzenStack>
+
     </ChildContent>
 </BasePage>
 
 @code {
-    public bool IsLoading { get; set; } = true;
+        // ردیف‌های چارت خطی (null => 0)
+    private List<CryptoChartRow> ChartRows =>
+        (Items ?? new()).Select(x => new CryptoChartRow
+        {
+            Name   = x.Name,
+            Pct7d  = x.PriceChangePct7d  ?? 0m,
+            Pct30d = x.PriceChangePct30d ?? 0m,
+            Pct200d= x.PriceChangePct200d?? 0m
+        }).ToList();
+
+    public class CryptoChartRow
+    {
+        public string Name { get; set; } = "";
+        public decimal Pct7d { get; set; }
+        public decimal Pct30d { get; set; }
+        public decimal Pct200d { get; set; }
+    }
+
+    private bool IsLoading { get; set; } = true;
+    private bool _offline;
+    private List<CryptoItemDto>? Items;
+    private IEnumerable<ChangePoint> Change7d =>
+    (Items ?? Enumerable.Empty<CryptoItemDto>())
+    .Where(x => x.PriceChangePct7d.HasValue)
+    .Select(x => new ChangePoint(x.Name, x.PriceChangePct7d!.Value));
+
+    public record ChangePoint(string Label, decimal Value);
+    // لیست پیش‌فرض
+    private const string CoinIds = "bitcoin,ethereum,solana,binancecoin,ripple,cardano,tron,chainlink,polygon,toncoin";
 
     protected override async Task OnInitializedAsync()
     {
-        IsLoading = true;
+        try
+        {
+            Crypto.OnCryptoUpdated += (key, list) =>
+            {
+                if (!string.Equals(key, CoinIds, StringComparison.OrdinalIgnoreCase)) return;
+                Items = list ?? new();
+                _offline = false;
+                IsLoading = false;
+                InvokeAsync(StateHasChanged);
+            };
 
-        IsLoading = false;
+            await Crypto.StartAsync();
+            await Crypto.SubscribeAsync(CoinIds);
+        }
+        catch
+        {
+            _offline = true;
+            IsLoading = false;
+        }
     }
 
-    #region Notifcation
-
-    void ShowNotification(NotificationMessage message)
+    private async Task Refresh()
     {
-        NotificationService.Notify(message);
+        try
+        {
+            IsLoading = true;
+            await Crypto.SubscribeAsync(CoinIds, force: true);
+            _offline = false;
+        }
+        catch
+        {
+            _offline = true;
+        }
+        finally
+        {
+            IsLoading = false;
+        }
     }
 
+    #region CurrentWindow
+    private int windowWidth;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var dotNetRef = DotNetObjectReference.Create(this);
+            await JSRuntime.InvokeVoidAsync("resizeListener.register", dotNetRef);
+
+            windowWidth = await JSRuntime.InvokeAsync<int>("getWindowWidth");
+            StateHasChanged(); // 👈 همین خط لازمه
+        }
+    }
+    [JSInvokable]
+    public Task OnResize(int width)
+    {
+        windowWidth = width;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
     #endregion
+
 
 }

@@ -17,7 +17,7 @@
             <Tabs>
                 @foreach (var cat in _categories)
                 {
-                    <RadzenTabsItem Text="@_titles[cat]">
+                    <RadzenTabsItem Text="@_titles[cat]" >
                         @NewsTab(cat)
                     </RadzenTabsItem>
                 }

@@ -16,6 +16,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 
 builder.Services.AddScoped<NewsRealtimeService>();
 builder.Services.AddScoped<WeatherRealtimeService>();
+builder.Services.AddSingleton<CryptoRealtimeService>();
 
 await builder.Build().RunAsync();
 
