@@ -160,7 +160,6 @@
     }
 </style>
 
-
 <BasePage IsLoading="IsLoading">
     <HeaderContent>
         <RadzenAlert AlertStyle="AlertStyle.Danger" @bind-Visible="_offline" ShowIcon="false" Variant="Variant.Flat" Shade="Shade.Lighter"
@@ -295,10 +294,10 @@
     </ChildContent>
 </BasePage>
 
-@if (_offline)
+@* @if (_offline)
 {
     <RadzenAlert Severity="AlertSeverity.Warning">اتصال برقرار نیست — بعداً دوباره تلاش کنید.</RadzenAlert>
-}
+} *@
 
 
 @code {

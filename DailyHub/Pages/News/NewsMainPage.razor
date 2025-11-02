@@ -27,7 +27,7 @@
 </BasePage>
 
 @code {
-    private bool _offline;
+    private bool _offline = false;
     public bool IsLoading { get; set; } = true;
     int selectedIndex = 0;
 
@@ -104,8 +104,8 @@
         builder.AddAttribute(4, "ChildContent", (RenderFragment)((_builder) =>
         {
             _builder.OpenElement(5, "div");
-            _builder.AddAttribute(6, "style", "display:flex; align-items:center; justify-content:space-between; margin-bottom:.75rem;");
-            _builder.AddContent(7, $"آخرین اخبار ({_titles[cat]})");
+            _builder.AddAttribute(6, "style", "display:flex; align-items:center; justify-content:space-between; margin-bottom:.75rem; margin: 0.5rem 1.5rem;");
+            _builder.AddContent(7, $"اخبار ({_titles[cat]})");
 
             _builder.OpenComponent<RadzenButton>(8);
             _builder.AddAttribute(9, "Icon", "refresh");

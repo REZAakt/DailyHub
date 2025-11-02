@@ -392,3 +392,9 @@ code {
 .rz-tabview-nav{
     justify-content:center !important;  
 }
+
+
+.rz-pager.rz-unselectable-text.rz-helper-clearfix.rz-align-justify{
+    direction:ltr;
+   
+}
