@@ -2,67 +2,46 @@
 @using DailyHub.Shared.Dto.News
 @inject NewsRealtimeService News
 
-
 <BasePage IsLoading="IsLoading">
     <HeaderContent>
-        <RadzenAlert AlertStyle="AlertStyle.Danger" @bind-Visible="_offline" ShowIcon="false" Variant="Variant.Flat" Shade="Shade.Lighter"
-                     style="margin:1rem 1rem; border-radius:18px;width:98%; box-shadow: 0 0px 30px rgba(0, 0, 0, 0.1) !important;">
-            <RadzenText style="color:red; font-weight:800; font-size:16px;" Text="  اتصال شما برقرار نشد. ابتدا از اتصال به اینترنت اطمینان حاصل کنید و صفحه را  (Refresh)  کنید ." />
+        <RadzenAlert AlertStyle="AlertStyle.Danger" @bind-Visible="_offline"
+                     ShowIcon="false" Variant="Variant.Flat" Shade="Shade.Lighter"
+                     style="margin:1rem; border-radius:18px; width:98%; box-shadow: 0 0px 25px rgba(0,0,0,0.08)!important;">
+            <RadzenText style="color:red; font-weight:800; font-size:16px;"
+                        Text="اتصال شما برقرار نشد. اینترنت را بررسی کرده و صفحه را مجدد بارگذاری کنید." />
         </RadzenAlert>
-   @*      <div class="mb-2" style="opacity:.7; margin-inline:1rem;">
-            @(Items is null ? "دریافت خبر..." : $"تعداد خبر: {Items.Count}")
-        </div> *@
     </HeaderContent>
 
     <ChildContent>
-        <div dir="rtl" style="padding: 12px; max-width: 1100px; margin: 0 auto;">
-            <RadzenCard style="padding: .75rem 1rem; border-radius: 14px;">
-                <div style="display:flex; align-items:center; justify-content:space-between; gap:.5rem; margin-bottom:.75rem;">
-                    <div style="font-weight:900;">آخرین اخبار (دسته: همه)</div>
-                    <RadzenButton Icon="refresh" Text="بروزرسانی" Click="Refresh" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" />
-                </div>
-
-                @if (Items is null)
+        <RadzenTabs RenderMode="TabRenderMode.Client" @bind-SelectedIndex="@selectedIndex" TabPosition="TabPosition.TopRight" Style="justify-content:center;">
+            <Tabs>
+                @foreach (var cat in _categories)
                 {
-                    <div style="opacity:.6; padding:.5rem;">در حال دریافت...</div>
+                    <RadzenTabsItem Text="@_titles[cat]">
+                        @NewsTab(cat)
+                    </RadzenTabsItem>
                 }
-                else if (Items.Count == 0)
-                {
-                    <div style="opacity:.6; padding:.5rem;">خبری برای نمایش نیست.</div>
-                }
-                else
-                {
-                    <RadzenDataList TItem="NewsItemDto"
-                                    Data="@Items"
-                                    AllowPaging="true"
-                                    PageSize="10"
-                                    Style="max-height: calc(100vh - 320px); overflow:auto; padding-inline:2px;">
-                        <Template Context="n">
-                            <RadzenCard class="news-card" style="margin-bottom:.75rem;padding:1rem;border-radius:12px;border:1px solid var(--rz-base-300);">
-                                <div style="font-weight:800;margin-bottom:.25rem">@n.Title</div>
-
-                                <div style="opacity:.85;margin-bottom:.5rem">
-                                    @Truncate(StripHtml(n.Summary), 220)
-                                </div>
-
-                                @if (!string.IsNullOrWhiteSpace(n.Link))
-                                {
-                                    <a href="@n.Link" target="_blank">ادامه خبر</a>
-                                }
-                            </RadzenCard>
-                        </Template>
-                    </RadzenDataList>
-                }
-            </RadzenCard>
-        </div>
+            </Tabs>
+        </RadzenTabs>
     </ChildContent>
 </BasePage>
 
 @code {
-    public bool IsLoading { get; set; } = true;
     private bool _offline;
-    private List<NewsItemDto>? Items;
-    private const string Category = "all";
+    public bool IsLoading { get; set; } = true;
+    int selectedIndex = 0;
+
+    private readonly string[] _categories = ["all", "sports", "politics", "economy", "health"];
+    private readonly Dictionary<string, string> _titles = new()
+        {
+            ["all"] = "همه",
+            ["sports"] = "ورزشی",
+            ["politics"] = "سیاسی",
+            ["economy"] = "اقتصادی",
+            ["health"] = "سلامتی"
+        };
+
+    private readonly Dictionary<string, List<NewsItemDto>> _data = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -70,45 +49,118 @@
         {
             News.OnNewsUpdated += (cat, list) =>
             {
-                if (!string.Equals(cat, Category, StringComparison.OrdinalIgnoreCase))
-                    return;
-
-                Items = list ?? new();
-                _offline = false;
-                IsLoading = false;
+                _data[cat] = list ?? new();
                 InvokeAsync(StateHasChanged);
             };
 
+            IsLoading = true;
             await News.StartAsync();
-            await News.SubscribeAsync(Category);     // فقط دسته‌ی "همه"
-        }
-        catch
-        {
-            _offline = true;
-            IsLoading = false;
-        }
-    }
 
-    private async Task Refresh()
-    {
-        try
-        {
-            await News.SubscribeAsync(Category, force: true);
+            // ⏳ یکبار همه‌ی دسته‌ها را باهم بگیر
+            foreach (var c in _categories)
+                await News.SubscribeAsync(c);
+
             _offline = false;
         }
         catch
         {
             _offline = true;
         }
+        finally
+        {
+            IsLoading = false;
+        }
     }
 
-    // کمکی‌ها برای نمایش خلاصه تمیز
+    private async Task RefreshAll()
+    {
+        try
+        {
+            IsLoading = true;
+            await News.ForceRefreshAllAsync(_categories);
+            _offline = false;
+        }
+        catch
+        {
+            _offline = true;
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    // ✅ تب‌های خبری
+    RenderFragment NewsTab(string cat) => builder =>
+    {
+        var list = _data.TryGetValue(cat, out var items) ? items : new List<NewsItemDto>();
+
+        builder.OpenElement(0, "div");
+        builder.AddAttribute(1, "style", "padding: 12px; max-width: 1500px; margin: 0 auto;");
+
+        builder.OpenComponent<RadzenCard>(2);
+        builder.AddAttribute(3, "Style", "padding:.75rem 1rem; border-radius:14px;");
+
+        builder.AddAttribute(4, "ChildContent", (RenderFragment)((_builder) =>
+        {
+            _builder.OpenElement(5, "div");
+            _builder.AddAttribute(6, "style", "display:flex; align-items:center; justify-content:space-between; margin-bottom:.75rem;");
+            _builder.AddContent(7, $"آخرین اخبار ({_titles[cat]})");
+
+            _builder.OpenComponent<RadzenButton>(8);
+            _builder.AddAttribute(9, "Icon", "refresh");
+            _builder.AddAttribute(10, "Text", "بروزرسانی");
+            _builder.AddAttribute(11, "ButtonStyle", ButtonStyle.Primary);
+            _builder.AddAttribute(12, "Size", ButtonSize.Small);
+            // _builder.AddAttribute(13, "Click", EventCallback.Factory.Create(this, RefreshAll));
+            _builder.AddAttribute(13, "Click", EventCallback.Factory.Create<MouseEventArgs>(this, RefreshAll));
+            _builder.CloseComponent();
+
+            _builder.CloseElement(); // header
+
+            if (IsLoading)
+            {
+                _builder.AddMarkupContent(14, "<div style='opacity:.6; padding:.5rem;'>در حال دریافت...</div>");
+            }
+            else if (list.Count == 0)
+            {
+                _builder.AddMarkupContent(15, "<div style='opacity:.6; padding:.5rem;'>خبری برای نمایش نیست.</div>");
+            }
+            else
+            {
+                _builder.OpenComponent<RadzenDataList<NewsItemDto>>(16);
+                _builder.AddAttribute(17, "Data", list);
+                _builder.AddAttribute(18, "AllowPaging", true);
+                _builder.AddAttribute(19, "PagerPosition", PagerPosition.TopAndBottom);
+                _builder.AddAttribute(20, "PageSize", 10);
+                _builder.AddAttribute(21, "Style", "overflow:auto; padding-inline:2px;");
+                _builder.AddAttribute(22, "Template", (RenderFragment<NewsItemDto>)((n) => (__b) =>
+                {
+                    __b.OpenComponent<RadzenCard>(30);
+                    __b.AddAttribute(31, "Style", "margin-bottom:.75rem;padding:1rem 2rem;border-radius:12px;border:1px solid var(--rz-base-300);box-shadow:0 2px 6px rgba(0,0,0,0.05);");
+                    __b.AddAttribute(32, "ChildContent", (RenderFragment)((__c) =>
+                    {
+                        __c.AddMarkupContent(33, $"<div style='font-weight:800;margin-bottom:.25rem'>{n.Title}</div>");
+                        __c.AddMarkupContent(34, $"<div style='opacity:.85;margin-bottom:.5rem'>{Truncate(StripHtml(n.Summary), 220)}</div>");
+                        if (!string.IsNullOrWhiteSpace(n.Link))
+                            __c.AddMarkupContent(35, $"<div style='display:flex; justify-content:end;'><a href='{n.Link}' target='_blank'>ادامه خبر</a></div>");
+                    }));
+                    __b.CloseComponent();
+                }));
+                _builder.CloseComponent();
+            }
+        }));
+        builder.CloseComponent();
+        builder.CloseElement();
+    };
+
+    // Utility
     private static string StripHtml(string? html)
     {
         if (string.IsNullOrEmpty(html)) return "";
-        // حذف تگ‌های ساده‌ی HTML
         return System.Text.RegularExpressions.Regex.Replace(html, "<.*?>", string.Empty);
     }
+
     private static string Truncate(string? s, int max)
     {
         if (string.IsNullOrEmpty(s) || s.Length <= max) return s ?? "";

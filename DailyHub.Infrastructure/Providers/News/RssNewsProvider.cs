@@ -15,10 +15,10 @@ public sealed class RssNewsProvider(HttpClient http) : INewsProvider
 
         var url = category switch
         {
-            "sports" => "https://en.isna.ir/rss/tp/23",   // Sports (پایدار)
-            "politics" => "https://en.isna.ir/rss/tp/13",
-            "economy" => "https://en.isna.ir/rss/tp/33",   // به‌جای donya-e-eqtesad
-            "health" => "https://www.yjc.ir/fa/rss",      // فید کلی YJC
+            "sports" => "https://www.varzesh3.com/rss/all",   // Sports (پایدار)
+            "politics" => "https://www.tasnimnews.com/fa/rss/feed/1/Politics",
+            "economy" => "https://www.eghtesadonline.com/fa/rss/all",   // به‌جای donya-e-eqtesad
+            "health" => "https://www.mehrnews.com/rss/tp/16",      // فید کلی YJC
             "all" => "https://www.isna.ir/rss",
             _ => "https://www.isna.ir/rss"
         };
