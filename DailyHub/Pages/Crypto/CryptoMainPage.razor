@@ -13,8 +13,7 @@
 
     <ChildContent>
         <RadzenStack Orientation="Orientation.Vertical" Gap="1rem" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center" Style="width:100%; height:100%;" Wrap="FlexWrap.Wrap">
-
-            <RadzenCard Style="padding:1rem; max-width:1600px; margin:0 auto;border-radius:20px; width:97%;">
+            <RadzenCard Style="padding:2rem; max-width:1600px; margin:0 auto;border-radius:20px; width:97%;">
                 <div style="display:flex; justify-content:space-between; align-items:center; gap:1rem; margin:0.2rem 0.5rem 0.8rem 0.5rem;">
                     <div style="font-weight:900; font-size:18px;">قیمت رمزارزها</div>
                     <RadzenButton Icon="refresh" Text="بروزرسانی" Click="Refresh" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" />
@@ -152,11 +151,9 @@
             </RadzenCard>
 
             @* 1) قیمت (USD) همه کوین‌ها *@
-            <RadzenCard Style="padding:1rem; max-width:1600px; margin:0 auto;border-radius:20px; width:97%;">
+            <RadzenCard dir="ltr" Style="padding:2rem; max-width:1600px; margin:0 auto;border-radius:20px; width:97%;">
                 <div style="font-weight:900; margin-bottom:.5rem;">قیمت (USD)</div>
                 <RadzenChart  Style="width:100%; height:480px;">
-                    <RadzenCategoryAxis LabelAutoRotation="15" Stroke="#060270" StrokeWidth="2" TickDistance="50" />
-                    <RadzenValueAxis Stroke="#060270" StrokeWidth="2" Formatter="@(v => string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:N0}", v))" />
                     <RadzenColumnSeries TItem="CryptoItemDto"
                                         Data="@(Items ?? new())"
                                         CategoryProperty="Name"
@@ -164,16 +161,19 @@
                                         Title="قیمت (USD)"
                                         Stroke="#DDA201" />
                     <RadzenLegend Position="LegendPosition.Right" />
+                    <RadzenCategoryAxis LabelAutoRotation="15" Stroke="#060270" StrokeWidth="2" TickDistance="50" />
+                    <RadzenValueAxis Stroke="#060270" StrokeWidth="2" Formatter="@(v => string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:N0}", v))" />
+                    <RadzenMarkers Visible="true" MarkerType="MarkerType.Circle" Fill="#84E1F1" Stroke="#060270" StrokeWidth="2" />
+                    <RadzenChartTooltipOptions Shared="true" />
                 </RadzenChart>
             </RadzenCard>
 
             @* 2) چارت خطی: درصد تغییرات ۷ / ۳۰ / ۲۰۰ روز *@
-            <RadzenCard Style="padding:1rem; max-width:1600px; margin:1rem auto;border-radius:20px; width:97%;">
+            <RadzenCard dir="ltr" Style="padding:2rem; max-width:1600px; margin:1rem auto;border-radius:20px; width:97%;">
                 <div style="font-weight:900; margin-bottom:.5rem;">درصد تغییرات (۷، ۳۰ و ۲۰۰ روزه)</div>
                 <RadzenChart  Style="width:100%; height:520px;">
-                    <RadzenCategoryAxis LabelAutoRotation="15" Stroke="#060270" StrokeWidth="2" TickDistance="50" />
-                    <RadzenValueAxis Stroke="#060270" StrokeWidth="2" />
-                    <RadzenLegend Position="LegendPosition.Right" />
+                    <RadzenChartTooltipOptions Shared="true" />
+                    <RadzenChartTooltip />
                     @* سه سری خطی روی یک چارت؛ با داده‌های تبدیل‌شده به عدد (null => 0) *@
                     <RadzenLineSeries TItem="CryptoChartRow"
                                       Data="@ChartRows" Interpolation="Interpolation.Spline"  
@@ -197,22 +197,27 @@
                                       LineType="LineType.Solid"
                                       Stroke="#e53935" />
                     <RadzenLegend Position="LegendPosition.Right" />
+                    <RadzenCategoryAxis LabelAutoRotation="15" Stroke="#060270" StrokeWidth="2" TickDistance="50" />
+                    <RadzenValueAxis Stroke="#060270" StrokeWidth="2" />
+                    <RadzenLegend Position="LegendPosition.Right" />
+                    <RadzenMarkers Visible="true" MarkerType="MarkerType.Circle" Fill="#84E1F1" Stroke="#060270" StrokeWidth="2" />
+
                 </RadzenChart>
             </RadzenCard>
 
             @* 3) حجم ۲۴ساعت (نمودار دایره‌ای) *@
-            <RadzenCard Style="padding:1rem; max-width:1600px; margin:0 auto;border-radius:20px; width:97%;">
+            <RadzenCard dir="ltr" Style="padding:2rem; max-width:1600px; margin:0 auto;border-radius:20px; width:97%;">
                 <div style="font-weight:900; margin-bottom:.5rem;">سهم رمزارزها از حجم معاملات ۲۴ساعت</div>
 
                 <RadzenChart Style="width:100%; height:560px;">
+                    <RadzenChartTooltipOptions Shared="true" />
                     <RadzenPieSeries TItem="CryptoItemDto"
                                      Data="@(Items?.OrderByDescending(x => x.TotalVolume).ToList() ?? new())"
                                      CategoryProperty="Name"
                                      ValueProperty="TotalVolume"
-                                     Title="سهم حجم ۲۴ساعت"
-                                     
+                                     Title="سهم حجم ۲۴ساعت"                                    
                                      StrokeWidth="1" />
-
+                    <RadzenMarkers Visible="true" MarkerType="MarkerType.Circle" Fill="#84E1F1" Stroke="#060270" StrokeWidth="2" />
                     <RadzenLegend Position="LegendPosition.Right" />
                 </RadzenChart>
             </RadzenCard>

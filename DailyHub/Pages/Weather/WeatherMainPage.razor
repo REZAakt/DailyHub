@@ -264,6 +264,7 @@
                 <div class="wx-section-title"> نمودار کمینه / بیشینه دما       ( ۷ روز )  </div>
                 <RadzenChart class="ChartClass">
                     <RadzenChartTooltipOptions Shared="true" />
+                    <RadzenChartTooltip />
                     <RadzenLineSeries TItem="WeatherDayDto" LineType="LineType.Solid" Interpolation="Interpolation.Spline" Smooth="true"
                                       Data="@(_data?.Daily ?? Array.Empty<WeatherDayDto>())"
                                       CategoryProperty="Date" Stroke="#01D6DD"

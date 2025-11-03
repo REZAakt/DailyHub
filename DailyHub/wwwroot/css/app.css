@@ -480,3 +480,12 @@ code {
 :root[dir="rtl"] .rz-legend {
     direction: rtl;
 }
+/* تولتیپ‌های چارت رَدزِن */
+.rz-chart-tooltip, .rz-tooltip {
+  z-index: 10000 !important;
+}
+
+/* اگه کارت/کانتینر یه جای دیگه overflow:hidden داشت */
+.rz-card, .rz-card > .rz-card-content {
+  overflow: visible !important;
+}
