@@ -14,6 +14,7 @@ builder.Services.AddLocalization();
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
+builder.Services.AddScoped<OnThisDayRealtimeService>();
 builder.Services.AddScoped<NewsRealtimeService>();
 builder.Services.AddScoped<WeatherRealtimeService>();
 builder.Services.AddSingleton<CryptoRealtimeService>();

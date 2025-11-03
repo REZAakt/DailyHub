@@ -8,12 +8,15 @@ namespace DailyHub.Infrastructure.DI;
 
 using DailyHub.Infrastructure.Caching;
 using DailyHub.Infrastructure.Http;
+using DailyHub.Infrastructure.Providers.Otd;
 using DailyHub.Infrastructure.Providers.Weather;
+using DailyHub.Shared.Abstractions.OnThisDay;
 using DailyHub.Shared.Abstractions.Weather;
 using Microsoft.Extensions.DependencyInjection;
 
 public static class InfrastructureServiceCollectionExtensions
 {
+
     public static IServiceCollection AddDailyHubInfrastructure(this IServiceCollection services)
     {
         //services.AddHttpClient(HttpClientNames.OpenMeteo, c =>
@@ -44,3 +47,4 @@ public static class InfrastructureServiceCollectionExtensions
         return services;
     }
 }
+

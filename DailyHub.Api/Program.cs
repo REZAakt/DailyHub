@@ -61,7 +61,7 @@ builder.Services.AddHttpClient("rss");
 builder.Services.AddScoped<INewsProvider, RssNewsProvider>();
 builder.Services.AddScoped<INewsCache, NewsCache>();
 builder.Services.AddHttpClient<ICryptoProvider, CoinGeckoProvider>();
-
+builder.Services.AddOtdProvider();
 builder.Services.AddDailyHubInfrastructure();
 
 var app = builder.Build();
@@ -87,8 +87,8 @@ if (app.Environment.IsDevelopment())
 app.UseAuthorization();
 app.MapControllers();
 app.MapWeatherEndpoints();
+app.MapHub<OnThisDayHub>("/hubs/otd");
 app.MapHub<WeatherHub>("/hubs/weather");  // باید بعد از UseCors و قبل از Run بیاد
 app.MapHub<NewsHub>("/hubs/news");
 app.MapHub<CryptoHub>("/hubs/crypto");
-
 app.Run();
