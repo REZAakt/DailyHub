@@ -189,7 +189,6 @@
                                               ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" />
                             </div>
                         </div>
-
                         @if (IsLoading)
                         {
                             <div style="opacity:.6; padding:.5rem;">در حال دریافت...</div>
@@ -197,6 +196,7 @@
                         else
                         {
                             var featured = GetFeatured(2);
+
                             if (featured.Count == 0)
                             {
                                 <div style="opacity:.6; padding:.5rem;">آیتمی برای نمایش نیست.</div>
@@ -221,14 +221,14 @@
                                                         @if (it.Year > 0)
                                                         {
                                                             <span style="direction:ltr; background:var(--rz-base-200); color:var(--rz-text-color);
-                                 border-radius:999px; padding:.15rem .6rem; font-size:.8rem;">
+                                                                    border-radius:999px; padding:.15rem .6rem; font-size:.8rem;justify-content: center; display: flex;">
                                                                 <RadzenIcon Icon="event" Style="font-size:16px;opacity:.8;margin-inline-end:.25rem;" />
                                                                 @it.Year
                                                             </span>
                                                         }
 
                                                         <span style="background:#eef6ff; color:#0b5ed7; border:1px solid #d5e9ff;
-                             border-radius:999px; padding:.15rem .6rem; font-size:.8rem;">
+                                                                  border-radius:999px; padding:.15rem .6rem; font-size:.8rem;justify-content: center; display: flex;">
                                                             <RadzenIcon Icon="local_offer" Style="font-size:16px;opacity:.85;margin-inline-end:.25rem;" />
                                                             @Norm(it.Type)
                                                         </span>
@@ -287,6 +287,19 @@
 
     private static string Norm(string? s) => (s ?? "").Trim().ToLowerInvariant();
 
+    private List<OnThisDayItemDto> GetFeatured(int n)
+    {
+        IEnumerable<OnThisDayItemDto> src = _items.Where(i => Norm(i.Type) == "selected");
+        if (!src.Any())
+            src = _items.Where(i => Norm(i.Type) == "events");
+
+        return src
+            .OrderByDescending(i => !string.IsNullOrWhiteSpace(i.Thumbnail))
+            .ThenByDescending(i => i.Year)
+            .Take(n)
+            .ToList();
+    }
+
     protected override async Task OnInitializedAsync()
     {
         try
@@ -301,8 +314,8 @@
             };
 
             await Otd.StartAsync();
-            // “all” میاد؛ خودمون 1–2 تا رویداد رو فیلتر می‌کنیم
-            await Otd.SubscribeAsync(_lang, "all", _m, _d);
+            // یک‌بار سابسکرایب + آپدیت شبانهٔ خودکار
+            await Otd.SubscribeAsync(_lang, "all", _m, _d, autoRefresh: true);
         }
         catch
         {
@@ -317,7 +330,11 @@
         {
             IsLoading = true;
             StateHasChanged();
-            await Otd.SubscribeAsync(_lang, "all", _m, _d);
+
+            await Otd.RefreshOnceAsync(_lang, "all", _m, _d);
+
+            _offline = false;
+            IsLoading = false;
         }
         catch
         {
@@ -326,19 +343,6 @@
         }
     }
 
-    // اولویت با selected؛ اگر خالی بود events. عکس‌دارها و سالِ جدیدتر جلوتر.
-    private List<OnThisDayItemDto> GetFeatured(int n)
-    {
-        IEnumerable<OnThisDayItemDto> src = _items.Where(i => Norm(i.Type) == "selected");
-        if (!src.Any())
-            src = _items.Where(i => Norm(i.Type) == "events");
-
-        return src
-            .OrderByDescending(i => !string.IsNullOrWhiteSpace(i.Thumbnail))
-            .ThenByDescending(i => i.Year)
-            .Take(n)
-            .ToList();
-    }
 
     private static string StripHtml(string? s)
     {
