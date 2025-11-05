@@ -12,7 +12,6 @@ public static class EndpointRouteBuilderExtensions
         app.MapNewsEndpoints();
         app.MapCalendarEndpoints();
         app.MapCryptoEndpoints();
-        app.MapAiChatEndpoints();
         // Metals / Rates intentionally omitted for now
         return app;
     }

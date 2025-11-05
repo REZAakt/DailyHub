@@ -9,3 +9,8 @@ namespace DailyHub.Shared.Enums;
 public enum Currency { USD, EUR, IRR }
 public enum MetalSymbol { XAU, XAG }
 public enum NewsSource { Custom, BBC, Reuters, DW }
+
+
+
+public enum ChatRole { system, user, assistant }
+

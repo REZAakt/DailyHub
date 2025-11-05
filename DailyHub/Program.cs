@@ -18,6 +18,7 @@ builder.Services.AddScoped<OnThisDayRealtimeService>();
 builder.Services.AddScoped<NewsRealtimeService>();
 builder.Services.AddScoped<WeatherRealtimeService>();
 builder.Services.AddSingleton<CryptoRealtimeService>();
+builder.Services.AddScoped<DeepseekRealtimeService>();
 
 await builder.Build().RunAsync();
 

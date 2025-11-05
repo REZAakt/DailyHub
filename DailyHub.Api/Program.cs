@@ -2,8 +2,11 @@
 using DailyHub.Api.Hubs;
 using DailyHub.Infrastructure.Caching;
 using DailyHub.Infrastructure.DI;
+using DailyHub.Infrastructure.Providers.Chat;
+using DailyHub.Shared.Abstractions.Chat;
 using DailyHub.Shared.Abstractions.Crypto;
 using DailyHub.Shared.Abstractions.News;
+using System.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +28,14 @@ builder.Services.AddCors(options =>
             .AllowCredentials()
             .SetIsOriginAllowed(_ => true);
     });
+});
+
+builder.Services.AddHttpClient<IDeepseekProvider, DeepseekProvider>(client =>
+{
+    client.BaseAddress = new Uri("https://api.deepseek.com/v1/"); // توجه: v1
+    client.DefaultRequestHeaders.Authorization =
+        new AuthenticationHeaderValue("Bearer", builder.Configuration["DeepSeek:ApiKey"]); // از secrets/env بخوان
+    client.DefaultRequestHeaders.UserAgent.ParseAdd("DailyHub/1.0 (+contact@example.com)");
 });
 
 builder.Services.AddMemoryCache();
@@ -56,6 +67,8 @@ builder.Services.AddHttpClient<ICryptoProvider, CoinGeckoProvider>("ICryptoProvi
         http.DefaultRequestHeaders.Add("x-cg-demo-api-key", apiKey); // یا x-cg-pro-api-key
 })
 .SetHandlerLifetime(TimeSpan.FromMinutes(10));
+
+
 
 builder.Services.AddHttpClient("rss");
 builder.Services.AddScoped<INewsProvider, RssNewsProvider>();
@@ -91,4 +104,6 @@ app.MapHub<OnThisDayHub>("/hubs/otd");
 app.MapHub<WeatherHub>("/hubs/weather");  // باید بعد از UseCors و قبل از Run بیاد
 app.MapHub<NewsHub>("/hubs/news");
 app.MapHub<CryptoHub>("/hubs/crypto");
+app.MapHub<DeepseekHub>("/hubs/deepseek");
+
 app.Run();

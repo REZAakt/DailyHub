@@ -1,30 +1,348 @@
 ﻿@page "/AI/AiMainPage"
+@using DailyHub.Shared.Dto.Ai
+@using DailyHub.Shared.Enums
+@using System.Text.Json
+@inject DeepseekRealtimeService ChatSrv
+@inject IJSRuntime JS
+
+<style>
+    .chat-wrap {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 180px);
+    max-width: 900px;
+    margin: 0 auto
+    }
+
+    .chat-log {
+    flex: 1;
+    overflow: auto;
+    border: 1px solid var(--rz-base-300);
+    border-radius: 14px;
+    padding: 12px;
+    background: var(--rz-base-50)
+    }
+
+    .msg {
+    max-width: 80%;
+    padding: .75rem 1rem;
+    border-radius: 14px;
+    margin: .4rem 0;
+    white-space: pre-wrap;
+    line-height: 1.5
+    }
+
+    .msg.user {
+    margin-left: auto;
+    background: #DCF1FF;
+    border: 1px solid #BFE4FF
+    }
+
+    .msg.ai {
+    margin-right: auto;
+    background: #F6F6F6;
+    border: 1px solid #E2E2E2
+    }
+
+    .msg.pending {
+    opacity: .8
+    }
+
+    .toolbar {
+    display: flex;
+    gap: .5rem;
+    margin-top: .75rem
+    }
+
+    .input-box {
+    display: flex;
+    gap: .5rem;
+    align-items: flex-end;
+    margin-top: 8px
+    }
+
+    textarea {
+    width: 100%;
+    min-height: 70px;
+    border-radius: 12px;
+    border: 1px solid var(--rz-base-300);
+    padding: .75rem
+    }
+
+    .badge {
+    padding: 2px 8px;
+    background: #eee;
+    border-radius: 999px;
+    font-size: .75rem;
+    margin-inline-start: 6px
+    }
+</style>
 
 <BasePage IsLoading="IsLoading">
     <HeaderContent>
-
+        <div style="display:flex;align-items:center;justify-content:space-between;width:98%;margin:1rem auto">
+            <div class="wx-section-title">گفتگو با DeepSeek <span class="badge">مدل: @Settings.Model</span></div>
+            <div style="opacity:.7;font-size:.9rem">پیام‌ها: @Messages.Count</div>
+        </div>
     </HeaderContent>
+
     <ChildContent>
+        <div class="chat-wrap">
+            <div id="chatlog" class="chat-log">
+                @foreach (var m in Messages)
+                {
+                    <div class="msg @(m.Role == ChatRole.user ? "user" : "ai")">
+                        @m.Content
+                    </div>
+                }
+                @if (IsStreaming)
+                {
+                    <div class="msg ai pending">@StreamingBuffer</div>
+                }
+                @if (!string.IsNullOrEmpty(ErrorText))
+                {
+                    <div class="msg ai" style="border-color:#ffb3b3;background:#fff2f2">
+                        <div>@ErrorText</div>
+                        <div class="toolbar">
+                            <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="ResendLast">ارسال دوباره</RadzenButton>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="input-box">
+                <textarea @bind="@UserInput" @bind:event="oninput" placeholder="پیامت را بنویس..." @onkeydown="OnKeyDown"></textarea>
+                <div style="display:flex;flex-direction:column;gap:.5rem">
+                    <RadzenButton Icon="send"
+                    Disabled="@(IsStreaming || string.IsNullOrWhiteSpace(UserInput))"
+                    Click="Send">ارسال</RadzenButton>
+
+                    <RadzenButton Icon="stop"
+                    ButtonStyle="ButtonStyle.Danger"
+                    Disabled="@(!IsStreaming)"
+                    Click="Stop">توقف</RadzenButton>
+                </div>
+            </div>
+
+            <div style="display:flex;gap:.75rem;align-items:center;margin-top:.5rem;opacity:.85">
+                <label>MaxTokens</label>
+                <RadzenNumeric @bind-Value="_maxTokens" Min="64" Max="2048" Style="max-width:120px" />
+
+                <label>Temp</label>
+                <RadzenNumeric @bind-Value="_temperature" Step="0.1" Min="0" Max="2" Style="max-width:120px" />
+
+                <RadzenDropDown @bind-Value="_model"
+                Data="Models" Style="max-width:220px"
+                Placeholder="مدل" />
+
+                <span style="margin-inline-start:auto;opacity:.7">ذخیره‌ی جلسه: sessionStorage</span>
+                <RadzenButton ButtonStyle="ButtonStyle.Secondary" Icon="save" Click="@ApplySettings">
+                    اعمال تنظیمات
+                </RadzenButton>
+            </div>
+        </div>
     </ChildContent>
 </BasePage>
 
 @code {
+    private int _maxTokens = 512;
+    private double _temperature = 0.7;
+    private string _model = "deepseek-chat";
+
     public bool IsLoading { get; set; } = true;
+    private List<ChatMessageDto> Messages = new();
+    private string UserInput = "";
+    private bool IsStreaming = false;
+    private string StreamingBuffer = "";
+    private string? ErrorText = null;
+    private CancellationTokenSource? _cts;
+
+    private ChatSettingsDto BuildSettings() => new ChatSettingsDto
+        {
+            Model = _model,
+            MaxTokens = _maxTokens,
+            Temperature = _temperature
+        };
+    private void ApplySettings()
+    {
+        Settings = BuildSettings();
+        // اگر جایی لازم داری Settings نگهداری شود:
+        StateHasChanged();
+    }
+    private ChatSettingsDto Settings { get; set; } = new() { Model = "deepseek-chat", MaxTokens = 512, Temperature = 0.7 };
+
+    // مثالِ ارسال پیام:
+    private async Task SendAsync()
+    {
+        var settings = BuildSettings();
+        // ... call hub/provider with `settings`
+    }
+
+    // تنظیمات درخواست
+
+    private readonly string[] Models = new[] { "deepseek-chat", "deepseek-reasoner" };
 
     protected override async Task OnInitializedAsync()
     {
-        IsLoading = true;
+        ChatSrv.OnDelta += OnDelta;
+        ChatSrv.OnCompleted += OnCompleted;
+        ChatSrv.OnError += OnError;
 
+        await ChatSrv.StartAsync();
+        await LoadSession();
+        ScrollToEnd();
         IsLoading = false;
     }
 
-    #region Notifcation
-
-    void ShowNotification(NotificationMessage message)
+    async Task Send()
     {
-        NotificationService.Notify(message);
+        IsLoading = true;
+        ErrorText = null;
+        var content = UserInput?.Trim();
+        if (string.IsNullOrEmpty(content)) return;
+
+        // پیام کاربر
+        Messages.Add(new(ChatRole.user, content));
+        UserInput = "";
+        await SaveSession();
+        ScrollToEnd();
+
+        // شروع استریم
+        IsStreaming = true;
+        StreamingBuffer = "";
+        _cts?.Dispose();
+        _cts = new CancellationTokenSource();
+
+        var msgs = new List<ChatMessageDto>(Messages); // کل کانتکست
+
+        _ = ChatSrv.StreamAsync(msgs, Settings, _cts.Token); // fire&forget
+        IsLoading = false;
     }
 
-    #endregion
+    void Stop()
+    {
+        IsLoading = true;
+        _cts?.Cancel();
+        IsStreaming = false;
+        IsLoading = false;
+    }
 
+    void ResendLast()
+    {
+        IsLoading = true;
+        if (Messages.Count == 0) return;
+        // آخرین پیام کاربر را دوباره می‌فرستیم
+        var lastUser = Messages.LastOrDefault(m => m.Role == ChatRole.user);
+        if (lastUser is null) return;
+
+        UserInput = lastUser.Content;
+        ErrorText = null;
+        _ = Send();
+        IsLoading = false;
+    }
+
+    void OnDelta(string delta)
+    {
+        IsLoading = true;
+        StreamingBuffer += delta;
+        InvokeAsync(StateHasChanged);
+        ScrollToEnd();
+        IsLoading = false;
+    }
+
+    async void OnCompleted(string? full)
+    {
+        IsLoading = true;
+        if (!string.IsNullOrEmpty(full))
+        {
+            Messages.Add(new(ChatRole.assistant, full));
+            await SaveSession();
+        }
+        IsStreaming = false;
+        StreamingBuffer = "";
+        await InvokeAsync(StateHasChanged);
+        ScrollToEnd();
+        IsLoading = false;
+    }
+
+    async void OnError(string err)
+    {
+        IsLoading = true;
+        ErrorText = err;
+        IsStreaming = false;
+        StreamingBuffer = "";
+        await InvokeAsync(StateHasChanged);
+        ScrollToEnd();
+        IsLoading = false;
+    }
+
+    void OnKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !e.ShiftKey && !IsStreaming && !string.IsNullOrWhiteSpace(UserInput))
+        {
+            _ = Send();
+        }
+    }
+
+    async Task SaveSession()
+    {
+        var obj = new { messages = Messages, settings = Settings };
+        await JS.InvokeVoidAsync("sessionStorage.setItem", "chat_session", JsonSerializer.Serialize(obj));
+    }
+
+    async Task LoadSession()
+    {
+        IsLoading = true;
+        var s = await JS.InvokeAsync<string>("sessionStorage.getItem", "chat_session");
+        if (!string.IsNullOrEmpty(s))
+        {
+            try
+            {
+                using var doc = JsonDocument.Parse(s);
+                var root = doc.RootElement;
+                if (root.TryGetProperty("messages", out var msgs) && msgs.ValueKind == JsonValueKind.Array)
+                {
+                    Messages = msgs.Deserialize<List<ChatMessageDto>>() ?? new();
+                }
+                if (root.TryGetProperty("settings", out var st))
+                {
+                    var m = st.Deserialize<ChatSettingsDto>();
+                    if (m is not null) Settings = m;
+                }
+            }
+            catch { /* ignore */ }
+        }
+        IsLoading = false;
+    }
+
+    async Task ResetSession()
+    {
+        IsLoading = true;
+        await JS.InvokeVoidAsync("sessionStorage.removeItem", "chat_session");
+        Messages.Clear();
+        ErrorText = null;
+        StreamingBuffer = "";
+        StateHasChanged();
+        IsLoading = false;
+    }
+
+    async void ScrollToEnd()
+    {
+        try
+        {
+            await JS.InvokeVoidAsync("eval", "let el=document.getElementById('chatlog'); if(el) el.scrollTop=el.scrollHeight;");
+        }
+        catch { }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        IsLoading = true;
+        ChatSrv.OnDelta -= OnDelta;
+        ChatSrv.OnCompleted -= OnCompleted;
+        ChatSrv.OnError -= OnError;
+        _cts?.Dispose();
+        await SaveSession();
+        IsLoading = false;
+    }
 }
