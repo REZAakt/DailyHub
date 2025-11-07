@@ -1003,3 +1003,181 @@ code {
     top: 60px;
     animation: twinkling 2s infinite;
 }
+
+
+.u-bubble-card {
+    width: 20%;
+    min-width: 400px;
+    height: 500px;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    color: #333;
+    box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.05);
+    border-radius: 40px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.7s ease-in-out;
+    overflow: hidden;
+}
+
+    .u-bubble-card::before {
+        content: "";
+        position: absolute;
+        height: 40%;
+        width: 100%;
+        bottom: 0;
+        right: 0;
+        transform: translateY(70px);
+        border-radius: 100%;
+        transition: all 0.7s ease-in-out;
+        box-shadow: 0px 0px 0px 0px rgba(0,0,0,0);
+    }
+
+    .u-bubble-card.Ai::before {
+        background-color: #3a0cbe;
+    }
+    .u-bubble-card.Wheater::before {
+        background-color: #008cd3;
+    }
+    .u-bubble-card.News::before {
+        background-color: #940524;
+    }
+    .u-bubble-card.Crypto::before {
+        background-color: #DDA201;
+    }
+
+.u-bubble-text {
+    z-index: 2;
+}
+
+.u-bubble-card:hover::before {
+    transform: scale(7) translate(-20px);
+}
+
+.u-bubble-card:hover {
+    box-shadow: 1px -10px 500px 500px #9fe4e44a;
+    color: #f3f3f3;
+}
+
+
+.u-glow-card {
+    width: 190px;
+    height: 254px;
+    background: #171717;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 0px 3px 1px #00000088;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+    .u-glow-card .u-glow-content {
+        border-radius: 10px;
+        background: linear-gradient(to right, #008b9d, #6a68e0, #d82383);
+        width: 186px;
+        height: 250px;
+        z-index: 1;
+        padding: 20px;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+
+.u-glow-content::before {
+    opacity: 0;
+    transition: opacity 300ms;
+    content: " ";
+    display: block;
+    background: #fff5;
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    filter: blur(50px);
+}
+
+.u-glow-card:hover .u-glow-content::before {
+    opacity: 1;
+}
+
+.u-glow-card::before {
+    opacity: 1;
+    content: "";
+    position: absolute;
+    display: block;
+    width: 120px;
+    height: 300px;
+    transform: rotate(0deg) translateY(50%);
+    background: linear-gradient(90deg, #ff2288, transparent);
+    transition: opacity 300ms;
+    animation: u-glow-rotation-a 3000ms infinite linear;
+    animation-play-state: paused;
+}
+
+.u-glow-card::after {
+    opacity: 1;
+    content: "";
+    position: absolute;
+    display: block;
+    width: 120px;
+    height: 300px;
+    transform: rotate(0deg) translateY(-50%);
+    background: linear-gradient(90deg, transparent, #2268ff);
+    transition: opacity 300ms;
+    animation: u-glow-rotation-b 3000ms infinite linear;
+    animation-play-state: paused;
+}
+
+.u-glow-card:hover::before {
+    opacity: 1;
+    animation-play-state: running;
+}
+
+.u-glow-card:hover::after {
+    opacity: 1;
+    animation-play-state: running;
+}
+
+.u-glow-card:hover .u-glow-glass {
+    opacity: 0;
+}
+
+.u-glow-glass {
+    position: absolute;
+    content: "";
+    display: block;
+    width: 20%;
+    height: 254px;
+    background: #17171733;
+    backdrop-filter: blur(50px);
+    z-index: 1;
+    transition-duration: 0.5s;
+}
+
+/* keyframes هم یونیک شد */
+@keyframes u-glow-rotation-a {
+    0% {
+        transform: rotate(0deg) translateY(50%);
+    }
+
+    100% {
+        transform: rotate(360deg) translateY(50%);
+    }
+}
+
+@keyframes u-glow-rotation-b {
+    0% {
+        transform: rotate(0deg) translateY(-50%);
+    }
+
+    100% {
+        transform: rotate(360deg) translateY(-50%);
+    }
+}
