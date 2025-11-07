@@ -133,7 +133,7 @@
 
 <BasePage IsLoading="IsLoading">
     <HeaderContent>
-        <div class="Headerdiv">
+        <div class="Headerdiv fade-in">
             <div style="width:max-content; height:max-content; display:flex; justify-content:center;min-width:100%;">
                 <ExpandablePanel Title="تنظیمات" style="background-color:white; min-width:100%;margin-top:-13px;">
                     <div style="margin:10px 0px;display:flex; justify-content:left;">
@@ -190,7 +190,7 @@
 
             <div class="input-box" dir="ltr" style="background-color:white; border-radius:10px;">
                 <textarea style="max-height:50px !important;border:none; direction:rtl;" @bind="@UserInput" @bind:event="oninput" placeholder="هرچی می خوای بپرس  ... " @onkeydown="OnKeyDown"></textarea>
-                <div style="display:flex;flex-direction:column;gap:.5rem; ">
+                <div style="display:flex;flex-direction:column;gap:.5rem;  padding: 5px; ">
                     <RadzenButton Icon="send" IconColor="#fff" Style="font-size:40px;width:70px ;height:70px; direction:rtl; border-radius:999px; display:revert;" 
                                   Disabled="@(IsStreaming || string.IsNullOrWhiteSpace(UserInput))"
                                   Click="Send"/>
