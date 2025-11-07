@@ -13,7 +13,7 @@
     </HeaderContent>
 
     <ChildContent>
-        <RadzenTabs RenderMode="TabRenderMode.Client" @bind-SelectedIndex="@selectedIndex" TabPosition="TabPosition.TopRight" Style="justify-content:center;">
+        <RadzenTabs class="fade-in" RenderMode="TabRenderMode.Client" @bind-SelectedIndex="@selectedIndex" TabPosition="TabPosition.TopRight" Style="justify-content:center;">
             <Tabs>
                 @foreach (var cat in _categories)
                 {

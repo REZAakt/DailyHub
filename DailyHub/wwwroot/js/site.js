@@ -212,6 +212,8 @@ window.ButtonClicker = {
         document.getElementById(id)?.click();
     }
 };
+
+window.scrollToBottom = function (el) { el.scrollTop = el.scrollHeight; };
 //function printElementById(id) {
 //    const elem = document.getElementById(id);
 //    if (!elem) return;

@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Components.Web
 @using Radzen.Blazor
 
-<div class="expandable-panel">
+<div class="expandable-panel fade-in" style="@style">
     <div class="title-container" @onclick="ToggleContent">
         <span class="title">@Title</span>
         <hr />
@@ -81,7 +81,8 @@
 @code {
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public string Title { get; set; } = "عنوان";
-    [Parameter] public bool isExpanded { get; set; } = true;
+    [Parameter] public string style { get; set; } 
+    [Parameter] public bool isExpanded { get; set; } = false;
 
     private void ToggleContent()
     {

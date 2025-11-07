@@ -35,7 +35,7 @@ builder.Services.AddHttpClient<IDeepseekProvider, DeepseekProvider>(client =>
     client.BaseAddress = new Uri("https://api.deepseek.com/v1/"); // توجه: v1
     client.DefaultRequestHeaders.Authorization =
         new AuthenticationHeaderValue("Bearer", builder.Configuration["DeepSeek:ApiKey"]); // از secrets/env بخوان
-    client.DefaultRequestHeaders.UserAgent.ParseAdd("DailyHub/1.0 (+contact@example.com)");
+    client.DefaultRequestHeaders.UserAgent.ParseAdd("DailyHub/1.0 (+Rreza.Aak@gmail.com)");
 });
 
 builder.Services.AddMemoryCache();

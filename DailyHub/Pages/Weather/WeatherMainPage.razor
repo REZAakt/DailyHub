@@ -173,7 +173,7 @@
             <RadzenRow class="wx-row" Style="align-items: stretch; gap: 1rem;">
 
                 <RadzenColumn Size="12" SizeMd="9" SizeSm="12">
-                    <RadzenCard class="wx-card">
+                    <RadzenCard class="wx-card fade-in">
                         <div class="wx-title">
                             <span class="wx-city">بابل</span>
                             @if (_data is not null)
@@ -212,7 +212,7 @@
                 </RadzenColumn>
 
                 <RadzenColumn Size="12" SizeMd="3" SizeSm="12">
-                    <RadzenCard class="wx-side">
+                    <RadzenCard class="wx-side fade-in">
                         <div class="wx-side-title">خلاصه امروز</div>
                         @if (_data is null)
                         {
@@ -232,7 +232,7 @@
             </RadzenRow>
 
             <!-- جدول ۷ روز آینده -->
-            <RadzenCard class="wx-card" Style="margin-top:1rem;">
+            <RadzenCard class="wx-card fade-in" Style="margin-top:1rem;">
                 <div class="wx-section-title">پیش‌بینی ۷ روز آینده</div>
                 <RadzenDataGrid TItem="WeatherDayDto"
                                 Data="@(_data?.Daily ?? Array.Empty<WeatherDayDto>())"
@@ -260,7 +260,7 @@
             </RadzenCard>
 
             <!-- چارت Min / Max -->
-            <RadzenCard class="wx-card" Style="margin-top:1rem;">
+            <RadzenCard class="wx-card fade-in" Style="margin-top:1rem;">
                 <div class="wx-section-title"> نمودار کمینه / بیشینه دما       ( ۷ روز )  </div>
                 <RadzenChart class="ChartClass">
                     <RadzenChartTooltipOptions Shared="true" />
