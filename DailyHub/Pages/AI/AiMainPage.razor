@@ -11,7 +11,7 @@
         flex-direction: column;
         height: calc(100vh - 180px);
         max-width: 75%;
-        margin: 0 auto
+        margin: 0 auto;
     }
 
     .Headerdiv {
@@ -42,7 +42,8 @@
         border: 1px solid var(--rz-base-300);
         border-radius: 14px;
         padding: 12px;
-        background: var(--rz-base-50)
+        background: var(--rz-base-50) ;
+        background-color :#212121;
     }
 
     .msg {
@@ -129,6 +130,23 @@
             opacity: 0.7;
         }
     }
+
+    .chat-input {
+        font-size:16px;
+        font-weight:600;
+        max-height: 50px !important;
+        border: none;
+        background-color: #212121;
+        color: white;
+        direction: rtl;
+        resize: none; /* اگه نمی‌خوای کاربر بکشه بزرگش کنه */
+    }
+
+        .chat-input:focus {
+            outline: none;
+            box-shadow: none;
+            border: none;
+        }
 </style>
 
 <BasePage IsLoading="IsLoading">
@@ -182,14 +200,14 @@
                     <div class="msg ai" style="border-color:#ffb3b3;background:#fff2f2">
                         <div>@ErrorText</div>
                         <div class="toolbar">
-                            <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="ResendLast">ارسال دوباره</RadzenButton>
+                            <RadzenButton ButtonStyle="ButtonStyle.Secondary" Icon="replay" IconColor="#fff" Click="ResendLast"></RadzenButton>
                         </div>
                     </div>
                 }
             </div>
 
-            <div class="input-box" dir="ltr" style="background-color:white; border-radius:10px;">
-                <textarea style="max-height:50px !important;border:none; direction:rtl;" @bind="@UserInput" @bind:event="oninput" placeholder="هرچی می خوای بپرس  ... " @onkeydown="OnKeyDown"></textarea>
+            <div class="input-box" dir="ltr" style="background-color:#212121; border-radius:10px;">
+                <textarea class="chat-input" @bind="@UserInput" @bind:event="oninput" placeholder="هرچی می خوای بپرس  ... " @onkeydown="OnKeyDown"></textarea>
                 <div style="display:flex;flex-direction:column;gap:.5rem;  padding: 5px; ">
                     <RadzenButton Icon="send" IconColor="#fff" Style="font-size:40px;width:70px ;height:70px; direction:rtl; border-radius:999px; display:revert;" 
                                   Disabled="@(IsStreaming || string.IsNullOrWhiteSpace(UserInput))"
@@ -302,15 +320,12 @@
 
     void Stop()
     {
-        IsLoading = true;
         _cts?.Cancel();
         IsStreaming = false;
-        IsLoading = false;
     }
 
     void ResendLast()
     {
-        IsLoading = true;
         if (Messages.Count == 0) return;
         // آخرین پیام کاربر را دوباره می‌فرستیم
         var lastUser = Messages.LastOrDefault(m => m.Role == ChatRole.user);
@@ -319,21 +334,17 @@
         UserInput = lastUser.Content;
         ErrorText = null;
         _ = Send();
-        IsLoading = false;
     }
 
     void OnDelta(string delta)
     {
-        IsLoading = true;
         StreamingBuffer += delta;
         InvokeAsync(StateHasChanged);
         ScrollToEnd();
-        IsLoading = false;
     }
 
     async void OnCompleted(string? full)
     {
-        IsLoading = true;
         if (!string.IsNullOrEmpty(full))
         {
             Messages.Add(new(ChatRole.assistant, full));
@@ -343,18 +354,15 @@
         StreamingBuffer = "";
         await InvokeAsync(StateHasChanged);
         ScrollToEnd();
-        IsLoading = false;
     }
 
     async void OnError(string err)
     {
-        IsLoading = true;
         ErrorText = err;
         IsStreaming = false;
         StreamingBuffer = "";
         await InvokeAsync(StateHasChanged);
         ScrollToEnd();
-        IsLoading = false;
     }
 
     void OnKeyDown(KeyboardEventArgs e)
@@ -373,7 +381,6 @@
 
     async Task LoadSession()
     {
-        IsLoading = true;
         var s = await JS.InvokeAsync<string>("sessionStorage.getItem", "chat_session");
         if (!string.IsNullOrEmpty(s))
         {
@@ -393,18 +400,15 @@
             }
             catch { /* ignore */ }
         }
-        IsLoading = false;
     }
 
     async Task ResetSession()
     {
-        IsLoading = true;
         await JS.InvokeVoidAsync("sessionStorage.removeItem", "chat_session");
         Messages.Clear();
         ErrorText = null;
         StreamingBuffer = "";
         StateHasChanged();
-        IsLoading = false;
     }
 
     async void ScrollToEnd()
@@ -418,12 +422,10 @@
 
     public async ValueTask DisposeAsync()
     {
-        IsLoading = true;
         ChatSrv.OnDelta -= OnDelta;
         ChatSrv.OnCompleted -= OnCompleted;
         ChatSrv.OnError -= OnError;
         _cts?.Dispose();
         await SaveSession();
-        IsLoading = false;
     }
 }
