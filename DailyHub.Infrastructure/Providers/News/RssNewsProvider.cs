@@ -14,11 +14,11 @@ public sealed class RssNewsProvider(HttpClient http) : INewsProvider
     {
         var url = category switch
         {
-            "sports" => "https://www.varzesh3.com/rss/all",                          // ✅ سالم
-            "politics" => "https://www.irna.ir/rss/tp/5",                           // ✅ سالم و RSS واقعی
-            "economy" => "https://www.irna.ir/rss/tp/20",                           // ✅ سالم
-            "health" => "https://www.irna.ir/rss/tp/1001681",                            // ✅ سالم
-            "all" => "https://www.isna.ir/rss",                                   // ✅ سالم
+            "sports" => "https://www.isna.ir/rss/tp/24",   // ورزشی
+            "politics" => "https://www.isna.ir/rss/tp/14",   // سیاسی
+            "economy" => "https://www.isna.ir/rss/tp/34",   // اقتصادی
+            "health" => "https://www.isna.ir/rss/tp/50",   // اجتماعی > سلامت
+            "all" => "https://www.isna.ir/rss",         // همه‌ی اخبار
             _ => "https://www.isna.ir/rss"
         };
 
