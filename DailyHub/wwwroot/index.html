@@ -61,6 +61,65 @@
             });
         }
     </script>
+
+    <script>
+        (function () {
+            const seen = new WeakSet();
+
+            // اینجا تاخیر کلی رو تنظیم کن (میلی‌ثانیه)
+            const GLOBAL_DELAY = 200; // 1 ثانیه
+
+            const options = {
+                root: null,
+                rootMargin: '0px 0px -10% 0px',
+                threshold: 0.1
+            };
+
+            const io = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const el = entry.target;
+
+                        // با تاخیر کلاس رو بزن
+                        setTimeout(() => {
+                            el.classList.add('is-visible');
+                        }, GLOBAL_DELAY);
+
+                        observer.unobserve(el);
+                    }
+                });
+            }, options);
+
+            function registerTargets(root = document) {
+                root.querySelectorAll('.fade-in').forEach(el => {
+                    if (!seen.has(el)) {
+                        seen.add(el);
+                        io.observe(el);
+                    }
+                });
+            }
+
+            // اول صفحه
+            registerTargets();
+
+            // برای المنت‌هایی که بعداً اضافه می‌شن
+            const mo = new MutationObserver(mutations => {
+                for (const m of mutations) {
+                    m.addedNodes.forEach(node => {
+                        if (node.nodeType !== 1) return;
+                        if (node.matches && node.matches('.fade-in')) {
+                            registerTargets(node.parentNode || document);
+                        }
+                        registerTargets(node);
+                    });
+                }
+            });
+
+            mo.observe(document.body, { childList: true, subtree: true });
+        })();
+    </script>
+
+
 </body>
 
 </html>
