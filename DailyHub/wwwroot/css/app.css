@@ -23,7 +23,7 @@ a, .btn-link {
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 .content {
@@ -194,6 +194,7 @@ code {
     top: calc(50% - 1.25em);
     left: calc(50% - 1.25em);
 }
+
 .overlay {
     position: fixed; /* روی کل صفحه */
     top: 0;
@@ -207,8 +208,8 @@ code {
     z-index: 9999; /* مطمئن شو روی همه عناصره */
 }
 
-.rz-navigation-item-text{
-    color:black;
+.rz-navigation-item-text {
+    color: black;
 }
 
 /* رنگ و ضخامت و فاصله‌ی خط رو اینجا تنظیم کن */
@@ -307,18 +308,18 @@ code {
 }
 
 .rz-navigation-item-text {
-    font-weight:400;
-    font-size:14px;
-    color:white;
+    font-weight: 400;
+    font-size: 14px;
+    color: white;
 }
 
 .rz-navigation-item-wrapper {
-    display:flex;
-    justify-content:right;
+    display: flex;
+    justify-content: right;
 }
 
-.rz-menu-toggle-item{
-    direction:ltr;
+.rz-menu-toggle-item {
+    direction: ltr;
 }
 
 .rz-header {
@@ -389,14 +390,13 @@ code {
     max-height: calc(100vh - 220px);
 }
 
-.rz-tabview-nav{
-    justify-content:center !important;  
+.rz-tabview-nav {
+    justify-content: center !important;
 }
 
 
-.rz-pager.rz-unselectable-text.rz-helper-clearfix.rz-align-justify{
-    direction:ltr;
-   
+.rz-pager.rz-unselectable-text.rz-helper-clearfix.rz-align-justify {
+    direction: ltr;
 }
 
 .crypto-list {
@@ -482,12 +482,12 @@ code {
 }
 /* تولتیپ‌های چارت رَدزِن */
 .rz-chart-tooltip, .rz-tooltip {
-  z-index: 10000 !important;
+    z-index: 10000 !important;
 }
 
 /* اگه کارت/کانتینر یه جای دیگه overflow:hidden داشت */
 .rz-card, .rz-card > .rz-card-content {
-  overflow: visible !important;
+    overflow: visible !important;
 }
 
 .messageBox {
@@ -639,6 +639,7 @@ code {
         opacity: 0.7;
     }
 }
+
 @keyframes rotate {
     from {
         transform: rotate(0deg);
@@ -648,6 +649,7 @@ code {
         transform: rotate(360deg);
     }
 }
+
 @keyframes zoomOut {
     from {
         transform: scale(1);
@@ -658,6 +660,7 @@ code {
         opacity: 0;
     }
 }
+
 @keyframes zoomIn {
     from {
         transform: scale(0.8);
@@ -679,6 +682,7 @@ code {
         transform: translateY(-10px);
     }
 }
+
 @keyframes shake {
     0%, 100% {
         transform: translateX(0);
@@ -700,6 +704,7 @@ code {
         transform: translateX(4px);
     }
 }
+
 @keyframes colorPulse {
     0% {
         background: #ff7675;
@@ -771,15 +776,8 @@ code {
     }
 }
 
-
-/*.fade-in {*/
-    /*    animation: fadeIn .3s ease-in;*/
-    /*animation: zoomIn 0.5s ease-out forwards;
-}*/
-
 .pulse {
     animation: pulse .3s ease-in;
-
 }
 
 .e-card {
@@ -1039,12 +1037,15 @@ code {
     .u-bubble-card.Ai::before {
         background-color: #3a0cbe;
     }
+
     .u-bubble-card.Wheater::before {
         background-color: #008cd3;
     }
+
     .u-bubble-card.News::before {
         background-color: #940524;
     }
+
     .u-bubble-card.Crypto::before {
         background-color: #DDA201;
     }
@@ -1183,8 +1184,7 @@ code {
 }
 
 /*همون ویژگی که می خواستی برای لود وقتی دیده میشن و با انمیشن همراه با js که تویه indexhtml داره*/
-
-.fade-in {
+/*.fade-in {
     opacity: 0;
     transform: translateY(20px) scale(0.98);
     transition: opacity 0.6s ease, transform 0.6s ease;
@@ -1196,3 +1196,10 @@ code {
         transform: translateY(0) scale(1);
         animation: zoomIn 0.5s ease-out forwards;
     }
+*/
+
+
+.fade-in {
+    animation: fadeIn .3s ease-in;
+    animation: zoomIn 0.5s ease-out forwards;
+}

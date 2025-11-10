@@ -14,11 +14,16 @@ public sealed class CryptoHub(ICryptoProvider provider, ILogger<CryptoHub> logge
         var ids = idsCsv.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
         var interval = TimeSpan.FromMinutes(5);
 
-        // مرحله اول: یک بار دریافت اولیه (خارج از try/yield)
+        // 1) گرفتن داده اولیه
         List<CryptoItemDto> firstData;
         try
         {
             firstData = await provider.GetAsync(ids, ct);
+        }
+        catch (OperationCanceledException)
+        {
+            // کلاینت رفت، ما هم میریم
+            yield break;
         }
         catch (Exception ex)
         {
@@ -26,28 +31,45 @@ public sealed class CryptoHub(ICryptoProvider provider, ILogger<CryptoHub> logge
             yield break;
         }
 
-        // اولین بار yield
+        // اولین نتیجه
         yield return firstData;
 
-        // مرحله دوم: حلقه آپدیت دوره‌ای بدون try خارجی
+        // 2) حلقه‌ی بازه‌ای
         while (!ct.IsCancellationRequested)
         {
-            await Task.Delay(interval, ct);
+            // تاخیر با امکان کنسل شدن
+            try
+            {
+                await Task.Delay(interval, ct);
+            }
+            catch (OperationCanceledException)
+            {
+                // یعنی استریم بسته شده
+                yield break;
+            }
 
             List<CryptoItemDto>? refreshed = null;
-            bool ok = true;
+
             try
             {
                 refreshed = await provider.GetAsync(ids, ct);
             }
+            catch (OperationCanceledException)
+            {
+                // باز هم یعنی کلاینت رفت
+                yield break;
+            }
             catch (Exception ex)
             {
-                ok = false;
+                // اینجا ارور سرویسه، نه کنسل. پس لاگ کن و ادامه بده
                 logger.LogWarning(ex, "Crypto.Subscribe refresh failed for {Ids}", idsCsv);
+                continue;
             }
 
-            if (ok && refreshed is not null)
+            if (refreshed is not null)
+            {
                 yield return refreshed;
+            }
         }
     }
 }
