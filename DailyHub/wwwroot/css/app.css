@@ -1183,6 +1183,106 @@ code {
     }
 }
 
+/* کانتینر کلی */
+.chat-card-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    padding:0px .5rem;
+}
+
+/* خود کارت Radzen */
+.chat-card {
+    display: flex;
+    flex-direction: row-reverse; /* متن راست، مربع چپ */
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border-radius: 18px;
+    min-height: 120px;
+    padding: 1.2rem 2rem;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+    /* هاور */
+    .chat-card:hover {
+        transform: scale(1.01);
+        box-shadow: 0 14px 30px rgba(0,0,0,0.12);
+    }
+
+/* متن */
+.chat-card-content {
+    text-align: right;
+    color: #fff;
+}
+
+    .chat-card-content h3 {
+        margin: 0 0 .4rem;
+        font-size: 1.35rem;
+        font-weight: 600;
+        color: white;
+    }
+
+    .chat-card-content p {
+        margin: 0;
+        font-size: .95rem;
+    }
+
+/* مربع سفید سمت چپ */
+.chat-card-icon {
+    width: 90px;
+    display: flex;
+    justify-content: center;
+}
+
+.chat-card-slot {
+    width: 80px;
+    height: 80px;
+    background-color: transparent;
+    border-radius: 4px;
+}
+
+/* پس‌زمینه‌های مختلف برای یونیک‌بودن */
+.card1 {
+    background: linear-gradient(90deg, #26c6da 0%, #9c27b0 50%, #3a0cbe 100%);
+}
+
+.card2 {
+    background: linear-gradient(90deg, #26c6da 0%, #008cd3 100%);
+}
+
+.card3 {
+    background: linear-gradient(90deg, #26c6da 0%, #CB4400 100%);
+}
+
+.card4 {
+    background: linear-gradient(90deg, #26c6da 0%, #940524 100%);
+}
+
+/* ریسپانسیو: تو موبایل مربع سفید حذف بشه و پدینگ کم بشه */
+@media (max-width: 768px) {
+    .chat-card {
+        padding: 1rem 1.2rem;
+        direction:ltr;
+    }
+
+    .chat-card-icon {
+        display: none;
+    }
+
+    .chat-card-content h3 {
+        font-size: 1.1rem;
+        color:white ;
+    }
+
+    .chat-card-content p {
+        font-size: .85rem;
+    }
+}
+
+
 /*همون ویژگی که می خواستی برای لود وقتی دیده میشن و با انمیشن همراه با js که تویه indexhtml داره*/
 /*.fade-in {
     opacity: 0;
