@@ -824,7 +824,6 @@ code {
     font-size: 14px;
     font-weight: 100;
     position: relative;
-    top: 1em;
     text-transform: lowercase;
 }
 
@@ -1300,6 +1299,6 @@ code {
 
 
 .fade-in {
-    animation: fadeIn .3s ease-in;
+    /*animation: fadeIn .3s ease-in;*/
     animation: zoomIn 0.5s ease-out forwards;
 }
