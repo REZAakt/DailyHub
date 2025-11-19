@@ -7,150 +7,154 @@
 
 <style>
     .chat-wrap {
-        display: flex;
-        flex-direction: column;
-        height: calc(100vh - 180px);
-        max-width: 75%;
-        margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 180px);
+    max-width: 75%;
+    margin: 0 auto;
     }
 
     .Headerdiv {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        max-width: 75%;
-        margin: 1rem auto;
-        background-color: white;
-        border-radius: .5rem;
-        box-shadow: 0 0px 10px rgba(0, 0, 0, 0.15);
-        margin-top: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 75%;
+    margin: 1rem auto;
+    background-color: white;
+    border-radius: .5rem;
+    box-shadow: 0 0px 10px rgba(0, 0, 0, 0.15);
+    margin-top: 30px;
     }
 
     @@media(max-width: 780px) {
-        .chat-wrap {
-            max-width: 95%;
-        }
+    .chat-wrap {
+    max-width: 95%;
+    }
 
-        .Headerdiv {
-            max-width: 95%;
-        }
+    .Headerdiv {
+    max-width: 95%;
+    }
     }
 
     .chat-log {
-        flex: 1;
-        overflow: auto;
-        border: 1px solid var(--rz-base-300);
-        border-radius: 14px;
-        padding: 12px;
-        background: var(--rz-base-50) ;
-        background-color :#212121;
+    flex: 1;
+    overflow: auto;
+    border: 1px solid var(--rz-base-300);
+    border-radius: 14px;
+    padding: 12px;
+    background: var(--rz-base-50);
+    background-color: #212121;
     }
 
     .msg {
-        max-width: 80%;
-        text-wrap: wrap;
-        padding: .75rem 1rem;
-        border-radius: 14px;
-        margin: .4rem 0;
-        white-space: pre-wrap;
-        line-height: 1.5;
-        animation: fadeIn 0.3s ease-in;
-        /* animation: pulse 1s infinite; */
+    max-width: 80%;
+    text-wrap: wrap;
+    padding: .75rem 1rem;
+    border-radius: 14px;
+    margin: .4rem 0;
+    white-space: pre-wrap;
+    line-height: 1.5;
+    animation: fadeIn 0.3s ease-in;
+    /* animation: pulse 1s infinite; */
     }
 
-        .msg.user {
-            margin-left: auto;
-            background: #DCF1FF;
-            border: 1px solid #BFE4FF
-        }
+    .msg.user {
+    margin-left: auto;
+    background: #DCF1FF;
+    border: 1px solid #BFE4FF
+    }
 
-        .msg.ai {
-            margin-right: auto;
-            background: #F6F6F6;
-            border: 1px solid #E2E2E2
-        }
+    .msg.ai {
+    margin-right: auto;
+    background: #F6F6F6;
+    border: 1px solid #E2E2E2
+    }
 
-        .msg.pending {
-            opacity: .8
-        }
+    .msg.pending {
+    opacity: .8
+    }
 
     .toolbar {
-        display: flex;
-        gap: .5rem;
-        margin-top: .75rem
+    display: flex;
+    gap: .5rem;
+    margin-top: .75rem
     }
 
     .input-box {
-        display: flex;
-        gap: .5rem;
-        align-items: flex-end;
-        margin-top: 8px
+    display: flex;
+    gap: .5rem;
+    align-items: flex-end;
+    margin-top: 8px
     }
 
     textarea {
-        width: 100%;
-        min-height: 70px;
-        border-radius: 12px;
-        border: 1px solid var(--rz-base-300);
-        padding: .75rem
+    width: 100%;
+    min-height: 70px;
+    border-radius: 12px;
+    border: 1px solid var(--rz-base-300);
+    padding: .75rem
     }
 
     .badge {
-        padding: 5px 8px;
-        background: #5686FE;
-        border-radius: 9px;
-        font-size: .75rem;
-        justify-content: left;
-        display: flex;
-        margin-inline-start: 6px
+    padding: 5px 8px;
+    background: #5686FE;
+    border-radius: 9px;
+    font-size: .75rem;
+    justify-content: left;
+    display: flex;
+    margin-inline-start: 6px
     }
 
     @@keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(10px);
-        }
+    from {
+    opacity: 0;
+    transform: translateY(10px);
+    }
 
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    to {
+    opacity: 1;
+    transform: translateY(0);
+    }
     }
 
     @@keyframes pulse {
-        0% {
-            opacity: 0.7;
-        }
+    0% {
+    opacity: 0.7;
+    }
 
-        50% {
-            opacity: 1;
-        }
+    50% {
+    opacity: 1;
+    }
 
-        100% {
-            opacity: 0.7;
-        }
+    100% {
+    opacity: 0.7;
+    }
     }
 
     .chat-input {
-        font-size:16px;
-        font-weight:600;
-        max-height: 50px !important;
-        border: none;
-        background-color: #303030;
-        color: white;
-        direction: rtl;
-        resize: none; /* اگه نمی‌خوای کاربر بکشه بزرگش کنه */
+    font-size: 16px;
+    font-weight: 600;
+    max-height: 50px !important;
+    border: none;
+    background-color: #303030;
+    color: white;
+    direction: rtl;
+    resize: none; /* اگه نمی‌خوای کاربر بکشه بزرگش کنه */
     }
 
-        .chat-input:focus {
-            outline: none;
-            box-shadow: none;
-            border: none;
-        }
+    .chat-input:focus {
+    outline: none;
+    box-shadow: none;
+    border: none;
+    }
 </style>
 
 <BasePage IsLoading="IsLoading">
     <HeaderContent>
+        <RadzenAlert AlertStyle="AlertStyle.Danger" @bind-Visible="_offline" ShowIcon="false" Variant="Variant.Flat" Shade="Shade.Lighter"
+        style="margin:1rem 1rem; border-radius:18px;width:98%; box-shadow: 0 0px 30px rgba(0, 0, 0, 0.1) !important;">
+            <RadzenText style="color:red; font-weight:800; font-size:16px;" Text="  اتصال شما برقرار نشد. ابتدا از اتصال به اینترنت اطمینان حاصل کنید و صفحه را  (Refresh)  کنید ." />
+        </RadzenAlert>
         <div class="Headerdiv fade-in">
             <div style="width:max-content; height:max-content; display:flex; justify-content:center;min-width:100%;">
                 <ExpandablePanel Title="تنظیمات" style="background-color:white; min-width:100%;margin-top:-13px;">
@@ -166,8 +170,8 @@
                         <RadzenNumeric @bind-Value="_temperature" Step="0.1" Min="0" Max="2" Style="max-width:120px" />
 
                         <RadzenDropDown @bind-Value="_model"
-                                        Data="Models" Style="max-width:220px"
-                                        Placeholder="مدل" />
+                        Data="Models" Style="max-width:220px"
+                        Placeholder="مدل" />
 
                         <span style="margin-inline-start:auto;opacity:.7">ذخیره‌ی جلسه: sessionStorage</span>
 
@@ -209,9 +213,9 @@
             <div class="input-box" dir="ltr" style="background-color:#303030; border-radius:10px;">
                 <textarea class="chat-input" @bind="@UserInput" @bind:event="oninput" placeholder="هرچی می خوای بپرس  ... " @onkeydown="OnKeyDown"></textarea>
                 <div style="display:flex;flex-direction:column;gap:.5rem;  padding: 5px; ">
-                    <RadzenButton Icon="send" IconColor="#fff" Style="font-size:40px;width:70px ;height:70px; direction:rtl; border-radius:999px; display:revert;" 
-                                  Disabled="@(IsStreaming || string.IsNullOrWhiteSpace(UserInput))"
-                                  Click="Send"/>
+                    <RadzenButton Icon="send" IconColor="#fff" Style="font-size:40px;width:70px ;height:70px; direction:rtl; border-radius:999px; display:revert;"
+                    Disabled="@(IsStreaming || string.IsNullOrWhiteSpace(UserInput))"
+                    Click="Send" />
 
                     @*     <RadzenButton Icon="stop"
                                   ButtonStyle="ButtonStyle.Danger"
@@ -230,7 +234,9 @@
     private int _maxTokens = 512;
     private double _temperature = 0.7;
     private string _model = "deepseek-chat";
-
+    private bool _offline = false;
+    private readonly string[] Models = new[] { "deepseek-chat", "deepseek-reasoner" };
+    private ChatSettingsDto Settings { get; set; } = new() { Model = "deepseek-chat", MaxTokens = 512, Temperature = 0.7 };
     public bool IsLoading { get; set; } = true;
     private List<ChatMessageDto> Messages = new();
     private string UserInput = "";
@@ -253,6 +259,7 @@
             MaxTokens = _maxTokens,
             Temperature = _temperature
         };
+
     private void ApplySettings()
     {
         Settings = BuildSettings();
@@ -268,7 +275,6 @@
 
         StateHasChanged();
     }
-    private ChatSettingsDto Settings { get; set; } = new() { Model = "deepseek-chat", MaxTokens = 512, Temperature = 0.7 };
 
     // مثالِ ارسال پیام:
     private async Task SendAsync()
@@ -279,16 +285,25 @@
 
     // تنظیمات درخواست
 
-    private readonly string[] Models = new[] { "deepseek-chat", "deepseek-reasoner" };
-
     protected override async Task OnInitializedAsync()
     {
+        IsLoading = true;
+
         ChatSrv.OnDelta += OnDelta;
         ChatSrv.OnCompleted += OnCompleted;
         ChatSrv.OnError += OnError;
 
-        await ChatSrv.StartAsync();
-        await LoadSession();
+        try
+        {
+            await ChatSrv.StartAsync();
+            await LoadSession();
+            _offline = false;
+        }
+        catch (Exception ex)
+        {
+            _offline = true;
+            IsLoading = false;
+        }
         ScrollToEnd();
         IsLoading = false;
     }
