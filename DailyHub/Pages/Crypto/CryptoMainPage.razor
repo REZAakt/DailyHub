@@ -33,7 +33,7 @@
                         <RadzenDataGrid TItem="CryptoItemDto" Data="@Items" AllowPaging="true" PageSize="10" Responsive="false">
                             <Columns>
                                 <RadzenDataGridColumn TItem="CryptoItemDto" Title="#" Width="40px">
-                                    <Template Context="c">@Items.IndexOf(c) + 1</Template>
+                                    <Template Context="c">@(Items.IndexOf(c) + 1)</Template>
                                 </RadzenDataGridColumn>
 
                                 <RadzenDataGridColumn TItem="CryptoItemDto" Title="نام" Width="220px">
