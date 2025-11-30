@@ -1,12 +1,11 @@
 ﻿@page "/"
 
 
+
 @code {
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        base.OnInitialized();
-        Navigation.NavigateTo("/Home", forceLoad: true);
+        Navigation.NavigateTo("Home");
     }
-
 }

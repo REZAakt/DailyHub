@@ -69,6 +69,22 @@ builder.Services.AddHttpClient<ICryptoProvider, CoinGeckoProvider>("ICryptoProvi
 .SetHandlerLifetime(TimeSpan.FromMinutes(10));
 
 
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("AllowGitHubPages",
+//        policy =>
+//        {
+//            policy.WithOrigins(
+//                "https://username.github.io",
+//                "https://username.github.io/my-client-frontend"
+//            )
+//            .AllowAnyHeader()
+//            .AllowAnyMethod();
+//        });
+//});
+
+
+// 2) استفاده از policy قبل از UseAuthorization
 
 builder.Services.AddHttpClient("rss");
 builder.Services.AddScoped<INewsProvider, RssNewsProvider>();
@@ -79,6 +95,7 @@ builder.Services.AddDailyHubInfrastructure();
 
 var app = builder.Build();
 
+//app.UseCors("AllowGitHubPages");
 app.MapGet("/", () => "Hello World!");
 // --- Middleware ---
 app.UseHttpsRedirection();
