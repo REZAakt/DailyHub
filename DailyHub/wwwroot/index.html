@@ -37,7 +37,13 @@
     </div>
 
     <script src="_framework/blazor.webassembly.js"></script>
-    <script>navigator.serviceWorker.register('service-worker.js');</script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.published.js');
+            });
+        }
+    </script>
     <script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
     <script src="js/site.js"></script>
     <script>

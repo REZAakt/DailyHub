@@ -1,4 +1,4 @@
-// Caution! Be sure you understand the caveats before publishing an application with
+﻿// Caution! Be sure you understand the caveats before publishing an application with
 // offline support. See https://aka.ms/blazor-offline-considerations
 
 self.importScripts('./service-worker-assets.js');
@@ -38,18 +38,50 @@ async function onActivate(event) {
 }
 
 async function onFetch(event) {
-    let cachedResponse = null;
-    if (event.request.method === 'GET') {
-        // For all navigation requests, try to serve index.html from cache,
-        // unless that request is for an offline resource.
-        // If you need some URLs to be server-rendered, edit the following check to exclude those URLs
-        const shouldServeIndexHtml = event.request.mode === 'navigate'
-            && !manifestUrlList.some(url => url === event.request.url);
+    const cache = await caches.open(cacheName);
 
-        const request = shouldServeIndexHtml ? 'index.html' : event.request;
-        const cache = await caches.open(cacheName);
-        cachedResponse = await cache.match(request);
+    // فقط درخواست‌های GET رو هندل می‌کنیم
+    if (event.request.method !== 'GET') {
+        return fetch(event.request);
     }
+
+    // ۱) اگر درخواست از نوع "navigate" هست (یعنی لود صفحه / روت)
+    if (event.request.mode === 'navigate') {
+        try {
+            // اول سعی می‌کنیم از شبکه جواب بدیم
+            const networkResponse = await fetch(event.request);
+            return networkResponse;
+        } catch (error) {
+            console.warn('Network failed, serving offline page if possible.', error);
+
+            // اگر نت قطع بود یا شبکه خطا داد → برو سراغ offline.html از کش
+            const offlinePage = await cache.match('offline.html');
+            if (offlinePage) {
+                return offlinePage;
+            }
+
+            // اگر به هر دلیلی offline.html نبود، حداقل index.html رو بده
+            const cachedIndex = await cache.match('index.html');
+            if (cachedIndex) {
+                return cachedIndex;
+            }
+
+            // آخرین fallback
+            return new Response('Offline', {
+                status: 503,
+                statusText: 'Offline'
+            });
+        }
+    }
+
+    // ۲) برای بقیه درخواست‌ها (css/js/عکس و …) منطق قبلی کش
+    let cachedResponse = null;
+
+    const shouldServeIndexHtml = event.request.mode === 'navigate'
+        && !manifestUrlList.some(url => url === event.request.url);
+
+    const request = shouldServeIndexHtml ? 'index.html' : event.request;
+    cachedResponse = await cache.match(request);
 
     return cachedResponse || fetch(event.request);
 }
