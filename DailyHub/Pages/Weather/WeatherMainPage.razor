@@ -314,11 +314,19 @@
 
         _handler = dto =>
         {
-            _data = dto;
-            _offline = false;          // به محض دریافت داده یعنی اتصال اوکی
-            IsLoading = false;
-            InvokeAsync(StateHasChanged);
+            try
+            {
+                _data = dto;
+                _offline = false;
+                IsLoading = false;
+                InvokeAsync(StateHasChanged);
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Weather handler failed: {ex}");
+            }
         };
+
         Wx.OnWeatherUpdated += _handler;
 
         try
@@ -330,16 +338,26 @@
         {
             _offline = true;           // هر خطایی در اتصال/استریم
             IsLoading = false;
-            Console.Error.WriteLine($"Subscribe failed: {ex.Message}");
             StateHasChanged();
         }
     }
 
     public async ValueTask DisposeAsync()
     {
-        if (_handler is not null) Wx.OnWeatherUpdated -= _handler;
-        await Wx.DisposeAsync();
+        if (_handler is not null)
+            Wx.OnWeatherUpdated -= _handler;
+
+        try
+        {
+            await Wx.DisposeAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Wx.DisposeAsync failed: {ex}");
+            // اینجا عمداً swallow می‌کنیم که UI کلاً کرش نکنه
+        }
     }
+
 
     // نگاشت ساده‌ی کد WMO به برچسب فارسی
     private static string GetWeatherLabel(int code) => code switch
