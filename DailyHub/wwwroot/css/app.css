@@ -1280,6 +1280,179 @@ code {
         font-size: .85rem;
     }
 }
+/* صفحه خطای Blazor – فول‌اسکرین و شیک */
+#blazor-error-ui {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+    /* بک‌گراند گرادینت صورتی جیغ و آبی آسمونی */
+    #blazor-error-ui .error-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        background: radial-gradient(circle at top left, #ff6bb5 0%, #ffd6ec 30%, #a6e1ff 70%, #ffffff 100%);
+    }
+
+    /* کارت وسط صفحه */
+    #blazor-error-ui .error-card {
+        position: relative;
+        width: 100%;
+        max-width: 480px;
+        background: rgba(255, 255, 255, 0.96);
+        backdrop-filter: blur(12px);
+        border-radius: 24px;
+        box-shadow: 0 18px 45px rgba(255, 105, 180, 0.35);
+        padding: 24px 24px 28px;
+        text-align: center;
+    }
+
+    /* نشان مشکل */
+    #blazor-error-ui .error-badge {
+        display: inline-block;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #ff4fa0, #ff8ad4);
+        color: #fff;
+        font-size: 0.78rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+    }
+
+    /* عنوان */
+    #blazor-error-ui .error-title {
+        margin: 0 0 8px;
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #ff2f88;
+    }
+
+    /* متن توضیحی */
+    #blazor-error-ui .error-text {
+        margin: 0 0 16px;
+        font-size: 0.95rem;
+        color: #555;
+    }
+
+    /* باکس شماره پشتیبانی */
+    #blazor-error-ui .support-box {
+        background: #fdf1f8;
+        border-radius: 16px;
+        padding: 12px 14px;
+        margin-bottom: 18px;
+        border: 1px solid rgba(255, 143, 197, 0.6);
+    }
+
+        #blazor-error-ui .support-box p {
+            margin: 0 0 4px;
+            font-size: 0.85rem;
+            color: #777;
+        }
+
+    #blazor-error-ui .support-phone {
+        display: inline-block;
+        font-size: 1.2rem;
+        font-weight: 800;
+        text-decoration: none;
+        color: #ff2f88;
+    }
+
+        #blazor-error-ui .support-phone:hover {
+            text-decoration: underline;
+        }
+
+    #blazor-error-ui .support-hint {
+        display: block;
+        margin-top: 4px;
+        font-size: 0.8rem;
+        color: #999;
+    }
+
+    /* دکمه‌ها */
+    #blazor-error-ui .error-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 14px;
+    }
+
+    #blazor-error-ui .error-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 14px;
+        border-radius: 999px;
+        border: none;
+        text-decoration: none;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+    }
+
+        #blazor-error-ui .error-btn.primary {
+            background: linear-gradient(90deg, #ff2f88, #ff6bb5);
+            color: #fff;
+            box-shadow: 0 10px 24px rgba(255, 47, 136, 0.45);
+        }
+
+        #blazor-error-ui .error-btn.secondary {
+            background: #e7f6ff;
+            color: #1c8ad8;
+            border: 1px solid rgba(28, 138, 216, 0.2);
+        }
+
+        #blazor-error-ui .error-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+    /* متن پایین کارت */
+    #blazor-error-ui .error-footer {
+        font-size: 0.78rem;
+        color: #999;
+    }
+
+    /* دکمه بستن (اگر بخوای استفاده کنی) */
+    #blazor-error-ui .error-close {
+        position: absolute;
+        top: 10px;
+        inset-inline-end: 14px;
+        font-size: 1rem;
+        cursor: pointer;
+        color: #ff2f88;
+        opacity: 0.7;
+        transition: opacity 0.15s ease, transform 0.1s ease;
+    }
+
+        #blazor-error-ui .error-close:hover {
+            opacity: 1;
+            transform: scale(1.08);
+        }
+
+/* ریسپانسیو برای موبایل‌های خیلی کوچک */
+@media (max-width: 360px) {
+    #blazor-error-ui .error-card {
+        padding: 18px 16px 22px;
+        border-radius: 18px;
+    }
+
+    #blazor-error-ui .error-title {
+        font-size: 1.25rem;
+    }
+
+    #blazor-error-ui .support-phone {
+        font-size: 1.05rem;
+    }
+}
 
 
 /*همون ویژگی که می خواستی برای لود وقتی دیده میشن و با انمیشن همراه با js که تویه indexhtml داره*/

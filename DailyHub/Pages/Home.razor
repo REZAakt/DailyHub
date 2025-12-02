@@ -5,7 +5,6 @@
 @using System.Text.RegularExpressions
 @using DailyHub.Shared.Enums
 @inject NavigationManager _NavigationManager
-@inject IJSRuntime JS
 
 <style>
     .wx-wrap {
@@ -186,12 +185,11 @@
                             </div>
 
                             <div style="display:flex; align-items:center; gap:.6rem;">
-                                @if (windowWidth > 500)
+                          @*       @if (windowWidth > 500)
                                 {
                                     <div style="opacity:.7">@(_items?.Count > 0 ? $"{_items.Count} مورد" : (IsLoading ? "در حال دریافت..." : "موردی یافت نشد"))</div>
-                                }
-                                <RadzenButton Icon="refresh" Text="بروزرسانی"
-                                Click="Refresh"
+                                } *@
+                                <RadzenButton Icon="refresh" Text="بروزرسانی" Click="Refresh"
                                 ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" />
                             </div>
                         </div>
@@ -456,6 +454,9 @@
 
     protected override async Task OnInitializedAsync()
     {
+        //میخوای صفحه ارور رو تست کنی ؟
+        // throw new Exception("Test Blazor Error UI");
+
         try
         {
             Otd.OnOtdUpdated += (_, list) =>
@@ -479,27 +480,30 @@
     }
 
     #region CurrentWindow
-    private int windowWidth;
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        StateHasChanged();
+    // private int windowWidth;
 
-        if (firstRender)
-        {
-            var dotNetRef = DotNetObjectReference.Create(this);
-            await JS.InvokeVoidAsync("resizeListener.register", dotNetRef);
-            windowWidth = await JS.InvokeAsync<int>("getWindowWidth");
-            StateHasChanged();
 
-        }
-    }
-    [JSInvokable]
-    public Task OnResize(int width)
-    {
-        windowWidth = width;
-        StateHasChanged();
-        return Task.CompletedTask;
-    }
+    // protected override async Task OnAfterRenderAsync(bool firstRender)
+    // {
+    //     if (firstRender)
+    //     {
+    //         StateHasChanged();
+    //         var dotNetRef = DotNetObjectReference.Create(this);
+    //         await JS.InvokeVoidAsync("resizeListener.register", dotNetRef);
+
+    //         windowWidth = await JS.InvokeAsync<int>("getWindowWidth");
+
+    //         await InvokeAsync(StateHasChanged);
+    //     }
+    // }
+
+    // [JSInvokable]
+    // public Task OnResize(int width)
+    // {
+    //     windowWidth = width;
+
+    //     return InvokeAsync(StateHasChanged);
+    // }
     #endregion
 
 
