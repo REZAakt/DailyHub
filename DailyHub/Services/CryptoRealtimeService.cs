@@ -13,7 +13,7 @@ public sealed class CryptoRealtimeService : IAsyncDisposable
 
     public event Action<string, List<CryptoItemDto>>? OnCryptoUpdated;
 
-    private const string ApiBaseUrl = "https://localhost:7014";          // همون Base سرور
+    private const string ApiBaseUrl = "https://server2.app.sanaerp.ir";          // همون Base سرور
     private static readonly string HubUrl = $"{ApiBaseUrl}/hubs/crypto";
 
     // کش سمت کلاینت (اختیاری)

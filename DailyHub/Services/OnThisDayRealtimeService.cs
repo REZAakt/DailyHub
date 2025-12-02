@@ -10,7 +10,7 @@ public sealed class OnThisDayRealtimeService : IAsyncDisposable
 
     public event Action<string, List<OnThisDayItemDto>>? OnOtdUpdated;
 
-    private const string ApiBaseUrl = "https://localhost:7014";
+    private const string ApiBaseUrl = "https://server2.app.sanaerp.ir";
     private static readonly string HubUrl = $"{ApiBaseUrl}/hubs/otd";
 
     public async Task StartAsync()
