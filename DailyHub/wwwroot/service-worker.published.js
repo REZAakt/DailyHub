@@ -37,36 +37,37 @@ async function onActivate(event) {
         .map(key => caches.delete(key)));
 }
 
-async function onFetch(event) {
-    const cache = await caches.open(cacheName);
 
-    // فقط درخواست‌های GET رو هندل می‌کنیم
+async function onFetch(event) {
     if (event.request.method !== 'GET') {
         return fetch(event.request);
     }
 
-    // ۱) اگر درخواست از نوع "navigate" هست (یعنی لود صفحه / روت)
-    if (event.request.mode === 'navigate') {
+    const cache = await caches.open(cacheName);
+    const isNavigate = event.request.mode === 'navigate';
+
+    // ۱) برای درخواست‌های صفحه (route ها)
+    if (isNavigate) {
         try {
-            // اول سعی می‌کنیم از شبکه جواب بدیم
+            // سعی می‌کنیم آنلاین جواب بدیم
             const networkResponse = await fetch(event.request);
             return networkResponse;
         } catch (error) {
             console.warn('Network failed, serving offline page if possible.', error);
 
-            // اگر نت قطع بود یا شبکه خطا داد → برو سراغ offline.html از کش
+            // اول صفحه‌ی آفلاین
             const offlinePage = await cache.match('offline.html');
             if (offlinePage) {
                 return offlinePage;
             }
 
-            // اگر به هر دلیلی offline.html نبود، حداقل index.html رو بده
+            // بعد index.html برای fallback
             const cachedIndex = await cache.match('index.html');
             if (cachedIndex) {
                 return cachedIndex;
             }
 
-            // آخرین fallback
+            // آخرش یه جواب ساده
             return new Response('Offline', {
                 status: 503,
                 statusText: 'Offline'
@@ -74,14 +75,11 @@ async function onFetch(event) {
         }
     }
 
-    // ۲) برای بقیه درخواست‌ها (css/js/عکس و …) منطق قبلی کش
-    let cachedResponse = null;
+    // ۲) برای بقیه‌ی فایل‌ها (css/js/عکس و ...)
+    const cachedResponse = await cache.match(event.request);
+    if (cachedResponse) {
+        return cachedResponse;
+    }
 
-    const shouldServeIndexHtml = event.request.mode === 'navigate'
-        && !manifestUrlList.some(url => url === event.request.url);
-
-    const request = shouldServeIndexHtml ? 'index.html' : event.request;
-    cachedResponse = await cache.match(request);
-
-    return cachedResponse || fetch(event.request);
+    return fetch(event.request);
 }
