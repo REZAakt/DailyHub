@@ -2,6 +2,8 @@
 // offline support. See https://aka.ms/blazor-offline-considerations
 
 self.importScripts('./service-worker-assets.js');
+console.info('Service worker: script loaded');
+
 self.addEventListener('install', event => event.waitUntil(onInstall(event)));
 self.addEventListener('activate', event => event.waitUntil(onActivate(event)));
 self.addEventListener('fetch', event => event.respondWith(onFetch(event)));
@@ -18,13 +20,18 @@ const manifestUrlList = self.assetsManifest.assets.map(asset => new URL(asset.ur
 
 async function onInstall(event) {
     console.info('Service worker: Install');
-
+        
     // Fetch and cache all matching items from the assets manifest
     const assetsRequests = self.assetsManifest.assets
         .filter(asset => offlineAssetsInclude.some(pattern => pattern.test(asset.url)))
         .filter(asset => !offlineAssetsExclude.some(pattern => pattern.test(asset.url)))
         .map(asset => new Request(asset.url, { integrity: asset.hash, cache: 'no-cache' }));
+
     await caches.open(cacheName).then(cache => cache.addAll(assetsRequests));
+
+    // verify offline.html is in the cache for debugging
+    const offlineCached = await caches.open(cacheName).then(cache => cache.match('offline.html')).catch(() => null);
+    console.info('Service worker: offline.html cached?', !!offlineCached);
 }
 
 async function onActivate(event) {
@@ -57,6 +64,7 @@ async function onFetch(event) {
 
             // اول صفحه‌ی آفلاین
             const offlinePage = await cache.match('offline.html');
+            console.info('Service worker: offline.html found in cache?', !!offlinePage);
             if (offlinePage) {
                 return offlinePage;
             }

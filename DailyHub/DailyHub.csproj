@@ -43,6 +43,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="wwwroot\offline.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Update="Resources\MainText.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>MainText.Designer.cs</LastGenOutput>
