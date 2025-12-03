@@ -1471,6 +1471,64 @@ code {
 */
 
 
+.wiki-card-content {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+        "image text"
+        "link  link";
+    gap: 14px;
+    align-items: flex-start;
+}
+
+.wiki-card-image {
+    grid-area: image;
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid var(--rz-base-300);
+    margin-inline-start: 6px;
+}
+
+.wiki-card-text {
+    grid-area: text;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-align: right;
+    box-shadow: none !important;
+}
+
+.wiki-card-link {
+    grid-area: link;
+    margin-top: .25rem;
+    display: flex;
+    justify-content: flex-start;
+}
+
+@media (max-width: 768px) {
+    .wiki-card-content {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "text"
+            "image"
+            "link";
+    }
+
+    .wiki-card-image {
+        margin-inline-start: 0;
+        justify-self: center;
+    }
+
+    .wiki-card-link {
+        justify-content: center;
+    }
+}
+
+
+
+
 .fade-in {
     /*animation: fadeIn .3s ease-in;*/
     animation: zoomIn 0.5s ease-out forwards;

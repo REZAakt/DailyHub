@@ -5,171 +5,173 @@
 @using System.Text.RegularExpressions
 @using DailyHub.Shared.Enums
 @inject NavigationManager _NavigationManager
+@inject IJSRuntime JS
+
 
 <style>
     .wx-wrap {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    min-width: 100%;
-    padding: clamp(12px, 2vw, 20px); /* فاصله از چهار طرف صفحه */
-    max-width: 1500px;
-    margin: 0 auto; /* محتوا وسط صفحه و محدود */
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        min-width: 100%;
+        padding: clamp(12px, 2vw, 20px); /* فاصله از چهار طرف صفحه */
+        max-width: 1500px;
+        margin: 0 auto; /* محتوا وسط صفحه و محدود */
     }
 
     .wx-section-title {
-    margin: 5px;
-    font-weight: 700;
-    font-size: 16px;
+        margin: 5px;
+        font-weight: 700;
+        font-size: 16px;
     }
 
     .wx-card, .wx-side {
-    border-radius: 16px;
-    height: 100%;
-    min-width: 100%;
-    padding: 1rem;
-    box-shadow: 0 0px 15px rgba(0,0,0,.03); /* سایه نرم و یکنواخت */
-    background: #fff;
+        border-radius: 16px;
+        height: 100%;
+        min-width: 100%;
+        padding: 1rem;
+        box-shadow: 0 0px 15px rgba(0,0,0,.03); /* سایه نرم و یکنواخت */
+        background: #fff;
     }
 
     .wx-title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
     }
 
     .wx-city {
-    font-size: 1.4rem;
-    font-weight: 900;
+        font-size: 1.4rem;
+        font-weight: 900;
     }
 
     .wx-time {
-    font-size: .9rem;
-    opacity: .7;
+        font-size: .9rem;
+        opacity: .7;
     }
 
     .wx-loading {
-    padding: .5rem 0;
+        padding: .5rem 0;
     }
 
     .wx-today {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
+        display: flex;
+        gap: 1rem;
+        align-items: center;
     }
 
     .wx-today-left {
-    display: flex;
-    flex-direction: column;
-    gap: .35rem;
-    flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: .35rem;
+        flex: 1;
     }
 
     .wx-temp-now {
-    font-size: 2.2rem;
-    font-weight: 900;
-    line-height: 1.2;
+        font-size: 2.2rem;
+        font-weight: 900;
+        line-height: 1.2;
     }
 
     .wx-temp-range, .wx-precip, .wx-code {
-    font-size: .95rem;
+        font-size: .95rem;
     }
 
     .wx-today-right {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    max-width: 150px;
-    max-height: 150px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        max-width: 150px;
+        max-height: 150px;
     }
 
     .wx-video {
-    width: 180px;
-    height: 140px;
-    object-fit: cover;
-    border-radius: 12px;
+        width: 180px;
+        height: 140px;
+        object-fit: cover;
+        border-radius: 12px;
     }
 
     .wx-side-title {
-    font-weight: 800;
-    margin-bottom: .75rem;
+        font-weight: 800;
+        margin-bottom: .75rem;
     }
 
     .wx-side-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: .5rem .75rem;
-    font-size: .95rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: .5rem .75rem;
+        font-size: .95rem;
     }
 
     .min-grid .rz-datatable-table {
-    min-width: 640px;
+        min-width: 640px;
     }
 
     .ChartClass {
-    height: 340px;
-    margin: 0px 1rem;
+        height: 340px;
+        margin: 0px 1rem;
     }
 
     /* --- موبایل --- */
     @@media (max-width: 768px) {
-    .wx-title {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: .25rem;
-    }
-    /* ردیف بالایی حتماً زیر هم بیاید */
-    .wx-row {
-    flex-direction: column !important;
-    }
-    /* تضمین استک‌شدن ستون‌ها */
-    .wx-row .rz-column {
-    flex: 0 0 100% !important;
-    max-width: 100% !important;
-    }
+        .wx-title {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: .25rem;
+        }
+        /* ردیف بالایی حتماً زیر هم بیاید */
+        .wx-row {
+            flex-direction: column !important;
+        }
+            /* تضمین استک‌شدن ستون‌ها */
+            .wx-row .rz-column {
+                flex: 0 0 100% !important;
+                max-width: 100% !important;
+            }
 
-    .wx-today {
-    flex-direction: column;
-    align-items: stretch;
-    }
+        .wx-today {
+            flex-direction: column;
+            align-items: stretch;
+        }
 
-    .wx-today-right {
-    justify-content: stretch;
-    width: 155px;
-    height: 155px;
-    }
+        .wx-today-right {
+            justify-content: stretch;
+            width: 155px;
+            height: 155px;
+        }
 
-    .wx-video {
-    width: 100%;
-    height: 100%;
-    aspect-ratio: 16/9;
-    object-fit: cover;
-    border-radius: 12px;
-    }
+        .wx-video {
+            width: 100%;
+            height: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            border-radius: 12px;
+        }
 
-    .wx-wrap {
-    padding: 12px;
-    }
-    /* کمی جمع‌وجورتر در موبایل */
-    .wx-card, .wx-side {
-    min-width: 100%;
-    box-shadow: 0 0px 15px rgba(0,0,0,.03);
-    }
-    /* سایه نرم‌تر */
-    .ChartClass {
-    height: 340px;
-    margin: 0px 1px;
-    }
+        .wx-wrap {
+            padding: 12px;
+        }
+        /* کمی جمع‌وجورتر در موبایل */
+        .wx-card, .wx-side {
+            min-width: 100%;
+            box-shadow: 0 0px 15px rgba(0,0,0,.03);
+        }
+        /* سایه نرم‌تر */
+        .ChartClass {
+            height: 340px;
+            margin: 0px 1px;
+        }
     }
 </style>
 
 <BasePage IsLoading="IsLoading">
     <HeaderContent>
         <RadzenAlert AlertStyle="AlertStyle.Danger" @bind-Visible="_offline" ShowIcon="false" Variant="Variant.Flat" Shade="Shade.Lighter"
-        style="margin:1rem 1rem; border-radius:18px;width:98%; box-shadow: 0 0px 30px rgba(0, 0, 0, 0.1) !important;">
+                     style="margin:1rem 1rem; border-radius:18px;width:98%; box-shadow: 0 0px 30px rgba(0, 0, 0, 0.1) !important;">
             <RadzenText style="color:red; font-weight:800; font-size:16px;"
-            Text="اتصال شما به سرور برقرار نشد ، لطفا با پشتیبانی تماس بگیرید . " />
+                        Text="اتصال شما به سرور برقرار نشد ، لطفا با پشتیبانی تماس بگیرید . " />
         </RadzenAlert>
     </HeaderContent>
 
@@ -185,12 +187,12 @@
                             </div>
 
                             <div style="display:flex; align-items:center; gap:.6rem;">
-                          @*       @if (windowWidth > 500)
+                                @if (windowWidth > 500)
                                 {
                                     <div style="opacity:.7">@(_items?.Count > 0 ? $"{_items.Count} مورد" : (IsLoading ? "در حال دریافت..." : "موردی یافت نشد"))</div>
-                                } *@
+                                }
                                 <RadzenButton Icon="refresh" Text="بروزرسانی" Click="Refresh"
-                                ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" />
+                                              ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" />
                             </div>
                         </div>
                         @if (IsLoading)
@@ -209,53 +211,106 @@
                             {
                                 <RadzenDataList TItem="OnThisDayItemDto" Data="@featured" AllowPaging="false" Style="max-height:none;">
                                     <Template Context="it">
-                                        <RadzenCard style="margin-bottom:.8rem; padding:.9rem 1.1rem; border-radius:14px; border:px solid var(--rz-base-300);box-shadow:none !important;">
-                                            <div style="display:flex; gap:14px; align-items:flex-start; flex-direction:row-reverse;" dir="rtl">
-                                                @if (!string.IsNullOrWhiteSpace(it.Thumbnail))
-                                                {
-                                                    <img src="@it.Thumbnail"
-                                                    alt="@StripHtml(it.Title)"
-                                                    style="width:120px;height:120px;object-fit:cover;border-radius:12px;border:1px solid var(--rz-base-300); margin-inline-start:6px;" />
-                                                }
+                                        @if (windowWidth > 500)
+                                        {
+                                            <RadzenCard style="margin-bottom:.8rem; padding:.9rem 1.1rem; border-radius:14px; border:0px solid var(--rz-base-300);box-shadow:none !important;">
+                                                <div style="display:flex; gap:14px; align-items:flex-start; flex-direction:row-reverse;" dir="rtl">
+                                                    @if (!string.IsNullOrWhiteSpace(it.Thumbnail))
+                                                    {
+                                                        <img src="@it.Thumbnail"
+                                                             alt="@StripHtml(it.Title)"
+                                                             style="width:120px;height:120px;object-fit:cover;border-radius:12px;border:1px solid var(--rz-base-300); margin-inline-start:6px;" />
+                                                    }
 
-                                                <div style="flex:1; display:flex; flex-direction:column; gap:6px; text-align:right;  box-shadow: none !important;">
-                                                    <div style="display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; justify-content:flex-start;">
-                                                        <span style="font-weight:900; font-size:1.05rem;">@SafeTitle(it)</span>
+                                                    <div style="flex:1; display:flex; flex-direction:column; gap:6px; text-align:right;  box-shadow: none !important;">
+                                                        <div style="display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; justify-content:flex-start;">
+                                                            <span style="font-weight:900; font-size:1.05rem;">@SafeTitle(it)</span>
 
-                                                        @if (it.Year > 0)
-                                                        {
-                                                            <span style="direction:ltr; background:var(--rz-base-200); color:var(--rz-text-color);
-                                                                    border-radius:999px; padding:.15rem .6rem; font-size:.8rem;justify-content: center; display: flex;">
-                                                                <RadzenIcon Icon="event" Style="font-size:16px;opacity:.8;margin-inline-end:.25rem;" />
-                                                                @it.Year
+                                                            @if (it.Year > 0)
+                                                            {
+                                                                <span style="direction:ltr; background:var(--rz-base-200); color:var(--rz-text-color);
+                                                                                                            border-radius:999px; padding:.15rem .6rem; font-size:.8rem;justify-content: center; display: flex;">
+                                                                    <RadzenIcon Icon="event" Style="font-size:16px;opacity:.8;margin-inline-end:.25rem;" />
+                                                                    @it.Year
+                                                                </span>
+                                                            }
+
+                                                            <span style="background:#eef6ff; color:#0b5ed7; border:1px solid #d5e9ff;
+                                                                                              border-radius:999px; padding:.15rem .6rem; font-size:.8rem;justify-content: center; display: flex;">
+                                                                <RadzenIcon Icon="local_offer" Style="font-size:16px;opacity:.85;margin-inline-end:.25rem;" />
+                                                                @Norm(it.Type)
                                                             </span>
+                                                        </div>
+
+                                                        <div style="opacity:.9; line-height:1.9; white-space:normal;">
+                                                            @StripHtml(it.Text)
+                                                        </div>
+
+                                                        @if (!string.IsNullOrWhiteSpace(it.PageUrl))
+                                                        {
+                                                            <div style="margin-top:.25rem;display:flex; justify-content:flex-start;">
+                                                                <a class="rz-button rz-secondary rz-size-small"
+                                                                   style="display:inline-flex; align-items:center; gap:.4rem; border-radius:999px; padding:.25rem .7rem;"
+                                                                   href="@it.PageUrl" target="_blank" rel="noopener">
+                                                                    <RadzenIcon Icon="open_in_new" Style="font-size:18px; opacity:.85;" />
+                                                                    <span>ادامه در ویکی‌پدیا</span>
+                                                                </a>
+                                                            </div>
                                                         }
+                                                    </div>
+                                                </div>
+                                            </RadzenCard>
+                                        }
+                                        @if (windowWidth <= 500)
+                                        {
+                                            <RadzenCard style="margin-bottom:.8rem; padding:.9rem 1.1rem; border-radius:14px; border:0px solid var(--rz-base-300);box-shadow:none !important;">
+                                                <div class="wiki-card-content" dir="rtl">
+                                                    <div class="wiki-card-text">
+                                                        <div style="display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; justify-content:flex-start;">
+                                                            <span style="font-weight:900; font-size:1.05rem;">@SafeTitle(it)</span>
 
-                                                        <span style="background:#eef6ff; color:#0b5ed7; border:1px solid #d5e9ff;
-                                                                  border-radius:999px; padding:.15rem .6rem; font-size:.8rem;justify-content: center; display: flex;">
-                                                            <RadzenIcon Icon="local_offer" Style="font-size:16px;opacity:.85;margin-inline-end:.25rem;" />
-                                                            @Norm(it.Type)
-                                                        </span>
+                                                            @if (it.Year > 0)
+                                                            {
+                                                                <span style="direction:ltr; background:var(--rz-base-200); color:var(--rz-text-color);
+                                                                        border-radius:999px; padding:.15rem .6rem; font-size:.8rem;justify-content: center; display: flex;">
+                                                                    <RadzenIcon Icon="event" Style="font-size:16px;opacity:.8;margin-inline-end:.25rem;" />
+                                                                    @it.Year
+                                                                </span>
+                                                            }
+
+                                                            <span style="background:#eef6ff; color:#0b5ed7; border:1px solid #d5e9ff;
+                                                          border-radius:999px; padding:.15rem .6rem; font-size:.8rem;justify-content: center; display: flex;">
+                                                                <RadzenIcon Icon="local_offer" Style="font-size:16px;opacity:.85;margin-inline-end:.25rem;" />
+                                                                @Norm(it.Type)
+                                                            </span>
+                                                        </div>
+
+                                                        <div style="opacity:.9; line-height:1.9; white-space:normal;">
+                                                            @StripHtml(it.Text)
+                                                        </div>
                                                     </div>
 
-                                                    <div style="opacity:.9; line-height:1.9; white-space:normal;">
-                                                        @StripHtml(it.Text)
-                                                    </div>
+                                                    @if (!string.IsNullOrWhiteSpace(it.Thumbnail))
+                                                    {
+                                                        <img class="wiki-card-image"
+                                                             src="@it.Thumbnail"
+                                                             alt="@StripHtml(it.Title)" />
+                                                    }
 
                                                     @if (!string.IsNullOrWhiteSpace(it.PageUrl))
                                                     {
-                                                        <div style="margin-top:.25rem;display:flex; justify-content:flex-start;">
+                                                        <div class="wiki-card-link">
                                                             <a class="rz-button rz-secondary rz-size-small"
-                                                            style="display:inline-flex; align-items:center; gap:.4rem; border-radius:999px; padding:.25rem .7rem;"
-                                                            href="@it.PageUrl" target="_blank" rel="noopener">
+                                                               style="display:inline-flex; align-items:center; gap:.4rem; border-radius:999px; padding:.25rem .7rem;"
+                                                               href="@it.PageUrl" target="_blank" rel="noopener">
                                                                 <RadzenIcon Icon="open_in_new" Style="font-size:18px; opacity:.85;" />
                                                                 <span>ادامه در ویکی‌پدیا</span>
                                                             </a>
                                                         </div>
                                                     }
                                                 </div>
-                                            </div>
-                                        </RadzenCard>
+                                            </RadzenCard>
+                                        }
                                     </Template>
                                 </RadzenDataList>
                             }
@@ -357,7 +412,7 @@
                             <JsonPlayer Id="1" Path="images/AI.json" />
                         </div>
                     </div>
-                    <div class="chat-card-content" >
+                    <div class="chat-card-content">
                         <h3>حرفی کاری سوالی ؟</h3>
                         <p>می‌تونی با من صحبت کنی ، از همین‌جا وارد شو</p>
                     </div>
@@ -480,30 +535,23 @@
     }
 
     #region CurrentWindow
-    // private int windowWidth;
-
-
-    // protected override async Task OnAfterRenderAsync(bool firstRender)
-    // {
-    //     if (firstRender)
-    //     {
-    //         StateHasChanged();
-    //         var dotNetRef = DotNetObjectReference.Create(this);
-    //         await JS.InvokeVoidAsync("resizeListener.register", dotNetRef);
-
-    //         windowWidth = await JS.InvokeAsync<int>("getWindowWidth");
-
-    //         await InvokeAsync(StateHasChanged);
-    //     }
-    // }
-
-    // [JSInvokable]
-    // public Task OnResize(int width)
-    // {
-    //     windowWidth = width;
-
-    //     return InvokeAsync(StateHasChanged);
-    // }
+    private int windowWidth;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var dotNetRef = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("resizeListener.register", dotNetRef);
+            windowWidth = await JS.InvokeAsync<int>("getWindowWidth");
+        }
+    }
+    [JSInvokable]
+    public Task OnResize(int width)
+    {
+        windowWidth = width;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
     #endregion
 
 

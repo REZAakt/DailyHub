@@ -91,7 +91,11 @@
     <script src="_framework/blazor.webassembly.js"></script>
     <script>
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/service-worker.js');
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.published.js', {
+                    updateViaCache: 'none'
+                });
+            });
         }
     </script>
     <script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
