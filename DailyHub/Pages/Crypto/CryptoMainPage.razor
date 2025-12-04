@@ -1,5 +1,6 @@
 ﻿@page "/Crypto/CryptoMainPage"
 @using DailyHub.Shared.Dto.Crypto
+@inject IJSRuntime JS
 
 @inject CryptoRealtimeService Crypto
 
@@ -152,169 +153,91 @@
             </RadzenCard>
 
             @* 1) قیمت (USD) همه کوین‌ها *@
-            @if (windowWidth > 500)
-            {
-                <RadzenCard class="fade-in" dir="ltr" Style="padding:2rem; max-width:1600px; margin:0 auto;border-radius:20px; width:97%;">
-                    <div style="font-weight:900; margin-bottom:.5rem;">قیمت (USD)</div>
-                    <RadzenChart Style="width:100%; height:480px;">
-                        <RadzenColumnSeries TItem="CryptoItemDto"
-                                            Data="@(Items ?? new())"
-                                            CategoryProperty="Name"
-                                            ValueProperty="CurrentPrice"
-                                            Title="قیمت (USD)"
-                                            Stroke="#DDA201" />
-                        <RadzenLegend Position="LegendPosition.Right" />
-                        <RadzenCategoryAxis LabelAutoRotation="15" Stroke="#060270" StrokeWidth="2" TickDistance="50" />
-                        <RadzenValueAxis Stroke="#060270" StrokeWidth="2" Formatter="@(v => string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:N0}", v))" />
-                        <RadzenMarkers Visible="true" MarkerType="MarkerType.Circle" Fill="#84E1F1" Stroke="#060270" StrokeWidth="2" />
-                        <RadzenChartTooltipOptions Shared="true" />
-                    </RadzenChart>
-                </RadzenCard>
-            }
-            @if (windowWidth <= 500)
-            {
-                <RadzenCard class="fade-in" dir="ltr" Style="padding:2rem; max-width:1600px; margin:0 auto;border-radius:20px; width:97%;">
-                    <div style="font-weight:900; margin-bottom:.5rem;">قیمت (USD)</div>
-                    <RadzenChart Style="width:100%; height:480px;">
-                        <RadzenColumnSeries TItem="CryptoItemDto"
-                                            Data="@(Items ?? new())"
-                                            CategoryProperty="Name"
-                                            ValueProperty="CurrentPrice"
-                                            Title="قیمت (USD)"
-                                            Stroke="#DDA201" />
-                        <RadzenCategoryAxis LabelAutoRotation="15" Stroke="#060270" StrokeWidth="2" TickDistance="50" />
-                        <RadzenValueAxis Stroke="#060270" StrokeWidth="2" Formatter="@(v => string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:N0}", v))" />
-                        <RadzenMarkers Visible="true" MarkerType="MarkerType.Circle" Fill="#84E1F1" Stroke="#060270" StrokeWidth="2" />
-                        <RadzenChartTooltipOptions Shared="true" />
-                    </RadzenChart>
-                </RadzenCard>
-            }
+
+            <RadzenCard class="fade-in" dir="ltr" Style="padding:2rem; max-width:1600px; margin:0 auto;border-radius:20px; width:97%;">
+                <div style="font-weight:900; margin-bottom:.5rem;">قیمت (USD)</div>
+                <RadzenChart Style="width:100%; height:480px;">
+                    <RadzenColumnSeries TItem="CryptoItemDto"
+                                        Data="@(Items ?? new())"
+                                        CategoryProperty="Name"
+                                        ValueProperty="CurrentPrice"
+                                        Title="قیمت (USD)"
+                                        Stroke="#DDA201" />
+                    <RadzenLegend Position="LegendPosition.Bottom" />
+                    <RadzenCategoryAxis LabelAutoRotation="15" Stroke="#060270" StrokeWidth="2" TickDistance="50" />
+                    <RadzenValueAxis Stroke="#060270" StrokeWidth="2" Formatter="@(v => string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:N0}", v))" />
+                    <RadzenMarkers Visible="true" MarkerType="MarkerType.Circle" Fill="#84E1F1" Stroke="#060270" StrokeWidth="2" />
+                    <RadzenChartTooltipOptions Shared="true" />
+                </RadzenChart>
+            </RadzenCard>
+
+
 
             @* 2) چارت خطی: درصد تغییرات ۷ / ۳۰ / ۲۰۰ روز *@
-            @if (windowWidth > 500)
-            {
-                <RadzenCard class="fade-in" dir="ltr" Style="padding:2rem; max-width:1600px; margin:1rem auto;border-radius:20px; width:97%;">
-                    <div style="font-weight:900; margin-bottom:.5rem;"> درصد تغییرات ( ۷ ، ۳۰ و ۲۰۰ روزه )</div>
-                    <RadzenChart Style="width:100%; height:520px;">
-                        <RadzenChartTooltipOptions Shared="true" />
-                        <RadzenChartTooltip />
 
-                        <RadzenLineSeries TItem="CryptoChartRow"
-                                          Data="@ChartRows"
-                                          CategoryProperty="Name"
-                                          ValueProperty="Pct7d"
-                                          Title="۷ روز"
-                                          Hidden="@Hide7"
-                                          Stroke="#0f9d58"
-                                          LineType="LineType.Solid" />
+            <RadzenCard class="fade-in" dir="ltr" Style="padding:2rem; max-width:1600px; margin:1rem auto;border-radius:20px; width:97%;">
+                <div style="font-weight:900; margin-bottom:.5rem;"> درصد تغییرات ( ۷ ، ۳۰ و ۲۰۰ روزه )</div>
+                <RadzenChart Style="width:100%; height:520px;">
+                    <RadzenChartTooltipOptions Shared="true" />
+                    <RadzenChartTooltip />
 
-                        <RadzenLineSeries TItem="CryptoChartRow"
-                                          Data="@ChartRows"
-                                          CategoryProperty="Name"
-                                          ValueProperty="Pct30d"
-                                          Title="۳۰ روز"
-                                          Hidden="@Hide30"
-                                          Stroke="#AA03D8"
-                                          LineType="LineType.Solid" />
+                    <RadzenLineSeries TItem="CryptoChartRow"
+                                      Data="@ChartRows"
+                                      CategoryProperty="Name"
+                                      ValueProperty="Pct7d"
+                                      Title="۷ روز"
+                                      Hidden="@Hide7"
+                                      Stroke="#0f9d58"
+                                      LineType="LineType.Solid" />
 
-                        <RadzenLineSeries TItem="CryptoChartRow"
-                                          Data="@ChartRows"
-                                          CategoryProperty="Name"
-                                          ValueProperty="Pct200d"
-                                          Title="۲۰۰ روز"
-                                          Hidden="@Hide200"
-                                          Stroke="#e53935"
-                                          LineType="LineType.Solid" />
+                    <RadzenLineSeries TItem="CryptoChartRow"
+                                      Data="@ChartRows"
+                                      CategoryProperty="Name"
+                                      ValueProperty="Pct30d"
+                                      Title="۳۰ روز"
+                                      Hidden="@Hide30"
+                                      Stroke="#AA03D8"
+                                      LineType="LineType.Solid" />
 
-                        <RadzenLegend Position="LegendPosition.Right" />
-                        <RadzenCategoryAxis LabelAutoRotation="15" Stroke="#060270" StrokeWidth="2" TickDistance="50" />
+                    <RadzenLineSeries TItem="CryptoChartRow"
+                                      Data="@ChartRows"
+                                      CategoryProperty="Name"
+                                      ValueProperty="Pct200d"
+                                      Title="۲۰۰ روز"
+                                      Hidden="@Hide200"
+                                      Stroke="#e53935"
+                                      LineType="LineType.Solid" />
+
+                    <RadzenLegend Position="LegendPosition.Bottom" />
+                    <RadzenCategoryAxis LabelAutoRotation="15" Stroke="#060270" StrokeWidth="2" TickDistance="50" />
+                    @if (windowWidth > 780)
+                    {
                         <RadzenValueAxis Stroke="#060270" StrokeWidth="2" />
-                        <RadzenMarkers Visible="true" MarkerType="MarkerType.Circle"
-                                       Fill="#84E1F1" Stroke="#060270" StrokeWidth="2" />
-                    </RadzenChart>
-                </RadzenCard>
-            }
-            @if (windowWidth <= 500)
-            {
-                <RadzenCard class="fade-in" dir="ltr" Style="padding:2rem; max-width:1600px; margin:1rem auto;border-radius:20px; width:97%;">
-                    <div style="font-weight:900; margin-bottom:.5rem;"> درصد تغییرات ( ۷ ، ۳۰ و ۲۰۰ روزه )</div>
-                    <RadzenChart Style="width:100%; height:520px;">
-                        <RadzenChartTooltipOptions Shared="true" />
-                        <RadzenChartTooltip />
+                    }
+                    <RadzenMarkers Visible="true" MarkerType="MarkerType.Circle"
+                                   Fill="#84E1F1" Stroke="#060270" StrokeWidth="2" />
+                </RadzenChart>
+            </RadzenCard>
 
-                        <RadzenLineSeries TItem="CryptoChartRow"
-                                          Data="@ChartRows"
-                                          CategoryProperty="Name"
-                                          ValueProperty="Pct7d"
-                                          Title="۷ روز"
-                                          Hidden="@Hide7"
-                                          Stroke="#0f9d58"
-                                          LineType="LineType.Solid" />
-
-                        <RadzenLineSeries TItem="CryptoChartRow"
-                                          Data="@ChartRows"
-                                          CategoryProperty="Name"
-                                          ValueProperty="Pct30d"
-                                          Title="۳۰ روز"
-                                          Hidden="@Hide30"
-                                          Stroke="#AA03D8"
-                                          LineType="LineType.Solid" />
-
-                        <RadzenLineSeries TItem="CryptoChartRow"
-                                          Data="@ChartRows"
-                                          CategoryProperty="Name"
-                                          ValueProperty="Pct200d"
-                                          Title="۲۰۰ روز"
-                                          Hidden="@Hide200"
-                                          Stroke="#e53935"
-                                          LineType="LineType.Solid" />
-
-                        <RadzenCategoryAxis LabelAutoRotation="15" Stroke="#060270" StrokeWidth="2" TickDistance="50" />
-                        <RadzenValueAxis Stroke="#060270" StrokeWidth="2" />
-                        <RadzenMarkers Visible="true" MarkerType="MarkerType.Circle"
-                                       Fill="#84E1F1" Stroke="#060270" StrokeWidth="2" />
-                    </RadzenChart>
-                </RadzenCard>
-
-            }
             @* 3) حجم ۲۴ساعت (نمودار دایره‌ای) *@
-            @if (windowWidth > 500)
-            {
-                <RadzenCard class="fade-in" dir="ltr" Style="padding:2rem; max-width:1600px; margin:0 auto;border-radius:20px; width:97%;">
-                    <div style="font-weight:900; margin-bottom:.5rem;">سهم رمزارزها از حجم معاملات ۲۴ساعت</div>
 
-                    <RadzenChart Style="width:100%; height:560px;">
-                        <RadzenChartTooltipOptions Shared="true" />
-                        <RadzenPieSeries TItem="CryptoItemDto"
-                                         Data="@(Items?.OrderByDescending(x => x.TotalVolume).ToList() ?? new())"
-                                         CategoryProperty="Name"
-                                         ValueProperty="TotalVolume"
-                                         Title="سهم حجم ۲۴ساعت"
-                                         StrokeWidth="1" />
-                        <RadzenMarkers Visible="true" MarkerType="MarkerType.Circle" Fill="#84E1F1" Stroke="#060270" StrokeWidth="2" />
+            <RadzenCard class="fade-in" dir="ltr" Style="padding:2rem; max-width:1600px; margin:0 auto;border-radius:20px; width:97%;">
+                <div style="font-weight:900; margin-bottom:.5rem;">سهم رمزارزها از حجم معاملات ۲۴ساعت</div>
 
-                        <RadzenLegend Position="LegendPosition.Right" />
-                    </RadzenChart>
-                </RadzenCard>
-            }
-            @if (windowWidth <= 500)
-            {
-                <RadzenCard class="fade-in" dir="ltr" Style="padding:2rem; max-width:1600px; margin:0 auto;border-radius:20px; width:97%;">
-                    <div style="font-weight:900; margin-bottom:.5rem;">سهم رمزارزها از حجم معاملات ۲۴ساعت</div>
+                <RadzenChart Style="width:100%; height:560px;">
+                    <RadzenChartTooltipOptions Shared="true" />
+                    <RadzenPieSeries TItem="CryptoItemDto"
+                                     Data="@(Items?.OrderByDescending(x => x.TotalVolume).ToList() ?? new())"
+                                     CategoryProperty="Name"
+                                     ValueProperty="TotalVolume"
+                                     Title="سهم حجم ۲۴ساعت"
+                                     StrokeWidth="1" />
+                    <RadzenMarkers Visible="true" MarkerType="MarkerType.Circle" Fill="#84E1F1" Stroke="#060270" StrokeWidth="2" />
 
-                    <RadzenChart Style="width:100%; height:560px;">
-                        <RadzenChartTooltipOptions Shared="true" />
-                        <RadzenPieSeries TItem="CryptoItemDto"
-                                         Data="@(Items?.OrderByDescending(x => x.TotalVolume).ToList() ?? new())"
-                                         CategoryProperty="Name"
-                                         ValueProperty="TotalVolume"
-                                         Title="سهم حجم ۲۴ساعت"
-                                         StrokeWidth="1" />
-                        <RadzenMarkers Visible="true" MarkerType="MarkerType.Circle" Fill="#84E1F1" Stroke="#060270" StrokeWidth="2" />
+                    <RadzenLegend Position="LegendPosition.Bottom" />
+                </RadzenChart>
+            </RadzenCard>
 
-                    </RadzenChart>
-                </RadzenCard>
-            }
         </RadzenStack>
 
     </ChildContent>
@@ -414,10 +337,8 @@
         if (firstRender)
         {
             var dotNetRef = DotNetObjectReference.Create(this);
-            await JSRuntime.InvokeVoidAsync("resizeListener.register", dotNetRef);
-
-            windowWidth = await JSRuntime.InvokeAsync<int>("getWindowWidth");
-            StateHasChanged(); // 👈 همین خط لازمه
+            await JS.InvokeVoidAsync("resizeListener.register", dotNetRef);
+            windowWidth = await JS.InvokeAsync<int>("getWindowWidth");
         }
     }
     [JSInvokable]

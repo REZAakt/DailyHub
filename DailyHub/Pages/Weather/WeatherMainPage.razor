@@ -104,7 +104,7 @@
     }
 
     .ChartClass {
-        height: 340px;
+        height: 500px;
         margin: 0px 1rem;
     }
 
@@ -263,7 +263,7 @@
             <!-- چارت Min / Max -->
             <RadzenCard class="wx-card fade-in" Style="margin-top:1rem;">
                 <div class="wx-section-title"> نمودار کمینه / بیشینه دما       ( ۷ روز )  </div>
-                <RadzenChart class="ChartClass">
+                <RadzenChart Style="width:100%; height:520px;">
                     <RadzenChartTooltipOptions Shared="true" />
                     <RadzenChartTooltip />
                     <RadzenLineSeries TItem="WeatherDayDto" LineType="LineType.Solid" Interpolation="Interpolation.Spline" Smooth="true"
@@ -289,7 +289,7 @@
 
                     <RadzenCategoryAxis  LabelAutoRotation="15" Stroke="#060270" StrokeWidth="2" TickDistance="50"/>
                     <RadzenValueAxis Stroke="#060270" StrokeWidth="2"/>
-                    <RadzenLegend Position="LegendPosition.Right" />
+                    <RadzenLegend Position="LegendPosition.Bottom" />
                 </RadzenChart>
             </RadzenCard>
         </div>
