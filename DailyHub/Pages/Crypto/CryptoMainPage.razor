@@ -30,7 +30,7 @@
                 }
                 else
                 {
-                    @if (windowWidth > 800)
+                    @if (windowWidth >= 800)
                     {
                         <RadzenDataGrid TItem="CryptoItemDto" Data="@Items" AllowPaging="true" PageSize="10" Responsive="false">
                             <Columns>
@@ -108,7 +108,7 @@
                             </Columns>
                         </RadzenDataGrid>
                     }
-                    @if (windowWidth < 800)
+                    else
                     {
                         <RadzenDataList TItem="CryptoItemDto" Data="@Items" AllowPaging="true" PageSize="10"
                                         Style="width:100%;"
@@ -170,8 +170,6 @@
                     <RadzenChartTooltipOptions Shared="true" />
                 </RadzenChart>
             </RadzenCard>
-
-
 
             @* 2) چارت خطی: درصد تغییرات ۷ / ۳۰ / ۲۰۰ روز *@
 
@@ -336,6 +334,7 @@
             var dotNetRef = DotNetObjectReference.Create(this);
             await JS.InvokeVoidAsync("resizeListener.register", dotNetRef);
             windowWidth = await JS.InvokeAsync<int>("getWindowWidth");
+            StateHasChanged();
         }
     }
     [JSInvokable]
@@ -346,6 +345,5 @@
         return Task.CompletedTask;
     }
     #endregion
-
 
 }
