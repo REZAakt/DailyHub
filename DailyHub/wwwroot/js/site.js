@@ -315,3 +315,12 @@ function printElementById(id) {
     printWindow.document.write(html);
     printWindow.document.close();
 }
+
+// تاریخ شمسی کامل (تقویم فارسی)
+window.getPersianDate = () => {
+    try {
+        return new Intl.DateTimeFormat('fa-IR-u-ca-persian', { dateStyle: 'full' }).format(new Date());
+    } catch (e) {
+        return '';
+    }
+};

@@ -3,9 +3,15 @@ using DailyHub.Api.Hubs;
 using DailyHub.Infrastructure.Caching;
 using DailyHub.Infrastructure.DI;
 using DailyHub.Infrastructure.Providers.Chat;
+using DailyHub.Shared.Abstractions.Calendar;
 using DailyHub.Shared.Abstractions.Chat;
 using DailyHub.Shared.Abstractions.Crypto;
+using DailyHub.Shared.Abstractions.Metals;
 using DailyHub.Shared.Abstractions.News;
+using DailyHub.Shared.Abstractions.Rates;
+using DailyHub.Infrastructure.Providers.Calendar;
+using DailyHub.Infrastructure.Providers.Metals;
+using DailyHub.Infrastructure.Providers.Rates;
 using System.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -93,6 +99,25 @@ builder.Services.AddHttpClient<ICryptoProvider, CoinGeckoProvider>();
 builder.Services.AddOtdProvider();
 builder.Services.AddDailyHubInfrastructure();
 
+// --- سرویس‌های جدید: طلا، ارز، تقویم ---
+builder.Services.AddHttpClient<IMetalsProvider, MetalsLiveProvider>(c =>
+{
+    c.Timeout = TimeSpan.FromSeconds(15);
+    c.DefaultRequestHeaders.UserAgent.ParseAdd("DailyHub/1.0");
+});
+builder.Services.AddHttpClient<IRatesProvider, FrankfurterRatesProvider>(c =>
+{
+    c.BaseAddress = new Uri("https://api.frankfurter.dev/v1/");
+    c.Timeout = TimeSpan.FromSeconds(15);
+    c.DefaultRequestHeaders.UserAgent.ParseAdd("DailyHub/1.0");
+});
+builder.Services.AddHttpClient<ICalendarProvider, NagerDateProvider>(c =>
+{
+    c.Timeout = TimeSpan.FromSeconds(15);
+    c.DefaultRequestHeaders.UserAgent.ParseAdd("DailyHub/1.0");
+});
+
+
 var app = builder.Build();
 
 //app.UseCors("AllowGitHubPages");
@@ -117,10 +142,16 @@ if (app.Environment.IsDevelopment())
 app.UseAuthorization();
 app.MapControllers();
 app.MapWeatherEndpoints();
+app.MapNewsEndpoints();
+app.MapCryptoEndpoints();
+app.MapCalendarEndpoints();
 app.MapHub<OnThisDayHub>("/hubs/otd");
 app.MapHub<WeatherHub>("/hubs/weather");  // باید بعد از UseCors و قبل از Run بیاد
 app.MapHub<NewsHub>("/hubs/news");
 app.MapHub<CryptoHub>("/hubs/crypto");
 app.MapHub<DeepseekHub>("/hubs/deepseek");
+app.MapHub<MetalsHub>("/hubs/metals");
+app.MapHub<RatesHub>("/hubs/rates");
+app.MapHub<CalendarHub>("/hubs/calendar");
 
 app.Run();

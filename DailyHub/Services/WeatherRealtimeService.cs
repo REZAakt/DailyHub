@@ -11,7 +11,9 @@ public sealed class WeatherRealtimeService : IAsyncDisposable
     public event Action<WeatherForecastDto>? OnWeatherUpdated;
 
     // آدرس API را با پورت واقعی خودت یکی کن
-    private const string ApiBaseUrl = "https://server2.app.sanaerp.ir";
+    //private const string ApiBaseUrl = "https://server2.app.sanaerp.ir";
+    private const string ApiBaseUrl = "https://localhost:7014";
+
     private static readonly string HubUrl = $"{ApiBaseUrl}/hubs/weather";
 
     // کش سمت کلاینت

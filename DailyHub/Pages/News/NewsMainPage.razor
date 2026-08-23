@@ -56,9 +56,8 @@
             IsLoading = true;
             await News.StartAsync();
 
-            // ⏳ یکبار همه‌ی دسته‌ها را باهم بگیر
-            foreach (var c in _categories)
-                await News.SubscribeAsync(c);
+            // ⏳ همه‌ی دسته‌ها را موازی بگیر (به‌جای پشت‌سرهم)
+            await Task.WhenAll(_categories.Select(c => News.SubscribeAsync(c)));
 
             _offline = false;
         }

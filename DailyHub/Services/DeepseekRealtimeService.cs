@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.SignalR.Client;
 public sealed class DeepseekRealtimeService : IAsyncDisposable
 {
     private HubConnection? _hub;
-    private const string ApiBaseUrl = "https://server2.app.sanaerp.ir";
+    //private const string ApiBaseUrl = "https://server2.app.sanaerp.ir";
+    private const string ApiBaseUrl = "https://localhost:7014";
+
     private static readonly string HubUrl = $"{ApiBaseUrl}/hubs/deepseek";
 
     public event Action<string>? OnDelta;        // تکه‌های جدید

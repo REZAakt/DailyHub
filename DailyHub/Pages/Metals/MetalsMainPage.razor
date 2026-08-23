@@ -1,0 +1,470 @@
+@page "/Metals/MetalsMainPage"
+@using DailyHub.Shared.Dto.Metals
+@using DailyHub.Client.Services
+@inject MetalsRealtimeService Metals
+@inject IJSRuntime JS
+
+<style>
+    .mt-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: clamp(12px, 2vw, 20px);
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .metals-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+
+    .metal-card {
+        position: relative;
+        border-radius: 20px;
+        padding: 1.4rem;
+        color: #fff;
+        overflow: hidden;
+        box-shadow: 0 10px 26px rgba(30, 60, 140, .15);
+        transition: transform .25s ease, box-shadow .25s ease;
+    }
+
+    .metal-card:hover {
+        transform: translateY(-5px) scale(1.01);
+        box-shadow: 0 18px 40px rgba(30, 60, 140, .25);
+    }
+
+    .metal-card.gold   { background: linear-gradient(135deg, #b8860b, #daa520 55%, #ffd700); }
+    .metal-card.silver { background: linear-gradient(135deg, #5c6670, #8b95a1 55%, #cfd6de); }
+    .metal-card.plat   { background: linear-gradient(135deg, #4a5568, #718096 55%, #a0aec0); }
+    .metal-card.pall   { background: linear-gradient(135deg, #3d4852, #607283 55%, #93a8b8); }
+
+    .metal-card .shine {
+        position: absolute;
+        top: -60%;
+        inset-inline-end: -30%;
+        width: 60%;
+        height: 220%;
+        background: radial-gradient(closest-side, rgba(255,255,255,.35), transparent);
+        pointer-events: none;
+    }
+
+    .metal-head {
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+        font-weight: 900;
+        font-size: 1.1rem;
+        margin-bottom: .6rem;
+    }
+
+    .metal-emoji { font-size: 34px; filter: drop-shadow(0 3px 6px rgba(0,0,0,.3)); }
+
+    .metal-ounce {
+        font-size: 2rem;
+        font-weight: 900;
+        direction: ltr;
+        text-align: right;
+        text-shadow: 0 2px 8px rgba(0,0,0,.25);
+    }
+
+    .metal-gram {
+        font-size: .9rem;
+        opacity: .95;
+        margin-top: .2rem;
+        direction: ltr;
+        text-align: right;
+    }
+
+    .metal-time { font-size: .75rem; opacity: .8; margin-top: .5rem; }
+
+    .ratio-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: .8rem;
+    }
+
+    .ratio-card {
+        border-radius: 16px;
+        padding: 1rem 1.2rem;
+        background: linear-gradient(145deg, #ffffff, #f4f7ff);
+        border: 1px solid rgba(30, 60, 140, .1);
+        box-shadow: 0 6px 16px rgba(30, 60, 140, .06);
+        text-align: center;
+        transition: transform .2s ease;
+    }
+
+    .ratio-card:hover { transform: translateY(-3px); }
+
+    .ratio-title { font-size: .82rem; opacity: .7; margin-bottom: .3rem; }
+
+    .ratio-val {
+        font-size: 1.5rem;
+        font-weight: 900;
+        direction: ltr;
+        color: #1a237e;
+    }
+
+    .ratio-desc { font-size: .75rem; opacity: .6; margin-top: .25rem; }
+
+    .cv-row {
+        display: flex;
+        gap: 1rem;
+        align-items: end;
+        flex-wrap: wrap;
+    }
+
+    .cv-result {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+        gap: .7rem;
+        margin-top: 1rem;
+        width: 100%;
+    }
+
+    .cv-box {
+        border-radius: 14px;
+        padding: .9rem 1rem;
+        background: linear-gradient(135deg, #fffdf5, #fff7e0);
+        border: 1px solid #ffe08a;
+        text-align: center;
+    }
+
+    .cv-box .v { font-size: 1.25rem; font-weight: 900; direction: ltr; color: #8a6d00; }
+    .cv-box .l { font-size: .78rem; opacity: .75; margin-top: .2rem; }
+
+    @@media (max-width: 600px) {
+        .metals-grid { grid-template-columns: 1fr; }
+    }
+</style>
+
+<BasePage IsLoading="IsLoading">
+    <HeaderContent>
+        <RadzenAlert AlertStyle="AlertStyle.Danger" @bind-Visible="_offline" ShowIcon="false" Variant="Variant.Flat" Shade="Shade.Lighter"
+                     style="margin:1rem; border-radius:18px; width:98%; box-shadow: 0 0px 30px rgba(0,0,0,0.1)!important;">
+            <RadzenText style="color:red; font-weight:800; font-size:16px;"
+                        Text="اتصال شما به سرور برقرار نشد ، لطفا با پشتیبانی تماس بگیرید . " />
+        </RadzenAlert>
+    </HeaderContent>
+
+    <ChildContent>
+        <div dir="rtl" class="mt-wrap">
+
+            @* ---------- ۱) کارت‌های اصلی ---------- *@
+            <RadzenCard class="fade-in" Style="border-radius:20px; width:100%;">
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:1rem; margin:0.2rem 0.5rem 0.8rem;">
+                    <div class="wx-section-title" style="display:flex; align-items:center; gap:.4rem;">
+                        <RadzenIcon Icon="workspace_premium" Style="font-size:22px; opacity:.8;" />
+                        <span>قیمت لحظه‌ای طلا و فلزات گران‌بها</span>
+                    </div>
+                    <RadzenButton Icon="refresh" Text="بروزرسانی" Click="Refresh"
+                                  ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" />
+                </div>
+
+                @if (IsLoading)
+                {
+                    <div style="opacity:.6; padding:.5rem;">در حال دریافت...</div>
+                }
+                else if (Items.Count == 0)
+                {
+                    <div style="opacity:.6; padding:.5rem;">داده‌ای برای نمایش نیست.</div>
+                }
+                else
+                {
+                    <div class="metals-grid">
+                        @foreach (var m in Items)
+                        {
+                            <div class="metal-card fade-in @(CssFor(m.Symbol))">
+                                <div class="shine"></div>
+                                <div class="metal-head">
+                                    <span class="metal-emoji">@IconFor(m.Symbol)</span>
+                                    <div>
+                                        <div>@NameFor(m.Symbol)</div>
+                                        <div style="font-size:.75rem; opacity:.85; direction:ltr; text-align:right;">@m.Symbol / USD</div>
+                                    </div>
+                                </div>
+                                <div class="metal-ounce">$@m.Price.ToString("N2")</div>
+                                <div class="metal-gram">هر گرم: $@((m.Price / 31.1034768m).ToString("N2"))</div>
+                                <div class="metal-time">آخرین بروزرسانی: @m.TimestampUtc.ToLocalTime().ToString("HH:mm:ss")</div>
+                            </div>
+                        }
+                    </div>
+                }
+            </RadzenCard>
+
+            @if (Items.Count > 0)
+            {
+                @* ---------- ۲) نسبت‌ها ---------- *@
+                <RadzenCard class="fade-in" Style="border-radius:20px; width:100%;">
+                    <div class="wx-section-title" style="margin-bottom:.8rem; display:flex; align-items:center; gap:.4rem;">
+                        <RadzenIcon Icon="balance" Style="font-size:20px; opacity:.8;" />
+                        <span>نسبت‌های بازار فلزات</span>
+                    </div>
+                    <div class="ratio-grid">
+                        <div class="ratio-card">
+                            <div class="ratio-title">نسبت طلا به نقره</div>
+                            <div class="ratio-val">@(Ratio("XAU", "XAG"))</div>
+                            <div class="ratio-desc">با این نسبت، چند اونس نقره برابر یک اونس طلاست</div>
+                        </div>
+                        <div class="ratio-card">
+                            <div class="ratio-title">نسبت طلا به پلاتین</div>
+                            <div class="ratio-val">@(Ratio("XAU", "XPT"))</div>
+                            <div class="ratio-desc">طلای گران‌تر یا پلاتین؟ معیار تریدرها</div>
+                        </div>
+                        <div class="ratio-card">
+                            <div class="ratio-title">نسبت نقره به پالادیم</div>
+                            <div class="ratio-val">@(Ratio("XAG", "XPD"))</div>
+                            <div class="ratio-desc">دو فلز صنعتی در مقایسه مستقیم</div>
+                        </div>
+                        <div class="ratio-card">
+                            <div class="ratio-title">گرانه‌ترین فلز امروز</div>
+                            <div class="ratio-val" style="font-size:1.1rem;">@TopMetal</div>
+                            <div class="ratio-desc">بالاترین قیمت اونس در این لحظه</div>
+                        </div>
+                    </div>
+                </RadzenCard>
+
+                @* ---------- ۳) مبدل واحد ---------- *@
+                <RadzenCard class="fade-in" Style="border-radius:20px; width:100%;">
+                    <div class="wx-section-title" style="margin-bottom:.8rem; display:flex; align-items:center; gap:.4rem;">
+                        <RadzenIcon Icon="calculate" Style="font-size:20px; opacity:.8;" />
+                        <span>ماشین‌حساب طلا و فلزات</span>
+                    </div>
+                    <div class="cv-row">
+                        <div>
+                            <RadzenLabel Text="فلز" Style="display:block; margin-bottom:.3rem;" />
+                            <RadzenDropDown @bind-Value="_cvMetal" Data="@CvMetals" Style="width:170px" />
+                        </div>
+                        <div>
+                            <RadzenLabel Text="مقدار" Style="display:block; margin-bottom:.3rem;" />
+                            <RadzenNumeric @bind-Value="_cvAmount" Min="0" Style="width:130px" />
+                        </div>
+                        <div>
+                            <RadzenLabel Text="واحد" Style="display:block; margin-bottom:.3rem;" />
+                            <RadzenDropDown @bind-Value="_cvUnit" Data="@Units" Style="width:150px" />
+                        </div>
+                    </div>
+                    <div class="cv-result">
+                        <div class="cv-box" style="grid-column: 1 / -1; background:linear-gradient(135deg,#fff,#e8f4ff); border-color:#9ecbff;">
+                            <div class="v" style="font-size:1.7rem; color:#0b5ed7;">$@ConvUSD.ToString("N2")</div>
+                            <div class="l">ارزش کل به دلار</div>
+                        </div>
+                        <div class="cv-box"><div class="v">@ConvOunce.ToString("N4")</div><div class="l">اونس بین‌المللی</div></div>
+                        <div class="cv-box"><div class="v">@ConvGram.ToString("N4")</div><div class="l">گرم</div></div>
+                        <div class="cv-box"><div class="v">@ConvMesghal.ToString("N4")</div><div class="l">مثقال (۴.۶۰۸۳ گرم)</div></div>
+                        <div class="cv-box"><div class="v">@ConvKilo.ToString("N4")</div><div class="l">کیلوگرم</div></div>
+                    </div>
+                </RadzenCard>
+
+                @* ---------- ۴) نمودار مقایسه ---------- *@
+        @*         <RadzenCard class="fade-in" dir="ltr" Style="border-radius:20px; padding:2rem;">
+                    <div style="font-weight:900; margin-bottom:.5rem;">مقایسه قیمت فلزات (USD / اونس)</div>
+                    <div class="chart-scroll">
+                        <RadzenChart Style="width:100%; height:420px;">
+                            <RadzenChartTooltipOptions Shared="true" />
+                            <RadzenChartTooltip />
+                            <RadzenColumnSeries TItem="MetalQuoteDto"
+                                                Data="@Items"
+                                                CategoryProperty="Symbol"
+                                                ValueProperty="Price"
+                                                Title="قیمت اونس"
+                                                Fill="#FFD54F" Stroke="#B8860B" />
+                            <RadzenLegend Position="LegendPosition.Bottom" />
+                            <RadzenCategoryAxis LabelAutoRotation="30" TickDistance="40" Stroke="#060270" StrokeWidth="2" />
+                            <RadzenValueAxis Stroke="#060270" StrokeWidth="2" 
+                                             Formatter="@(v => "$" + string.Format(System.Globalization.CultureInfo.InstalledUICulture, "{0:N0}", v))" />
+                        </RadzenChart>
+                    </div>
+                </RadzenCard> *@
+
+                @* ---------- ۵) روند نشست ---------- *@
+                @if (History.Count > 1)
+                {
+                    <RadzenCard class="fade-in" dir="ltr" Style="border-radius:20px; padding:2rem;">
+                        <div style="font-weight:900; margin-bottom:.5rem;">روند قیمت در این نشست (هر بروزرسانی = یک نقطه)</div>
+                    <div class="chart-scroll">
+                        <RadzenChart Style="width:100%; height:400px;">
+                            <RadzenChartTooltipOptions Shared="true" />
+                            <RadzenChartTooltip />
+                            <RadzenLineSeries TItem="SessionPoint" Data="@History" CategoryProperty="Label"
+                                              ValueProperty="XAU" Title="طلا" Stroke="#D4AF0A" Smooth="true" />
+                            <RadzenLineSeries TItem="SessionPoint" Data="@History" CategoryProperty="Label"
+                                              ValueProperty="XAG" Title="نقره" Stroke="#8B95A1" Smooth="true" />
+                            <RadzenLineSeries TItem="SessionPoint" Data="@History" CategoryProperty="Label"
+                                              ValueProperty="XPT" Title="پلاتین" Stroke="#5A6B7B" Smooth="true" />
+                            <RadzenLineSeries TItem="SessionPoint" Data="@History" CategoryProperty="Label"
+                                              ValueProperty="XPD" Title="پالادیم" Stroke="#4F86F7" Smooth="true" />
+                            <RadzenLegend Position="LegendPosition.Bottom" />
+                            <RadzenCategoryAxis LabelAutoRotation="30" TickDistance="40" Stroke="#060270" StrokeWidth="2" />
+                            <RadzenValueAxis Stroke="#060270" StrokeWidth="2" />
+                        </RadzenChart>
+                    </div>
+                    </RadzenCard>
+                }
+
+                @* ---------- ۶) جدول کامل ---------- *@
+                <RadzenCard class="fade-in" Style="border-radius:20px; width:100%;">
+                    <div class="wx-section-title" style="margin-bottom:.8rem;">جدول کامل قیمت‌ها</div>
+                    <RadzenDataGrid TItem="MetalQuoteDto" Data="@Items" AllowSorting="true"
+                                    RowRender="@(args => { if (args.Index % 2 == 1) args.Attributes["style"]="background:var(--rz-base-100);"; })">
+                        <Columns>
+                            <RadzenDataGridColumn TItem="MetalQuoteDto" Title="فلز" Width="200px">
+                                <Template Context="m">
+                                    <div style="display:flex; align-items:center; gap:.5rem;">
+                                        <span style="font-size:24px">@IconFor(m.Symbol)</span>
+                                        <b>@NameFor(m.Symbol)</b>
+                                    </div>
+                                </Template>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="MetalQuoteDto" Property="Symbol" Title="نماد" Width="90px" TextAlign="TextAlign.Center" />
+                            <RadzenDataGridColumn TItem="MetalQuoteDto" Title="اونس (USD)" Width="140px" TextAlign="TextAlign.Center" Property="Price">
+                                <Template Context="m"><b>$@m.Price.ToString("N2")</b></Template>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="MetalQuoteDto" Title="گرم (USD)" Width="130px" TextAlign="TextAlign.Center">
+                                <Template Context="m">$@((m.Price / 31.1034768m).ToString("N2"))</Template>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="MetalQuoteDto" Title="مثقال (USD)" Width="130px" TextAlign="TextAlign.Center">
+                                <Template Context="m">$@((m.Price / 31.1034768m * 4.6083m).ToString("N2"))</Template>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="MetalQuoteDto" Title="به‌روزرسانی" Width="160px" TextAlign="TextAlign.Center">
+                                <Template Context="m">@m.TimestampUtc.ToLocalTime():g</Template>
+                            </RadzenDataGridColumn>
+                        </Columns>
+                    </RadzenDataGrid>
+                </RadzenCard>
+            }
+        </div>
+    </ChildContent>
+</BasePage>
+
+@code {
+    private bool IsLoading { get; set; } = true;
+    private bool _offline;
+    private List<MetalQuoteDto> Items { get; set; } = new();
+    private List<SessionPoint> History { get; } = new();
+
+    private const string Symbols = "XAU,XAG,XPT,XPD";
+    private const decimal GramsPerOunce = 31.1034768m;
+    private const decimal GramsPerMesghal = 4.6083m;
+
+    // مبدل
+    private string _cvMetal = "XAU";
+    private decimal _cvAmount = 1;
+    private string _cvUnit = "اونس";
+    private readonly string[] Units = ["اونس", "گرم", "مثقال"];
+    private List<string> CvMetals => Items.Select(i => i.Symbol).ToList();
+
+    public sealed record SessionPoint(string Label, decimal XAU, decimal XAG, decimal XPT, decimal XPD);
+
+    private decimal MetalPrice(string sym) => Items.FirstOrDefault(i => i.Symbol == sym)?.Price ?? 0;
+    private decimal PricePerGram(string sym) => MetalPrice(sym) / GramsPerOunce;
+
+    private string Ratio(string a, string b)
+    {
+        var pb = MetalPrice(b);
+        if (pb == 0) return "—";
+        return (MetalPrice(a) / pb).ToString("N2");
+    }
+
+    private string TopMetal => Items.OrderByDescending(i => i.Price).FirstOrDefault() is { } t ? NameFor(t.Symbol) : "—";
+
+    private decimal TotalGrams => _cvUnit switch
+    {
+        "گرم" => _cvAmount,
+        "مثقال" => _cvAmount * GramsPerMesghal,
+        _ => _cvAmount * GramsPerOunce
+    };
+
+    private decimal ConvUSD    => PricePerGram(_cvMetal) * TotalGrams;   // ارزش دلاری کل
+    private decimal ConvOunce  => TotalGrams / GramsPerOunce;            // وزن معادل
+    private decimal ConvGram   => TotalGrams;
+    private decimal ConvMesghal => TotalGrams / GramsPerMesghal;
+    private decimal ConvKilo   => TotalGrams / 1000;
+
+    private static string NameFor(string symbol) => symbol switch
+    {
+        "XAU" => "طلا", "XAG" => "نقره", "XPT" => "پلاتین", "XPD" => "پالادیم", _ => symbol
+    };
+
+    private static string IconFor(string symbol) => symbol switch
+    {
+        "XAU" => "🥇", "XAG" => "🥈", "XPT" => "⚪", "XPD" => "🔘", _ => "🔶"
+    };
+
+    private static string CssFor(string symbol) => symbol switch
+    {
+        "XAU" => "gold", "XAG" => "silver", "XPT" => "plat", "XPD" => "pall", _ => "gold"
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Metals.OnMetalsUpdated += items =>
+            {
+                Items = items ?? new();
+                _offline = false;
+                IsLoading = false;
+                RecordHistory();
+                InvokeAsync(StateHasChanged);
+            };
+
+            await Metals.StartAsync();
+            await Metals.SubscribeAsync(Symbols);
+        }
+        catch
+        {
+            _offline = true;
+            IsLoading = false;
+        }
+    }
+
+    private void RecordHistory()
+    {
+        var label = DateTime.Now.ToString("HH:mm");
+        if (History.Count > 0 && History[^1].Label == label) return;
+        History.Add(new SessionPoint(label,
+            MetalPrice("XAU"), MetalPrice("XAG"), MetalPrice("XPT"), MetalPrice("XPD")));
+        if (History.Count > 60) History.RemoveAt(0);
+    }
+
+    private async Task Refresh()
+    {
+        try
+        {
+            IsLoading = true;
+            StateHasChanged();
+            await Metals.RefreshOnceAsync(Symbols);
+            _offline = false;
+        }
+        catch
+        {
+            _offline = true;
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    #region CurrentWindow
+    private int windowWidth;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var dotNetRef = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("resizeListener.register", dotNetRef);
+            windowWidth = await JS.InvokeAsync<int>("getWindowWidth");
+        }
+    }
+    [JSInvokable]
+    public Task OnResize(int width)
+    {
+        windowWidth = width;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+    #endregion
+}

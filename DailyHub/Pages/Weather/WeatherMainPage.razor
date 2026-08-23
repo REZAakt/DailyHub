@@ -263,34 +263,36 @@
             <!-- چارت Min / Max -->
             <RadzenCard class="wx-card fade-in" Style="margin-top:1rem;">
                 <div class="wx-section-title"> نمودار کمینه / بیشینه دما       ( ۷ روز )  </div>
-                <RadzenChart class="ChartClass">
-                    <RadzenChartTooltipOptions Shared="true" />
-                    <RadzenChartTooltip />
-                    <RadzenLineSeries TItem="WeatherDayDto" LineType="LineType.Solid" Interpolation="Interpolation.Spline" Smooth="true"
-                                      Data="@(_data?.Daily ?? Array.Empty<WeatherDayDto>())"
-                                      CategoryProperty="Date" Stroke="#01D6DD"
-                                      ValueProperty="MinC"
-                                      Title="کمینه">
+                <div class="chart-scroll">
+                    <RadzenChart class="ChartClass">
+                        <RadzenChartTooltipOptions Shared="true" />
+                        <RadzenChartTooltip />
+                        <RadzenLineSeries TItem="WeatherDayDto" LineType="LineType.Solid" Interpolation="Interpolation.Spline" Smooth="true"
+                                          Data="@(_data?.Daily ?? Array.Empty<WeatherDayDto>())"
+                                          CategoryProperty="Date" Stroke="#01D6DD"
+                                          ValueProperty="MinC"
+                                          Title="کمینه">
 
-                        <RadzenMarkers Visible="true" MarkerType="MarkerType.Circle" />
-                        <RadzenSeriesDataLabels Visible="true">
-                        </RadzenSeriesDataLabels>
-                    </RadzenLineSeries>
+                            <RadzenMarkers Visible="true" MarkerType="MarkerType.Circle" />
+                            <RadzenSeriesDataLabels Visible="true">
+                            </RadzenSeriesDataLabels>
+                        </RadzenLineSeries>
 
-                    <RadzenLineSeries TItem="WeatherDayDto" LineType="LineType.Solid" Interpolation="Interpolation.Spline" Smooth="true"
-                                      Data="@(_data?.Daily ?? Array.Empty<WeatherDayDto>())"
-                                      CategoryProperty="Date" 
-                                      ValueProperty="MaxC" Stroke="#D20103"
-                                      Title="بیشینه">
-                        <RadzenMarkers Visible="true" MarkerType="MarkerType.Circle" />
-                        <RadzenSeriesDataLabels Visible="true" >
-                        </RadzenSeriesDataLabels>
-                    </RadzenLineSeries>
+                        <RadzenLineSeries TItem="WeatherDayDto" LineType="LineType.Solid" Interpolation="Interpolation.Spline" Smooth="true"
+                                          Data="@(_data?.Daily ?? Array.Empty<WeatherDayDto>())"
+                                          CategoryProperty="Date"
+                                          ValueProperty="MaxC" Stroke="#D20103"
+                                          Title="بیشینه">
+                            <RadzenMarkers Visible="true" MarkerType="MarkerType.Circle" />
+                            <RadzenSeriesDataLabels Visible="true">
+                            </RadzenSeriesDataLabels>
+                        </RadzenLineSeries>
 
-                    <RadzenCategoryAxis  LabelAutoRotation="15" Stroke="#060270" StrokeWidth="2" TickDistance="50"/>
-                    <RadzenValueAxis Stroke="#060270" StrokeWidth="2"/>
-                    <RadzenLegend Position="LegendPosition.Bottom" />
-                </RadzenChart>
+                        <RadzenCategoryAxis LabelAutoRotation="30" TickDistance="40" Stroke="#060270" StrokeWidth="2" />
+                        <RadzenValueAxis Stroke="#060270" StrokeWidth="2" />
+                        <RadzenLegend Position="LegendPosition.Bottom" />
+                    </RadzenChart>
+                </div>
             </RadzenCard>
         </div>
     </ChildContent>

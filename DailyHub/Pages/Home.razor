@@ -114,6 +114,92 @@
         margin: 0px 1rem;
     }
 
+    /* --- هدر زنده --- */
+    .hero-strip {
+        display: flex;
+        align-items: center;
+        gap: 1.4rem;
+        padding: 1.2rem 1.6rem;
+        border-radius: 20px;
+        background: linear-gradient(120deg, #0f2027, #203a43, #2c5364);
+        color: #fff;
+        box-shadow: 0 14px 34px rgba(15, 32, 39, .35);
+        flex-wrap: wrap;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-strip::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(300px 120px at 12% 0%, rgba(0,140,211,.35), transparent 70%),
+            radial-gradient(260px 120px at 88% 100%, rgba(216,35,131,.28), transparent 70%);
+        pointer-events: none;
+    }
+
+    .hero-time {
+        font-size: 2.3rem;
+        font-weight: 900;
+        direction: ltr;
+        line-height: 1.1;
+        font-variant-numeric: tabular-nums;
+        text-shadow: 0 2px 12px rgba(0, 195, 255, .45);
+    }
+
+    .hero-date { font-size: 1.02rem; font-weight: 700; margin-top: .2rem; }
+    .hero-geo { font-size: .8rem; opacity: .65; margin-top: .15rem; }
+
+    .hero-divider {
+        width: 1px;
+        align-self: stretch;
+        background: linear-gradient(180deg, transparent, rgba(255,255,255,.35), transparent);
+    }
+
+    .hero-nowruz { display: flex; align-items: center; gap: .9rem; }
+
+    .hero-count {
+        font-size: 2.3rem;
+        font-weight: 900;
+        color: #ffd54f;
+        text-shadow: 0 2px 12px rgba(255, 213, 79, .4);
+        min-width: 74px;
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .hero-nowrap-t { font-size: .95rem; font-weight: 700; }
+    .hero-nowrap-d { font-size: .78rem; opacity: .6; margin-top: .15rem; }
+
+    .hero-services { flex: 1; min-width: 240px; }
+
+    .hero-pills { display: flex; flex-wrap: wrap; gap: .45rem; }
+
+    .hp {
+        padding: .35rem .8rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, .12);
+        border: 1px solid rgba(255, 255, 255, .18);
+        font-size: .82rem;
+        cursor: pointer;
+        transition: all .2s ease;
+        white-space: nowrap;
+    }
+
+    .hp:hover {
+        background: rgba(255, 255, 255, .25);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 14px rgba(0, 0, 0, .25);
+    }
+
+    @@media (max-width: 768px) {
+        .hero-strip { flex-direction: column; text-align: center; align-items: center; }
+        .hero-divider { width: 80%; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent); }
+        .hero-pills { justify-content: center; }
+        .hero-time { font-size: 1.9rem; }
+    }
+
     /* --- موبایل --- */
     @@media (max-width: 768px) {
         .wx-title {
@@ -177,6 +263,37 @@
 
     <ChildContent>
         <div dir="rtl" class="wx-wrap" style="overflow:hidden;">
+
+            @* ---------- هدر زنده: ساعت + تاریخ شمسی + نوروز ---------- *@
+            <div class="hero-strip fade-in">
+                <div class="hero-clock">
+                    <div class="hero-time">@DateTime.Now.ToString("HH:mm:ss")</div>
+                    <div class="hero-date">@_persianDate</div>
+                    <div class="hero-geo">@DateTime.Now.ToString("dddd, d MMMM yyyy")</div>
+                </div>
+                <div class="hero-divider"></div>
+                <div class="hero-nowruz">
+                    <div class="hero-count">@DaysToNowruz</div>
+                    <div class="hero-nowrap">
+                        <div class="hero-nowrap-t">روز مانده به نوروز</div>
+                        <div class="hero-nowrap-d">تحویل سال @_nowruzJalali</div>
+                    </div>
+                </div>
+                <div class="hero-divider"></div>
+                <div class="hero-services">
+                    <div class="hero-nowrap-t" style="margin-bottom:.35rem;">همه‌چیز همین‌جاست</div>
+                    <div class="hero-pills">
+                        <span class="hp" @onclick="() => NavManageer(AddressBar.Wheater)">☀️ آب‌وهوا</span>
+                        <span class="hp" @onclick="() => NavManageer(AddressBar.Crypto)">₿ کریپتو</span>
+                        <span class="hp" @onclick="() => NavManageer(AddressBar.Metals)">🥇 طلا</span>
+                        <span class="hp" @onclick="() => NavManageer(AddressBar.Rates)">💱 ارز</span>
+                        <span class="hp" @onclick="() => NavManageer(AddressBar.News)">📰 اخبار</span>
+                        <span class="hp" @onclick="() => NavManageer(AddressBar.Calendar)">🗓️ تعطیلات</span>
+                        <span class="hp" @onclick="() => NavManageer(AddressBar.AiCaht)">🤖 هوش مصنوعی</span>
+                    </div>
+                </div>
+            </div>
+
             <RadzenRow class="wx-row" Style="align-items: stretch; gap: 1rem;">
                 <RadzenColumn Size="12" SizeMd="9" SizeSm="12">
                     <RadzenCard class="wx-card fade-in">
@@ -453,6 +570,42 @@
                         <p>اخبار روز رو از اینجا دنبال کن</p>
                     </div>
                 </RadzenCard>
+
+                <RadzenCard class="chat-card card5" @onclick="() => NavManageer(AddressBar.Metals)">
+                    <div class="chat-card-icon">
+                        <div class="chat-card-slot">
+                            <span class="big-emoji">🥇</span>
+                        </div>
+                    </div>
+                    <div class="chat-card-content">
+                        <h3>طلا چنده ؟</h3>
+                        <p>قیمت لحظه‌ای طلا و فلزات گران‌بها</p>
+                    </div>
+                </RadzenCard>
+
+                <RadzenCard class="chat-card card6" @onclick="() => NavManageer(AddressBar.Rates)">
+                    <div class="chat-card-icon">
+                        <div class="chat-card-slot">
+                            <span class="big-emoji">💱</span>
+                        </div>
+                    </div>
+                    <div class="chat-card-content">
+                        <h3>نرخ ارزها</h3>
+                        <p>نرخ لحظه‌ای ارزهای جهان رو ببین</p>
+                    </div>
+                </RadzenCard>
+
+                <RadzenCard class="chat-card card7" @onclick="() => NavManageer(AddressBar.Calendar)">
+                    <div class="chat-card-icon">
+                        <div class="chat-card-slot">
+                            <span class="big-emoji">🗓️</span>
+                        </div>
+                    </div>
+                    <div class="chat-card-content">
+                        <h3>کی تعطیله ؟</h3>
+                        <p>تقویم تعطیلات رسمی کشورها</p>
+                    </div>
+                </RadzenCard>
             </div>
 
             @* </RadzenStack> *@
@@ -465,12 +618,19 @@
     </ChildContent>
 </BasePage>
 
+@implements IDisposable
 @code {
     public bool IsLoading { get; set; } = true;
     private bool _offline;
     private readonly List<OnThisDayItemDto> _items = new();
     private string _lang = "fa";
     private int _m = DateTime.Today.Month, _d = DateTime.Today.Day;
+
+    // هدر زنده
+    private string _persianDate = "";
+    private int DaysToNowruz { get; set; }
+    private int _nowruzJalali;
+    private System.Threading.Timer? _clockTimer;
 
     private void NavManageer(AddressBar Address)
     {
@@ -489,6 +649,18 @@
         else if (Address == AddressBar.Wheater)
         {
             _NavigationManager.NavigateTo("Weather/WeatherMainPage");
+        }
+        else if (Address == AddressBar.Metals)
+        {
+            _NavigationManager.NavigateTo("Metals/MetalsMainPage");
+        }
+        else if (Address == AddressBar.Rates)
+        {
+            _NavigationManager.NavigateTo("Rates/RatesMainPage");
+        }
+        else if (Address == AddressBar.Calendar)
+        {
+            _NavigationManager.NavigateTo("Calendar/CalendarMainPage");
         }
     }
 
@@ -509,6 +681,24 @@
 
     protected override async Task OnInitializedAsync()
     {
+        // شمارش معکوس نوروز: روز اول فروردینِ سال شمسیِ بعد، از خود تقویم فارسی
+        var pc = new System.Globalization.PersianCalendar();
+        var nextJalaliYear = pc.GetYear(DateTime.Today) + 1;
+        var nowruz = pc.ToDateTime(nextJalaliYear, 1, 1, 0, 0, 0, 0).Date;
+        if (nowruz <= DateTime.Today)
+        {
+            nextJalaliYear++;
+            nowruz = pc.ToDateTime(nextJalaliYear, 1, 1, 0, 0, 0, 0).Date;
+        }
+        DaysToNowruz = (nowruz - DateTime.Today).Days;
+        _nowruzJalali = nextJalaliYear;
+
+        // ساعت زنده (هر ثانیه)
+        _clockTimer = new System.Threading.Timer(_ =>
+        {
+            _ = InvokeAsync(StateHasChanged);
+        }, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
+
         try
         {
             Otd.OnOtdUpdated += (_, list) =>
@@ -540,6 +730,14 @@
             var dotNetRef = DotNetObjectReference.Create(this);
             await JS.InvokeVoidAsync("resizeListener.register", dotNetRef);
             windowWidth = await JS.InvokeAsync<int>("getWindowWidth");
+
+            // تاریخ شمسی از مرورگر
+            try
+            {
+                _persianDate = await JS.InvokeAsync<string>("getPersianDate");
+                StateHasChanged();
+            }
+            catch { /* مرورگر قدیمی */ }
         }
     }
     [JSInvokable]
@@ -581,5 +779,10 @@
 
     private static string SafeTitle(OnThisDayItemDto it)
         => StripHtml(!string.IsNullOrWhiteSpace(it.Title) ? it.Title : it.Text);
+
+    public void Dispose()
+    {
+        _clockTimer?.Dispose();
+    }
 
 }

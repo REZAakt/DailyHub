@@ -12,6 +12,9 @@ namespace DailyHub.Shared.Enums
         Crypto,
         Wheater,
         News,
-        AiCaht
+        AiCaht,
+        Metals,
+        Rates,
+        Calendar
     }
 }

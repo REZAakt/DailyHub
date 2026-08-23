@@ -5,7 +5,71 @@
     margin: 0;
     user-select: none;
     background: linear-gradient(180deg, #ffffff 0%, #e9f5ff 40%, #f9ebf7 100%);
+    background-attachment: fixed;
     font-family: 'Shabnam-FD', 'irsans', Arial, sans-serif !important;
+}
+
+/* حباب‌های نرم متحرک در پس‌زمینه */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+        radial-gradient(600px 400px at 85% 8%, rgba(0, 140, 211, .09), transparent 65%),
+        radial-gradient(500px 380px at 10% 30%, rgba(216, 35, 131, .07), transparent 65%),
+        radial-gradient(700px 500px at 50% 95%, rgba(106, 104, 224, .08), transparent 65%);
+    animation: bgShift 18s ease-in-out infinite alternate;
+}
+
+@keyframes bgShift {
+    from { opacity: .8; transform: translateY(0) scale(1); }
+    to { opacity: 1; transform: translateY(-14px) scale(1.03); }
+}
+
+/* اسکرول‌بار سفارشی */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #008b9d, #6a68e0);
+    border-radius: 999px;
+    border: 2px solid rgba(255,255,255,.6);
+}
+::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #006e7d, #5147c4); }
+
+/* کارت‌های رادزن شیشه‌ای‌تر */
+.rz-card {
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, .65);
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+/* انیمیشن ورود صفحه */
+.fade-in {
+    animation: pageIn .45s cubic-bezier(.2, .7, .3, 1) both;
+}
+
+@keyframes pageIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- نمودارها: در موبایل اسکرول افقی به‌جای له‌شدن --- */
+.chart-scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 12px;
+}
+
+.chart-scroll .rz-chart {
+    min-width: 640px;
+}
+
+/* لیبل‌های محور نمودار: جاگیری بهتر و بدون افتادن روی هم */
+.rz-chart text {
+    font-size: 11px;
 }
 
 h1:focus {
@@ -1184,10 +1248,16 @@ code {
 
 /* کانتینر کلی */
 .chat-card-wrap {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 1.2rem;
-    padding:0px .5rem;
+    padding: 0px .5rem;
+}
+
+@media (max-width: 768px) {
+    .chat-card-wrap {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* خود کارت Radzen */
@@ -1258,6 +1328,32 @@ code {
 
 .card4 {
     background: linear-gradient(90deg, #26c6da 0%, #940524 100%);
+}
+
+.card5 {
+    background: linear-gradient(90deg, #26c6da 0%, #B8860B 100%);
+}
+
+.card6 {
+    background: linear-gradient(90deg, #26c6da 0%, #039BE5 100%);
+}
+
+.card7 {
+    background: linear-gradient(90deg, #26c6da 0%, #E65100 100%);
+}
+
+.big-emoji {
+    font-size: 56px;
+    line-height: 80px;
+    display: block;
+    text-align: center;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,.25));
+    animation: emojiFloat 3s ease-in-out infinite;
+}
+
+@keyframes emojiFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
 }
 
 /* ریسپانسیو: تو موبایل مربع سفید حذف بشه و پدینگ کم بشه */
@@ -1531,5 +1627,5 @@ code {
 
 .fade-in {
     /*animation: fadeIn .3s ease-in;*/
-    animation: zoomIn 0.5s ease-out forwards;
+    animation: pageIn 0.5s cubic-bezier(.2,.7,.3,1) both;
 }

@@ -8,7 +8,9 @@ public sealed class NewsRealtimeService : IAsyncDisposable
 
     public event Action<string, List<NewsItemDto>>? OnNewsUpdated;
 
-    private const string ApiBaseUrl = "https://server2.app.sanaerp.ir"; // پورت API خودت
+    //private const string ApiBaseUrl = "https://server2.app.sanaerp.ir"; // پورت API خودت
+    private const string ApiBaseUrl = "https://localhost:7014";
+
     private static readonly string HubUrl = $"{ApiBaseUrl}/hubs/news";
 
     public TimeSpan RefreshInterval { get; set; } = TimeSpan.FromMinutes(30);
