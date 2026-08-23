@@ -6,14 +6,14 @@ using Microsoft.AspNetCore.Routing;
 
 public static class NewsEndpoints
 {
-    public static IEndpointRouteBuilder MapNewsEndpoints(this IEndpointRouteBuilder app)
+    public static void MapNewsEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/news", (string source, int limit, INewsProvider provider) =>
-        {
-            // Implement later
-            throw new NotImplementedException();
-        });
+        var group = app.MapGroup("/api/news");
 
-        return app;
+        group.MapGet("/{category}", async (string category, INewsProvider provider) =>
+        {
+            var news = await provider.GetNewsAsync(category);
+            return Results.Ok(news);
+        });
     }
 }

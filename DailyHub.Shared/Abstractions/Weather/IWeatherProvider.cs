@@ -10,5 +10,6 @@ using DailyHub.Shared.Dto.Weather;
 
 public interface IWeatherProvider
 {
-    Task<WeatherSummaryDto> GetSummaryAsync(double latitude, double longitude, CancellationToken ct = default);
+    /// <summary>Forecast شامل وضعیت الان، امروز و 7 روز آینده</summary>
+    Task<WeatherForecastDto> GetForecastAsync(double latitude, double longitude, int days = 7, CancellationToken ct = default);
 }

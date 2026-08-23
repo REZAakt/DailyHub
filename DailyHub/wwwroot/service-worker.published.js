@@ -1,7 +1,9 @@
-// Caution! Be sure you understand the caveats before publishing an application with
+﻿// Caution! Be sure you understand the caveats before publishing an application with
 // offline support. See https://aka.ms/blazor-offline-considerations
 
 self.importScripts('./service-worker-assets.js');
+console.info('Service worker: script loaded');
+
 self.addEventListener('install', event => event.waitUntil(onInstall(event)));
 self.addEventListener('activate', event => event.waitUntil(onActivate(event)));
 self.addEventListener('fetch', event => event.respondWith(onFetch(event)));
@@ -18,13 +20,18 @@ const manifestUrlList = self.assetsManifest.assets.map(asset => new URL(asset.ur
 
 async function onInstall(event) {
     console.info('Service worker: Install');
-
+        
     // Fetch and cache all matching items from the assets manifest
     const assetsRequests = self.assetsManifest.assets
         .filter(asset => offlineAssetsInclude.some(pattern => pattern.test(asset.url)))
         .filter(asset => !offlineAssetsExclude.some(pattern => pattern.test(asset.url)))
         .map(asset => new Request(asset.url, { integrity: asset.hash, cache: 'no-cache' }));
+
     await caches.open(cacheName).then(cache => cache.addAll(assetsRequests));
+
+    // verify offline.html is in the cache for debugging
+    const offlineCached = await caches.open(cacheName).then(cache => cache.match('offline.html')).catch(() => null);
+    console.info('Service worker: offline.html cached?', !!offlineCached);
 }
 
 async function onActivate(event) {
@@ -37,19 +44,50 @@ async function onActivate(event) {
         .map(key => caches.delete(key)));
 }
 
-async function onFetch(event) {
-    let cachedResponse = null;
-    if (event.request.method === 'GET') {
-        // For all navigation requests, try to serve index.html from cache,
-        // unless that request is for an offline resource.
-        // If you need some URLs to be server-rendered, edit the following check to exclude those URLs
-        const shouldServeIndexHtml = event.request.mode === 'navigate'
-            && !manifestUrlList.some(url => url === event.request.url);
 
-        const request = shouldServeIndexHtml ? 'index.html' : event.request;
-        const cache = await caches.open(cacheName);
-        cachedResponse = await cache.match(request);
+async function onFetch(event) {
+    if (event.request.method !== 'GET') {
+        return fetch(event.request);
     }
 
-    return cachedResponse || fetch(event.request);
+    const cache = await caches.open(cacheName);
+    const isNavigate = event.request.mode === 'navigate';
+
+    // ۱) برای درخواست‌های صفحه (route ها)
+    if (isNavigate) {
+        try {
+            // سعی می‌کنیم آنلاین جواب بدیم
+            const networkResponse = await fetch(event.request);
+            return networkResponse;
+        } catch (error) {
+            console.warn('Network failed, serving offline page if possible.', error);
+
+            // اول صفحه‌ی آفلاین
+            const offlinePage = await cache.match('offline.html');
+            console.info('Service worker: offline.html found in cache?', !!offlinePage);
+            if (offlinePage) {
+                return offlinePage;
+            }
+
+            // بعد index.html برای fallback
+            const cachedIndex = await cache.match('index.html');
+            if (cachedIndex) {
+                return cachedIndex;
+            }
+
+            // آخرش یه جواب ساده
+            return new Response('Offline', {
+                status: 503,
+                statusText: 'Offline'
+            });
+        }
+    }
+
+    // ۲) برای بقیه‌ی فایل‌ها (css/js/عکس و ...)
+    const cachedResponse = await cache.match(event.request);
+    if (cachedResponse) {
+        return cachedResponse;
+    }
+
+    return fetch(event.request);
 }

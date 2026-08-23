@@ -1,7 +1,788 @@
-﻿@page "/"
+﻿@page "/Home"
+@using DailyHub.Shared.Dto.Otd
+@inject OnThisDayRealtimeService Otd
+@using System.Net
+@using System.Text.RegularExpressions
+@using DailyHub.Shared.Enums
+@inject NavigationManager _NavigationManager
+@inject IJSRuntime JS
 
-<PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<style>
+    .wx-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        min-width: 100%;
+        padding: clamp(12px, 2vw, 20px); /* فاصله از چهار طرف صفحه */
+        max-width: 1500px;
+        margin: 0 auto; /* محتوا وسط صفحه و محدود */
+    }
 
-Welcome to your new app.
+    .wx-section-title {
+        margin: 5px;
+        font-weight: 700;
+        font-size: 16px;
+    }
+
+    .wx-card, .wx-side {
+        border-radius: 16px;
+        height: 100%;
+        min-width: 100%;
+        padding: 1rem;
+        box-shadow: 0 0px 15px rgba(0,0,0,.03); /* سایه نرم و یکنواخت */
+        background: #fff;
+    }
+
+    .wx-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .wx-city {
+        font-size: 1.4rem;
+        font-weight: 900;
+    }
+
+    .wx-time {
+        font-size: .9rem;
+        opacity: .7;
+    }
+
+    .wx-loading {
+        padding: .5rem 0;
+    }
+
+    .wx-today {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .wx-today-left {
+        display: flex;
+        flex-direction: column;
+        gap: .35rem;
+        flex: 1;
+    }
+
+    .wx-temp-now {
+        font-size: 2.2rem;
+        font-weight: 900;
+        line-height: 1.2;
+    }
+
+    .wx-temp-range, .wx-precip, .wx-code {
+        font-size: .95rem;
+    }
+
+    .wx-today-right {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        max-width: 150px;
+        max-height: 150px;
+    }
+
+    .wx-video {
+        width: 180px;
+        height: 140px;
+        object-fit: cover;
+        border-radius: 12px;
+    }
+
+    .wx-side-title {
+        font-weight: 800;
+        margin-bottom: .75rem;
+    }
+
+    .wx-side-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: .5rem .75rem;
+        font-size: .95rem;
+    }
+
+    .min-grid .rz-datatable-table {
+        min-width: 640px;
+    }
+
+    .ChartClass {
+        height: 340px;
+        margin: 0px 1rem;
+    }
+
+    /* --- هدر زنده --- */
+    .hero-strip {
+        display: flex;
+        align-items: center;
+        gap: 1.4rem;
+        padding: 1.2rem 1.6rem;
+        border-radius: 20px;
+        background: linear-gradient(120deg, #0f2027, #203a43, #2c5364);
+        color: #fff;
+        box-shadow: 0 14px 34px rgba(15, 32, 39, .35);
+        flex-wrap: wrap;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-strip::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(300px 120px at 12% 0%, rgba(0,140,211,.35), transparent 70%),
+            radial-gradient(260px 120px at 88% 100%, rgba(216,35,131,.28), transparent 70%);
+        pointer-events: none;
+    }
+
+    .hero-time {
+        font-size: 2.3rem;
+        font-weight: 900;
+        direction: ltr;
+        line-height: 1.1;
+        font-variant-numeric: tabular-nums;
+        text-shadow: 0 2px 12px rgba(0, 195, 255, .45);
+    }
+
+    .hero-date { font-size: 1.02rem; font-weight: 700; margin-top: .2rem; }
+    .hero-geo { font-size: .8rem; opacity: .65; margin-top: .15rem; }
+
+    .hero-divider {
+        width: 1px;
+        align-self: stretch;
+        background: linear-gradient(180deg, transparent, rgba(255,255,255,.35), transparent);
+    }
+
+    .hero-nowruz { display: flex; align-items: center; gap: .9rem; }
+
+    .hero-count {
+        font-size: 2.3rem;
+        font-weight: 900;
+        color: #ffd54f;
+        text-shadow: 0 2px 12px rgba(255, 213, 79, .4);
+        min-width: 74px;
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .hero-nowrap-t { font-size: .95rem; font-weight: 700; }
+    .hero-nowrap-d { font-size: .78rem; opacity: .6; margin-top: .15rem; }
+
+    .hero-services { flex: 1; min-width: 240px; }
+
+    .hero-pills { display: flex; flex-wrap: wrap; gap: .45rem; }
+
+    .hp {
+        padding: .35rem .8rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, .12);
+        border: 1px solid rgba(255, 255, 255, .18);
+        font-size: .82rem;
+        cursor: pointer;
+        transition: all .2s ease;
+        white-space: nowrap;
+    }
+
+    .hp:hover {
+        background: rgba(255, 255, 255, .25);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 14px rgba(0, 0, 0, .25);
+    }
+
+    @@media (max-width: 768px) {
+        .hero-strip { flex-direction: column; text-align: center; align-items: center; }
+        .hero-divider { width: 80%; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent); }
+        .hero-pills { justify-content: center; }
+        .hero-time { font-size: 1.9rem; }
+    }
+
+    /* --- موبایل --- */
+    @@media (max-width: 768px) {
+        .wx-title {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: .25rem;
+        }
+        /* ردیف بالایی حتماً زیر هم بیاید */
+        .wx-row {
+            flex-direction: column !important;
+        }
+            /* تضمین استک‌شدن ستون‌ها */
+            .wx-row .rz-column {
+                flex: 0 0 100% !important;
+                max-width: 100% !important;
+            }
+
+        .wx-today {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .wx-today-right {
+            justify-content: stretch;
+            width: 155px;
+            height: 155px;
+        }
+
+        .wx-video {
+            width: 100%;
+            height: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
+        .wx-wrap {
+            padding: 12px;
+        }
+        /* کمی جمع‌وجورتر در موبایل */
+        .wx-card, .wx-side {
+            min-width: 100%;
+            box-shadow: 0 0px 15px rgba(0,0,0,.03);
+        }
+        /* سایه نرم‌تر */
+        .ChartClass {
+            height: 340px;
+            margin: 0px 1px;
+        }
+    }
+</style>
+
+<BasePage IsLoading="IsLoading">
+    <HeaderContent>
+        <RadzenAlert AlertStyle="AlertStyle.Danger" @bind-Visible="_offline" ShowIcon="false" Variant="Variant.Flat" Shade="Shade.Lighter"
+                     style="margin:1rem 1rem; border-radius:18px;width:98%; box-shadow: 0 0px 30px rgba(0, 0, 0, 0.1) !important;">
+            <RadzenText style="color:red; font-weight:800; font-size:16px;"
+                        Text="اتصال شما به سرور برقرار نشد ، لطفا با پشتیبانی تماس بگیرید . " />
+        </RadzenAlert>
+    </HeaderContent>
+
+    <ChildContent>
+        <div dir="rtl" class="wx-wrap" style="overflow:hidden;">
+
+            @* ---------- هدر زنده: ساعت + تاریخ شمسی + نوروز ---------- *@
+            <div class="hero-strip fade-in">
+                <div class="hero-clock">
+                    <div class="hero-time">@DateTime.Now.ToString("HH:mm:ss")</div>
+                    <div class="hero-date">@_persianDate</div>
+                    <div class="hero-geo">@DateTime.Now.ToString("dddd, d MMMM yyyy")</div>
+                </div>
+                <div class="hero-divider"></div>
+                <div class="hero-nowruz">
+                    <div class="hero-count">@DaysToNowruz</div>
+                    <div class="hero-nowrap">
+                        <div class="hero-nowrap-t">روز مانده به نوروز</div>
+                        <div class="hero-nowrap-d">تحویل سال @_nowruzJalali</div>
+                    </div>
+                </div>
+                <div class="hero-divider"></div>
+                <div class="hero-services">
+                    <div class="hero-nowrap-t" style="margin-bottom:.35rem;">همه‌چیز همین‌جاست</div>
+                    <div class="hero-pills">
+                        <span class="hp" @onclick="() => NavManageer(AddressBar.Wheater)">☀️ آب‌وهوا</span>
+                        <span class="hp" @onclick="() => NavManageer(AddressBar.Crypto)">₿ کریپتو</span>
+                        <span class="hp" @onclick="() => NavManageer(AddressBar.Metals)">🥇 طلا</span>
+                        <span class="hp" @onclick="() => NavManageer(AddressBar.Rates)">💱 ارز</span>
+                        <span class="hp" @onclick="() => NavManageer(AddressBar.News)">📰 اخبار</span>
+                        <span class="hp" @onclick="() => NavManageer(AddressBar.Calendar)">🗓️ تعطیلات</span>
+                        <span class="hp" @onclick="() => NavManageer(AddressBar.AiCaht)">🤖 هوش مصنوعی</span>
+                    </div>
+                </div>
+            </div>
+
+            <RadzenRow class="wx-row" Style="align-items: stretch; gap: 1rem;">
+                <RadzenColumn Size="12" SizeMd="9" SizeSm="12">
+                    <RadzenCard class="wx-card fade-in">
+                        <div style="display:flex; align-items:center; justify-content:space-between; gap:.5rem; margin-bottom:.5rem;">
+                            <div class="wx-section-title" style="display:flex; align-items:center; gap:.4rem;">
+                                <RadzenIcon Icon="calendar_today" Style="font-size:22px; opacity:.8;" />
+                                <span>اتفاقات امروز در تاریخ</span>
+                            </div>
+
+                            <div style="display:flex; align-items:center; gap:.6rem;">
+                                @if (windowWidth > 500)
+                                {
+                                    <div style="opacity:.7">@(_items?.Count > 0 ? $"{_items.Count} مورد" : (IsLoading ? "در حال دریافت..." : "موردی یافت نشد"))</div>
+                                }
+                                <RadzenButton Icon="refresh" Text="بروزرسانی" Click="Refresh"
+                                              ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" />
+                            </div>
+                        </div>
+                        @if (IsLoading)
+                        {
+                            <div style="opacity:.6; padding:.5rem;">در حال دریافت...</div>
+                        }
+                        else
+                        {
+                            var featured = GetFeatured(2);
+
+                            if (featured.Count == 0)
+                            {
+                                <div style="opacity:.6; padding:.5rem;">امروز اتفاقی نیافتاده ؟🤔</div>
+                            }
+                            else
+                            {
+                                <RadzenDataList TItem="OnThisDayItemDto" Data="@featured" AllowPaging="false" Style="max-height:none;">
+                                    <Template Context="it">
+                                        @if (windowWidth > 500)
+                                        {
+                                            <RadzenCard style="margin-bottom:.8rem; padding:.9rem 1.1rem; border-radius:14px; border:0px solid var(--rz-base-300);box-shadow:none !important;">
+                                                <div style="display:flex; gap:14px; align-items:flex-start; flex-direction:row-reverse;" dir="rtl">
+                                                    @if (!string.IsNullOrWhiteSpace(it.Thumbnail))
+                                                    {
+                                                        <img src="@it.Thumbnail"
+                                                             alt="@StripHtml(it.Title)"
+                                                             style="width:120px;height:120px;object-fit:cover;border-radius:12px;border:1px solid var(--rz-base-300); margin-inline-start:6px;" />
+                                                    }
+
+                                                    <div style="flex:1; display:flex; flex-direction:column; gap:6px; text-align:right;  box-shadow: none !important;">
+                                                        <div style="display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; justify-content:flex-start;">
+                                                            <span style="font-weight:900; font-size:1.05rem;">@SafeTitle(it)</span>
+
+                                                            @if (it.Year > 0)
+                                                            {
+                                                                <span style="direction:ltr; background:var(--rz-base-200); color:var(--rz-text-color);
+                                                                                                            border-radius:999px; padding:.15rem .6rem; font-size:.8rem;justify-content: center; display: flex;">
+                                                                    <RadzenIcon Icon="event" Style="font-size:16px;opacity:.8;margin-inline-end:.25rem;" />
+                                                                    @it.Year
+                                                                </span>
+                                                            }
+
+                                                            <span style="background:#eef6ff; color:#0b5ed7; border:1px solid #d5e9ff;
+                                                                                              border-radius:999px; padding:.15rem .6rem; font-size:.8rem;justify-content: center; display: flex;">
+                                                                <RadzenIcon Icon="local_offer" Style="font-size:16px;opacity:.85;margin-inline-end:.25rem;" />
+                                                                @Norm(it.Type)
+                                                            </span>
+                                                        </div>
+
+                                                        <div style="opacity:.9; line-height:1.9; white-space:normal;">
+                                                            @StripHtml(it.Text)
+                                                        </div>
+
+                                                        @if (!string.IsNullOrWhiteSpace(it.PageUrl))
+                                                        {
+                                                            <div style="margin-top:.25rem;display:flex; justify-content:flex-start;">
+                                                                <a class="rz-button rz-secondary rz-size-small"
+                                                                   style="display:inline-flex; align-items:center; gap:.4rem; border-radius:999px; padding:.25rem .7rem;"
+                                                                   href="@it.PageUrl" target="_blank" rel="noopener">
+                                                                    <RadzenIcon Icon="open_in_new" Style="font-size:18px; opacity:.85;" />
+                                                                    <span>ادامه در ویکی‌پدیا</span>
+                                                                </a>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </RadzenCard>
+                                        }
+                                        @if (windowWidth <= 500)
+                                        {
+                                            <RadzenCard style="margin-bottom:.8rem; padding:.9rem 1.1rem; border-radius:14px; border:0px solid var(--rz-base-300);box-shadow:none !important;">
+                                                <div class="wiki-card-content" dir="rtl">
+                                                    <div class="wiki-card-text">
+                                                        <div style="display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; justify-content:flex-start;">
+                                                            <span style="font-weight:900; font-size:1.05rem;">@SafeTitle(it)</span>
+
+                                                            @if (it.Year > 0)
+                                                            {
+                                                                <span style="direction:ltr; background:var(--rz-base-200); color:var(--rz-text-color);
+                                                                        border-radius:999px; padding:.15rem .6rem; font-size:.8rem;justify-content: center; display: flex;">
+                                                                    <RadzenIcon Icon="event" Style="font-size:16px;opacity:.8;margin-inline-end:.25rem;" />
+                                                                    @it.Year
+                                                                </span>
+                                                            }
+
+                                                            <span style="background:#eef6ff; color:#0b5ed7; border:1px solid #d5e9ff;
+                                                          border-radius:999px; padding:.15rem .6rem; font-size:.8rem;justify-content: center; display: flex;">
+                                                                <RadzenIcon Icon="local_offer" Style="font-size:16px;opacity:.85;margin-inline-end:.25rem;" />
+                                                                @Norm(it.Type)
+                                                            </span>
+                                                        </div>
+
+                                                        <div style="opacity:.9; line-height:1.9; white-space:normal;">
+                                                            @StripHtml(it.Text)
+                                                        </div>
+                                                    </div>
+
+                                                    @if (!string.IsNullOrWhiteSpace(it.Thumbnail))
+                                                    {
+                                                        <img class="wiki-card-image"
+                                                             src="@it.Thumbnail"
+                                                             alt="@StripHtml(it.Title)" />
+                                                    }
+
+                                                    @if (!string.IsNullOrWhiteSpace(it.PageUrl))
+                                                    {
+                                                        <div class="wiki-card-link">
+                                                            <a class="rz-button rz-secondary rz-size-small"
+                                                               style="display:inline-flex; align-items:center; gap:.4rem; border-radius:999px; padding:.25rem .7rem;"
+                                                               href="@it.PageUrl" target="_blank" rel="noopener">
+                                                                <RadzenIcon Icon="open_in_new" Style="font-size:18px; opacity:.85;" />
+                                                                <span>ادامه در ویکی‌پدیا</span>
+                                                            </a>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </RadzenCard>
+                                        }
+                                    </Template>
+                                </RadzenDataList>
+                            }
+                        }
+                    </RadzenCard>
+                </RadzenColumn>
+
+                <RadzenColumn Size="12" SizeMd="3" SizeSm="12">
+                    <RadzenCard class="wx-side fade-in" Style="justify-content:center; display:flex; background-color:transparent; min-width:250px; box-shadow:none;align-content:center;flex-wrap: wrap;">
+                        <div class="section-banner">
+                            <div id="star-1">
+                                <div class="curved-corner-star">
+                                    <div id="curved-corner-bottomright"></div>
+                                    <div id="curved-corner-bottomleft"></div>
+                                </div>
+                                <div class="curved-corner-star">
+                                    <div id="curved-corner-topright"></div>
+                                    <div id="curved-corner-topleft"></div>
+                                </div>
+                            </div>
+
+                            <div id="star-2">
+                                <div class="curved-corner-star">
+                                    <div id="curved-corner-bottomright"></div>
+                                    <div id="curved-corner-bottomleft"></div>
+                                </div>
+                                <div class="curved-corner-star">
+                                    <div id="curved-corner-topright"></div>
+                                    <div id="curved-corner-topleft"></div>
+                                </div>
+                            </div>
+
+                            <div id="star-3">
+                                <div class="curved-corner-star">
+                                    <div id="curved-corner-bottomright"></div>
+                                    <div id="curved-corner-bottomleft"></div>
+                                </div>
+                                <div class="curved-corner-star">
+                                    <div id="curved-corner-topright"></div>
+                                    <div id="curved-corner-topleft"></div>
+                                </div>
+                            </div>
+
+                            <div id="star-4">
+                                <div class="curved-corner-star">
+                                    <div id="curved-corner-bottomright"></div>
+                                    <div id="curved-corner-bottomleft"></div>
+                                </div>
+                                <div class="curved-corner-star">
+                                    <div id="curved-corner-topright"></div>
+                                    <div id="curved-corner-topleft"></div>
+                                </div>
+                            </div>
+
+                            <div id="star-5">
+                                <div class="curved-corner-star">
+                                    <div id="curved-corner-bottomright"></div>
+                                    <div id="curved-corner-bottomleft"></div>
+                                </div>
+                                <div class="curved-corner-star">
+                                    <div id="curved-corner-topright"></div>
+                                    <div id="curved-corner-topleft"></div>
+                                </div>
+                            </div>
+
+                            <div id="star-6">
+                                <div class="curved-corner-star">
+                                    <div id="curved-corner-bottomright"></div>
+                                    <div id="curved-corner-bottomleft"></div>
+                                </div>
+                                <div class="curved-corner-star">
+                                    <div id="curved-corner-topright"></div>
+                                    <div id="curved-corner-topleft"></div>
+                                </div>
+                            </div>
+
+                            <div id="star-7">
+                                <div class="curved-corner-star">
+                                    <div id="curved-corner-bottomright"></div>
+                                    <div id="curved-corner-bottomleft"></div>
+                                </div>
+                                <div class="curved-corner-star">
+                                    <div id="curved-corner-topright"></div>
+                                    <div id="curved-corner-topleft"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </RadzenCard>
+                </RadzenColumn>
+            </RadzenRow>
+
+            @* <RadzenStack class="wx-card fade-in" Wrap="FlexWrap.Wrap" Orientation="Orientation.Horizontal" Gap="1rem" Reverse="true" JustifyContent="JustifyContent.Center" Style="margin-top:1rem;background-color:transparent;"> *@
+
+            <div class="chat-card-wrap fade-in">
+
+                <RadzenCard class="chat-card card1" @onclick="() => NavManageer(AddressBar.AiCaht)">
+                    <div class="chat-card-icon">
+                        <div class="chat-card-slot">
+                            <JsonPlayer Id="1" Path="images/AI.json" />
+                        </div>
+                    </div>
+                    <div class="chat-card-content">
+                        <h3>حرفی کاری سوالی ؟</h3>
+                        <p>می‌تونی با من صحبت کنی ، از همین‌جا وارد شو</p>
+                    </div>
+                </RadzenCard>
+
+                <RadzenCard class="chat-card card2" @onclick="() => NavManageer(AddressBar.Wheater)">
+                    <div class="chat-card-icon">
+                        <div class="chat-card-slot">
+                            <JsonPlayer Id="2" Path="images/Weather.json" />
+                        </div>
+                    </div>
+                    <div class="chat-card-content">
+                        <h3>هوا چطوره ؟</h3>
+                        <p>وضعیت اب و هوا رو از این جا ببین</p>
+                    </div>
+                </RadzenCard>
+
+                <RadzenCard class="chat-card card3" @onclick="() => NavManageer(AddressBar.Crypto)">
+                    <div class="chat-card-icon">
+                        <div class="chat-card-slot">
+                            <JsonPlayer Id="3" Path="images/Crypto.json" />
+                        </div>
+                    </div>
+                    <div class="chat-card-content">
+                        <h3>قیمت لحظه ای ارز دیجیتال</h3>
+                        <p>قیمت ارز های دیجیتال رو از پیگیری کن</p>
+                    </div>
+                </RadzenCard>
+
+                <RadzenCard class="chat-card card4" @onclick="() => NavManageer(AddressBar.News)">
+                    <div class="chat-card-icon">
+                        <div class="chat-card-slot">
+                            <JsonPlayer Id="4" Path="images/News.json" />
+                        </div>
+                    </div>
+                    <div class="chat-card-content">
+                        <h3>بیرون چه خبره ؟</h3>
+                        <p>اخبار روز رو از اینجا دنبال کن</p>
+                    </div>
+                </RadzenCard>
+
+                <RadzenCard class="chat-card card5" @onclick="() => NavManageer(AddressBar.Metals)">
+                    <div class="chat-card-icon">
+                        <div class="chat-card-slot">
+                            <span class="big-emoji">🥇</span>
+                        </div>
+                    </div>
+                    <div class="chat-card-content">
+                        <h3>طلا چنده ؟</h3>
+                        <p>قیمت لحظه‌ای طلا و فلزات گران‌بها</p>
+                    </div>
+                </RadzenCard>
+
+                <RadzenCard class="chat-card card6" @onclick="() => NavManageer(AddressBar.Rates)">
+                    <div class="chat-card-icon">
+                        <div class="chat-card-slot">
+                            <span class="big-emoji">💱</span>
+                        </div>
+                    </div>
+                    <div class="chat-card-content">
+                        <h3>نرخ ارزها</h3>
+                        <p>نرخ لحظه‌ای ارزهای جهان رو ببین</p>
+                    </div>
+                </RadzenCard>
+
+                <RadzenCard class="chat-card card7" @onclick="() => NavManageer(AddressBar.Calendar)">
+                    <div class="chat-card-icon">
+                        <div class="chat-card-slot">
+                            <span class="big-emoji">🗓️</span>
+                        </div>
+                    </div>
+                    <div class="chat-card-content">
+                        <h3>کی تعطیله ؟</h3>
+                        <p>تقویم تعطیلات رسمی کشورها</p>
+                    </div>
+                </RadzenCard>
+            </div>
+
+            @* </RadzenStack> *@
+
+            @*   <RadzenCard class="wx-card fade-in" Style="margin-top:1rem;">
+
+            </RadzenCard> *@
+        </div>
+
+    </ChildContent>
+</BasePage>
+
+@implements IDisposable
+@code {
+    public bool IsLoading { get; set; } = true;
+    private bool _offline;
+    private readonly List<OnThisDayItemDto> _items = new();
+    private string _lang = "fa";
+    private int _m = DateTime.Today.Month, _d = DateTime.Today.Day;
+
+    // هدر زنده
+    private string _persianDate = "";
+    private int DaysToNowruz { get; set; }
+    private int _nowruzJalali;
+    private System.Threading.Timer? _clockTimer;
+
+    private void NavManageer(AddressBar Address)
+    {
+        if (Address == AddressBar.Crypto)
+        {
+            _NavigationManager.NavigateTo("Crypto/CryptoMainPage");
+        }
+        else if (Address == AddressBar.News)
+        {
+            _NavigationManager.NavigateTo("News/NewsMainPage");
+        }
+        else if (Address == AddressBar.AiCaht)
+        {
+            _NavigationManager.NavigateTo("AI/AiMainPage");
+        }
+        else if (Address == AddressBar.Wheater)
+        {
+            _NavigationManager.NavigateTo("Weather/WeatherMainPage");
+        }
+        else if (Address == AddressBar.Metals)
+        {
+            _NavigationManager.NavigateTo("Metals/MetalsMainPage");
+        }
+        else if (Address == AddressBar.Rates)
+        {
+            _NavigationManager.NavigateTo("Rates/RatesMainPage");
+        }
+        else if (Address == AddressBar.Calendar)
+        {
+            _NavigationManager.NavigateTo("Calendar/CalendarMainPage");
+        }
+    }
+
+    private static string Norm(string? s) => (s ?? "").Trim().ToLowerInvariant();
+
+    private List<OnThisDayItemDto> GetFeatured(int n)
+    {
+        IEnumerable<OnThisDayItemDto> src = _items.Where(i => Norm(i.Type) == "selected");
+        if (!src.Any())
+            src = _items.Where(i => Norm(i.Type) == "events");
+
+        return src
+            .OrderByDescending(i => !string.IsNullOrWhiteSpace(i.Thumbnail))
+            .ThenByDescending(i => i.Year)
+            .Take(n)
+            .ToList();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // شمارش معکوس نوروز: روز اول فروردینِ سال شمسیِ بعد، از خود تقویم فارسی
+        var pc = new System.Globalization.PersianCalendar();
+        var nextJalaliYear = pc.GetYear(DateTime.Today) + 1;
+        var nowruz = pc.ToDateTime(nextJalaliYear, 1, 1, 0, 0, 0, 0).Date;
+        if (nowruz <= DateTime.Today)
+        {
+            nextJalaliYear++;
+            nowruz = pc.ToDateTime(nextJalaliYear, 1, 1, 0, 0, 0, 0).Date;
+        }
+        DaysToNowruz = (nowruz - DateTime.Today).Days;
+        _nowruzJalali = nextJalaliYear;
+
+        // ساعت زنده (هر ثانیه)
+        _clockTimer = new System.Threading.Timer(_ =>
+        {
+            _ = InvokeAsync(StateHasChanged);
+        }, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
+
+        try
+        {
+            Otd.OnOtdUpdated += (_, list) =>
+            {
+                _items.Clear();
+                if (list is not null) _items.AddRange(list);
+                IsLoading = false;
+                _offline = false;
+                InvokeAsync(StateHasChanged);
+            };
+
+            await Otd.StartAsync();
+            // یک‌بار سابسکرایب + آپدیت شبانهٔ خودکار
+            await Otd.SubscribeAsync(_lang, "all", _m, _d, autoRefresh: true);
+        }
+        catch
+        {
+            _offline = true;
+            IsLoading = false;
+        }
+    }
+
+    #region CurrentWindow
+    private int windowWidth;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var dotNetRef = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("resizeListener.register", dotNetRef);
+            windowWidth = await JS.InvokeAsync<int>("getWindowWidth");
+
+            // تاریخ شمسی از مرورگر
+            try
+            {
+                _persianDate = await JS.InvokeAsync<string>("getPersianDate");
+                StateHasChanged();
+            }
+            catch { /* مرورگر قدیمی */ }
+        }
+    }
+    [JSInvokable]
+    public Task OnResize(int width)
+    {
+        windowWidth = width;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+    #endregion
+
+
+    private async Task Refresh()
+    {
+        try
+        {
+            IsLoading = true;
+            StateHasChanged();
+
+            await Otd.RefreshOnceAsync(_lang, "all", _m, _d);
+
+            _offline = false;
+            IsLoading = false;
+        }
+        catch
+        {
+            _offline = true;
+            IsLoading = false;
+        }
+    }
+
+    private static string StripHtml(string? s)
+    {
+        if (string.IsNullOrWhiteSpace(s)) return "";
+        var decoded = WebUtility.HtmlDecode(s);
+        // حذف تمام تگ‌های HTML
+        return Regex.Replace(decoded, "<.*?>", "").Trim();
+    }
+
+    private static string SafeTitle(OnThisDayItemDto it)
+        => StripHtml(!string.IsNullOrWhiteSpace(it.Title) ? it.Title : it.Text);
+
+    public void Dispose()
+    {
+        _clockTimer?.Dispose();
+    }
+
+}

@@ -1,42 +1,162 @@
 ﻿@inherits LayoutComponentBase
+@inject IJSRuntime JS
 
-<RadzenLayout>
-    <RadzenHeader Style="background-color:white; height:40px;">
+<RadzenLayout Style="background-color: transparent;">
 
-        <RadzenRow Gap="0px" style="width:100%; height:15px;">
-            <RadzenColumn style="width:100%;background-color:palevioletred;" Size="4">
-            </RadzenColumn>
-            <RadzenColumn style="width:100%;background-color:darkslategray;" Size="4">
-                <RadzenLabel Text="Header"  />
-            </RadzenColumn>
-            <RadzenColumn style="width:100%;background-color:blueviolet;" Size="4">
-            </RadzenColumn>
-        </RadzenRow>
-
-        <RadzenRow style="width:100%;background-color:skyblue; height:20px;">
-                <RadzenMenu >
-                    <RadzenMenuItem Text="Counter" Icon="category" IconColor="#7586B1" Path="/counter" Style=" font-size:16px" />
-                    <RadzenMenuItem Text="Home" Icon="category" IconColor="#7586B1" Path="/" Style=" font-size:16px" />
-                    <RadzenMenuItem Text="Weather" Icon="category" IconColor="#7586B1" Path="/weather" Style=" font-size:16px" />
-                    <RadzenMenuItem Text="Home" Icon="category" IconColor="#7586B1" Path="/" Style=" font-size:16px" />
-                    <RadzenMenuItem Text="Weather" Icon="category" IconColor="#7586B1" Path="/weather" Style=" font-size:16px" />
+    <RadzenHeader class="app-header" style="@HeaderBackground">
+        <RadzenRow class="header-top" Style="padding: 0; height:100%;" JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center">
+            <RadzenColumn Size="8" Style="width:100%;" class="menu-col">
+                <RadzenMenu class="fade-in" Style="background-color:transparent;">
+                    <RadzenMenuItem Text="خانــه" Icon="home" IconColor="#FCFCFC" Path="Home"
+                                    Style="font-size:16px; color:white !important; margin-right:10px; font-weight:400;" />
+                    <RadzenMenuItem Text="کریپتو" Icon="currency_bitcoin" IconColor="#FCFCFC" Path="Crypto/CryptoMainPage"
+                                    Style="font-size:16px;color:white;margin-right:10px;font-weight:400;" />
+                    <RadzenMenuItem Text="طلا و فلزات" Icon="workspace_premium" IconColor="#FCFCFC" Path="Metals/MetalsMainPage"
+                                    Style="font-size:16px;color:white;margin-right:10px;font-weight:400;" />
+                    <RadzenMenuItem Text="نرخ ارز" Icon="currency_exchange" IconColor="#FCFCFC" Path="Rates/RatesMainPage"
+                                    Style="font-size:16px;color:white;margin-right:10px;font-weight:400;" />
+                    <RadzenMenuItem Text="اخبــار" Icon="newsmode" IconColor="#FCFCFC" Path="News/NewsMainPage"
+                                    Style="font-size:16px;color:white;margin-right:10px;font-weight:400;" />
+                    <RadzenMenuItem Text="آب و هوا" Icon="clear_day" IconColor="#FCFCFC" Path="Weather/WeatherMainPage"
+                                    Style="font-size:16px;color:white;margin-right:10px;font-weight:400;" />
+                    <RadzenMenuItem Text="تقویم تعطیلات" Icon="event" IconColor="#FCFCFC" Path="Calendar/CalendarMainPage"
+                                    Style="font-size:16px;color:white;margin-right:10px;font-weight:400;" />
+                    <RadzenMenuItem Text="چی کار می‌تونم بکنم برات؟" Icon="automation" IconColor="#FCFCFC" Path="AI/AiMainPage"
+                                    Style="font-size:16px;color:white;margin-right:10px;font-weight:400;" />
                 </RadzenMenu>
+            </RadzenColumn>
+
+            <RadzenColumn Size="4" Style="width:100%;height:100%; display:flex; align-items:flex-start; margin-top:5px;justify-content: end;padding-left: 10px; " class="logo-col">
+                <RadzenImage class="fade-in" Path="/images/Logo.svg"
+                             Style="display:block; margin:0; padding:0; align-self:flex-start;" />
+            </RadzenColumn>
         </RadzenRow>
-      
     </RadzenHeader>
 
-    <RadzenBody>
-        <div class="rz-p-12" style="height:100%; width:100%;">
+    @*     <RadzenSidebar FullHeight="true" Responsive="false" @bind-Expanded="@sidebarExpanded" style="position: absolute; z-index: 3">
+        <RadzenStack AlignItems="AlignItems.End" class="rz-p-2">
+            <RadzenButton Icon="west" Variant="Variant.Text" ButtonStyle="ButtonStyle.Secondary" Click="@(() => sidebarExpanded = false)" />
+        </RadzenStack>
+        <RadzenPanelMenu>
+            <RadzenPanelMenuItem Text="خانــه" Icon="home" IconColor="#6F7279" Path="/Home" Style="font-size:16px; color:white !important; margin-right:10px; font-weight:400;" />
+            <RadzenPanelMenuItem Text="اخبــار" Icon="newsmode" IconColor="#6F7279" Path="/News/NewsMainPage" Style=" font-size:16px;color:white;margin-right:10px;font-weight:400;" />
+            <RadzenPanelMenuItem Text="تقویم" Icon="calendar_month" IconColor="#6F7279" Path="/Calendar/CalendarMainPage" Style=" font-size:16px;color:white;margin-right:10px;font-weight:400;" />
+            <RadzenPanelMenuItem Text="آب و هوا" Icon="clear_day" IconColor="#6F7279" Path="/Weather/WeatherMainPage" Style=" font-size:16px;color:white;margin-right:10px;font-weight:400;" />
+            <RadzenPanelMenuItem Text="چی کار می تونم بکنم برات ؟" Icon="automation" IconColor="#6F7279" Path="/AI/AiMainPage" Style=" font-size:16px;color:white;margin-right:10px;font-weight:400;" />
+        </RadzenPanelMenu>
+
+    </RadzenSidebar> *@
+
+    <RadzenBody Style=" background-color:transparent; padding: 0;">
+        <div class="rz-p-12" style="height:100%; width:100%; background-color:transparent;padding: 0 !important; margin-bottom:30px;">
             @Body
+            <RadzenFooter class="reveal-on-scroll" Style="background-color:transparent; width:100%;">
+                <div class="site-footer">
+                    <div class="glow-container">
+                        <div class="footer-content">
+
+                            <h2 class="footer-title">Designed & Built by</h2>
+
+                            <div class="footer-creators">
+                                <div class="creator-box">
+                                    <h3>Reza Akbarpour</h3>
+                                    <div class="social-icons">
+                                        <a href="tel:+989114461400" title="Call">
+                                            <i class="fas fa-phone"></i>
+                                        </a>
+                                        <a href="https://www.instagram.com/reza.akbarpourr/" target="_blank" title="Instagram">
+                                            <i class="fab fa-instagram"></i>
+                                        </a>
+                                        <a href="https://t.me/REZA_akT" target="_blank" title="Telegram">
+                                            <i class="fab fa-telegram"></i>
+                                        </a>
+                                        <a href="https://www.linkedin.com/in/reza-akbarpour-64ab3b217/" target="_blank" title="LinkedIn">
+                                            <i class="fab fa-linkedin"></i>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                @* <div class="creator-box">
+                            <h3>Mohammad Allahgholipour</h3>
+                            <div class="social-icons">
+                                <a href="tel:+989114461400" title="Call">
+                                    <i class="fas fa-phone"></i>
+                                </a>
+                                <a href="https://www.instagram.com/reza.akbarpourr/" target="_blank" title="Instagram">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="https://t.me/REZA_akT" target="_blank" title="Telegram">
+                                    <i class="fab fa-telegram"></i>
+                                </a>
+                                <a href="https://www.linkedin.com/in/reza-akbarpour-64ab3b217/" target="_blank" title="LinkedIn">
+                                    <i class="fab fa-linkedin"></i>
+                                </a>
+                            </div>
+                        </div> *@
+                            </div>
+
+                            <div class="footer-copy">
+                                © 2025 All rights reserved. • v1.1
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </RadzenFooter>
         </div>
     </RadzenBody>
 
-    @*  <RadzenFooter>
-        Footer
-    </RadzenFooter> *@
 </RadzenLayout>
 
+
 @code {
+    bool sidebarExpanded = false;
+    private string HeaderBackground = "";
 
+    protected override void OnInitialized()
+    {
+        SetHeaderBackground();
+        Navigation.LocationChanged += (s, e) =>
+        {
+            SetHeaderBackground();
+            StateHasChanged();
+        };
+    }
+    private void SetHeaderBackground()
+    {
+        var path = Navigation.ToBaseRelativePath(Navigation.Uri).ToLower();
 
+        HeaderBackground = path switch
+        {
+            "" or "home" => "background: linear-gradient(to right, #008b9d, #6a68e0, #d82383);",
+            "news/newsmainpage" => "background: linear-gradient(to right,  #008b9d, #6a68e0, #940524);", // نارنجی-قرمز
+            "crypto/cryptomainpage" => "background: linear-gradient(to right, #008b9d, #6a68e0, #CB4400);", // آبی تیره
+            "weather/weathermainpage" => "background: linear-gradient(to right, #008b9d, #6a68e0, #008cd3);", // آبی آسمانی
+            "ai/aimainpage" => "background: linear-gradient(to right,#008b9d, #6a68e0, #3a0cbe);", // سبز-بنفش
+            "metals/metalsmainpage" => "background: linear-gradient(to right, #008b9d, #6a68e0, #B8860B);", // طلایی
+            "rates/ratesmainpage" => "background: linear-gradient(to right, #008b9d, #6a68e0, #039BE5);", // آبی ارز
+            "calendar/calendarmainpage" => "background: linear-gradient(to right, #008b9d, #6a68e0, #E65100);", // نارنجی تقویم
+            _ => "background: linear-gradient(to right, #6a11cb, #2575fc);" // پیش‌فرض
+        };
+    }
+
+    #region CurrentWindow
+    private int windowWidth;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var dotNetRef = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("resizeListener.register", dotNetRef);
+            windowWidth = await JS.InvokeAsync<int>("getWindowWidth");
+        }
+    }
+    [JSInvokable]
+    public Task OnResize(int width)
+    {
+        windowWidth = width;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+    #endregion
 }

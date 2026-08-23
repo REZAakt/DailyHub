@@ -1,0 +1,423 @@
+@page "/Rates/RatesMainPage"
+@using DailyHub.Shared.Dto.Rates
+@using DailyHub.Client.Services
+@inject RatesRealtimeService Rates
+@inject IJSRuntime JS
+
+<style>
+    .rt-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: clamp(12px, 2vw, 20px);
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .rates-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: .9rem;
+    }
+
+    .rate-card {
+        border-radius: 18px;
+        padding: 1.1rem 1.2rem;
+        background: linear-gradient(145deg, #ffffff 0%, #f0fbff 100%);
+        border: 1px solid rgba(0, 140, 211, .12);
+        box-shadow: 0 6px 18px rgba(0, 100, 160, .07);
+        transition: transform .25s ease, box-shadow .25s ease;
+    }
+
+    .rate-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 14px 28px rgba(0, 100, 160, .16);
+    }
+
+    .rate-sym {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        font-weight: 900;
+        font-size: 1.05rem;
+        direction: ltr;
+        justify-content: flex-end;
+    }
+
+    .rate-flag { font-size: 1.5rem; }
+
+    .rate-value {
+        font-size: 1.45rem;
+        font-weight: 900;
+        direction: ltr;
+        text-align: right;
+        margin-top: .35rem;
+        background: linear-gradient(90deg, #045a7d, #008b9d);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .rate-inverse { font-size: .78rem; opacity: .6; margin-top: .15rem; direction: ltr; text-align: right; }
+    .rate-name { font-size: .8rem; opacity: .65; }
+
+    .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: .8rem;
+    }
+
+    .stat-card {
+        border-radius: 16px;
+        padding: 1.1rem;
+        text-align: center;
+        border: 1px solid rgba(30, 60, 140, .1);
+        box-shadow: 0 6px 16px rgba(30, 60, 140, .06);
+        transition: transform .2s ease;
+    }
+
+    .stat-card:hover { transform: translateY(-3px); }
+
+    .stat-card .t { font-size: .82rem; opacity: .7; }
+    .stat-card .v { font-size: 1.4rem; font-weight: 900; margin-top: .3rem; color: #1a237e; }
+    .stat-card .d { font-size: .75rem; opacity: .6; margin-top: .25rem; }
+
+    .cv-box {
+        border-radius: 14px;
+        padding: 1rem;
+        background: linear-gradient(135deg, #fffdf5, #fff7e0);
+        border: 1px solid #ffe08a;
+        text-align: center;
+    }
+
+    .cv-box .v { font-size: 1.55rem; font-weight: 900; direction: ltr; color: #8a6d00; }
+    .cv-box .l { font-size: .8rem; opacity: .75; margin-top: .25rem; }
+
+    @@media (max-width: 480px) {
+        .rates-grid { grid-template-columns: 1fr 1fr; }
+    }
+</style>
+
+<BasePage IsLoading="IsLoading">
+    <HeaderContent>
+        <RadzenAlert AlertStyle="AlertStyle.Danger" @bind-Visible="_offline" ShowIcon="false" Variant="Variant.Flat" Shade="Shade.Lighter"
+                     style="margin:1rem; border-radius:18px; width:98%; box-shadow: 0 0px 30px rgba(0,0,0,0.1)!important;">
+            <RadzenText style="color:red; font-weight:800; font-size:16px;"
+                        Text="اتصال شما به سرور برقرار نشد ، لطفا با پشتیبانی تماس بگیرید . " />
+        </RadzenAlert>
+    </HeaderContent>
+
+    <ChildContent>
+        <div dir="rtl" class="rt-wrap">
+
+            @* ---------- ۱) کارت‌های نرخ ---------- *@
+            <RadzenCard class="fade-in" Style="border-radius:20px; width:100%;">
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:1rem; margin:0.2rem 0.5rem 0.8rem; flex-wrap:wrap;">
+                    <div class="wx-section-title" style="display:flex; align-items:center; gap:.4rem;">
+                        <RadzenIcon Icon="currency_exchange" Style="font-size:22px; opacity:.8;" />
+                        <span>نرخ لحظه‌ای ارزها (بر پایه @_base)</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:.6rem;">
+                        <RadzenDropDown @bind-Value="_base" Data="@_bases" Style="width:110px" Change="@(args => OnBaseChanged())" />
+                        <RadzenButton Icon="refresh" Text="بروزرسانی" Click="Refresh"
+                                      ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" />
+                    </div>
+                </div>
+
+                @if (IsLoading)
+                {
+                    <div style="opacity:.6; padding:.5rem;">در حال دریافت...</div>
+                }
+                else if (Items.Count == 0)
+                {
+                    <div style="opacity:.6; padding:.5rem;">داده‌ای برای نمایش نیست.</div>
+                }
+                else
+                {
+                    <div class="rates-grid">
+                        @foreach (var r in Items)
+                        {
+                            <div class="rate-card fade-in">
+                                <div class="rate-sym"><span class="rate-flag">@FlagFor(r.Symbol)</span> @r.Symbol</div>
+                                <div class="rate-value">@r.Rate.ToString("N4")</div>
+                                <div class="rate-inverse">1 @r.Symbol = @((1 / r.Rate).ToString("N4")) @_base</div>
+                                <div class="rate-name">@NameFor(r.Symbol)</div>
+                            </div>
+                        }
+                    </div>
+                }
+            </RadzenCard>
+
+            @if (Items.Count > 0)
+            {
+                @* ---------- ۲) آمار بازار ---------- *@
+                <RadzenCard class="fade-in" Style="border-radius:20px; width:100%;">
+                    <div class="wx-section-title" style="margin-bottom:.8rem; display:flex; align-items:center; gap:.4rem;">
+                        <RadzenIcon Icon="insights" Style="font-size:20px; opacity:.8;" />
+                        <span>آمار بازار ارز</span>
+                    </div>
+                    <div class="stat-grid">
+                        <div class="stat-card" style="background:linear-gradient(145deg,#fff,#eafff0);">
+                            <div class="t">قوی‌ترین ارز (کم‌ترین نرخ)</div>
+                            <div class="v">@FlagFor(Strongest.Symbol) @Strongest.Symbol</div>
+                            <div class="d">@Strongest.Rate.ToString("N4") برابر @_base</div>
+                        </div>
+                        <div class="stat-card" style="background:linear-gradient(145deg,#fff,#fff0f0);">
+                            <div class="t">ضعیف‌ترین ارز (بیش‌ترین نرخ)</div>
+                            <div class="v">@FlagFor(Weakest.Symbol) @Weakest.Symbol</div>
+                            <div class="d">@Weakest.Rate.ToString("N4") برابر @_base</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="t">اختلاف قوی‌ترین تا ضعیف‌ترین</div>
+                            <div class="v">@((Weakest.Rate / Strongest.Rate).ToString("N1"))×</div>
+                            <div class="d">فاصله ارزشی ارزها</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="t">تعداد ارزهای تحت پوشش</div>
+                            <div class="v">@Items.Count</div>
+                            <div class="d">نرخ‌های رسمی بانک مرکزی اروپا</div>
+                        </div>
+                    </div>
+                </RadzenCard>
+
+                @* ---------- ۳) مبدل ارز ---------- *@
+                <RadzenCard class="fade-in" Style="border-radius:20px; width:100%;">
+                    <div class="wx-section-title" style="margin-bottom:.8rem; display:flex; align-items:center; gap:.4rem;">
+                        <RadzenIcon Icon="calculate" Style="font-size:20px; opacity:.8;" />
+                        <span>مبدل ارز</span>
+                    </div>
+                    <div style="display:flex; gap:1rem; align-items:end; flex-wrap:wrap;">
+                        <div>
+                            <RadzenLabel Text="مبلغ" Style="display:block; margin-bottom:.3rem;" />
+                            <RadzenNumeric @bind-Value="_cvAmount" Min="0" Style="width:140px" />
+                        </div>
+                        <div>
+                            <RadzenLabel Text="از" Style="display:block; margin-bottom:.3rem;" />
+                            <RadzenDropDown @bind-Value="_cvFrom" Data="@CvSymbols" Style="width:110px" />
+                        </div>
+                        <RadzenButton Icon="swap_horiz" Click="@SwapCurrencies" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" Style="border-radius:12px;" />
+                        <div>
+                            <RadzenLabel Text="به" Style="display:block; margin-bottom:.3rem;" />
+                            <RadzenDropDown @bind-Value="_cvTo" Data="@CvSymbols" Style="width:110px" />
+                        </div>
+                    </div>
+                    @if (CvResult > 0)
+                    {
+                        <div class="cv-box" style="margin-top:1rem; display:inline-block; min-width:280px;">
+                            <div class="v">@CvResult.ToString("N2") @_cvTo</div>
+                            <div class="l">@_cvAmount.ToString("N0") @_cvFrom برابر است با</div>
+                        </div>
+                    }
+                </RadzenCard>
+
+                @* ---------- ۴) نمودار ---------- *@
+            @*     <RadzenCard class="fade-in" dir="ltr" Style="border-radius:20px; padding:2rem;">
+                    <div style="font-weight:900; margin-bottom:.5rem;">مقایسه نرخ ارزها نسبت به @_base</div>
+                    <div class="chart-scroll">
+                        <RadzenChart Style="width:100%; height:460px;">
+                            <RadzenChartTooltipOptions Shared="true" />
+                            <RadzenChartTooltip />
+                            <RadzenColumnSeries TItem="FxQuoteDto"
+                                                Data="@Items"
+                                                CategoryProperty="Symbol"
+                                                ValueProperty="Rate"
+                                                Title="نرخ"
+                                                Fill="#4FC3F7" Stroke="#0277BD" />
+                            <RadzenLegend Position="LegendPosition.Bottom" />
+                            <RadzenCategoryAxis LabelAutoRotation="30" TickDistance="40" Stroke="#060270" StrokeWidth="2" />
+                            <RadzenValueAxis Stroke="#060270" StrokeWidth="2"
+                                             Formatter="@(v => string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:N2}", v))" />
+                        </RadzenChart>
+                    </div>
+                </RadzenCard> *@
+
+                @* ---------- ۵) جدول کامل ---------- *@
+                <RadzenCard class="fade-in" Style="border-radius:20px; width:100%;">
+                    <div class="wx-section-title" style="margin-bottom:.8rem;">جدول کامل نرخ‌ها</div>
+                    <RadzenDataGrid TItem="FxQuoteDto" Data="@Items" AllowSorting="true"
+                                    RowRender="@(args => { if (args.Index % 2 == 1) args.Attributes["style"]="background:var(--rz-base-100);"; })">
+                        <Columns>
+                            <RadzenDataGridColumn TItem="FxQuoteDto" Title="ارز" Width="220px">
+                                <Template Context="r">
+                                    <div style="display:flex; align-items:center; gap:.5rem;">
+                                        <span style="font-size:26px">@FlagFor(r.Symbol)</span>
+                                        <div>
+                                            <b>@r.Symbol</b>
+                                            <div style="font-size:.75rem; opacity:.65;">@NameFor(r.Symbol)</div>
+                                        </div>
+                                    </div>
+                                </Template>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="FxQuoteDto" Title="@($"1 {_base} =")" Width="150px" TextAlign="TextAlign.Center">
+                                <Template Context="r"><b>@r.Rate.ToString("N4")</b></Template>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="FxQuoteDto" Title="@($"1 ارز = ({_base})")" Width="160px" TextAlign="TextAlign.Center">
+                                <Template Context="r">@((1 / r.Rate).ToString("N4"))</Template>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="FxQuoteDto" Title="نسبت به قوی‌ترین" Width="150px" TextAlign="TextAlign.Center">
+                                <Template Context="r">@((r.Rate / Strongest.Rate).ToString("N2"))×</Template>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="FxQuoteDto" Title="تاریخ نرخ" Width="140px" TextAlign="TextAlign.Center">
+                                <Template Context="r">@r.TimestampUtc.ToLocalTime().ToString("yyyy/MM/dd")</Template>
+                            </RadzenDataGridColumn>
+                        </Columns>
+                    </RadzenDataGrid>
+                    <div style="font-size:.78rem; opacity:.6; margin-top:.6rem;">
+                        نرخ‌ها از Frankfurter (بر پایه داده‌های رسمی بانک مرکزی اروپا) دریافت می‌شوند و روزانه به‌روزرسانی می‌گردند.
+                    </div>
+                </RadzenCard>
+            }
+        </div>
+    </ChildContent>
+</BasePage>
+
+@code {
+    private bool IsLoading { get; set; } = true;
+    private bool _offline;
+    private List<FxQuoteDto> Items { get; set; } = new();
+    private string _base = "USD";
+    private readonly string[] _bases = ["USD", "EUR"];
+
+    private const string Symbols = "EUR,GBP,JPY,CHF,CAD,AUD,TRY,CNY,INR";
+
+    // مبدل
+    private decimal _cvAmount = 100;
+    private string _cvFrom = "USD";
+    private string _cvTo = "EUR";
+
+    private FxQuoteDto Strongest => Items.OrderBy(r => r.Rate).First();
+    private FxQuoteDto Weakest => Items.OrderByDescending(r => r.Rate).First();
+
+    private List<string> CvSymbols
+    {
+        get
+        {
+            var list = new List<string> { _base };
+            list.AddRange(Items.Select(i => i.Symbol));
+            return list.Distinct().ToList();
+        }
+    }
+
+    /// <summary>نرخ تبدیل from → to از روی نرخ‌های پایه</summary>
+    private decimal Rate(string from, string to)
+    {
+        from = from.ToUpperInvariant();
+        to = to.ToUpperInvariant();
+        if (from == to) return 1m;
+
+        decimal FromPerBase(string s) =>
+            s == _base ? 1m : Items.FirstOrDefault(i => i.Symbol == s)?.Rate ?? 0m;
+
+        var fromRate = FromPerBase(from);
+        var toRate = FromPerBase(to);
+        if (fromRate == 0 || toRate == 0) return 0m;
+
+        return toRate / fromRate;
+    }
+
+    private decimal CvResult => Rate(_cvFrom, _cvTo) * _cvAmount;
+
+    private void SwapCurrencies()
+    {
+        (_cvFrom, _cvTo) = (_cvTo, _cvFrom);
+    }
+
+    private static string NameFor(string s) => s switch
+    {
+        "EUR" => "یورو", "GBP" => "پوند انگلیس", "JPY" => "ین ژاپن", "CHF" => "فرانک سوئیس",
+        "CAD" => "دلار کانادا", "AUD" => "دلار استرالیا", "TRY" => "لیر ترکیه",
+        "CNY" => "یوان چین", "INR" => "روپیه هند", "USD" => "دلار آمریکا", _ => s
+    };
+
+    private static string FlagFor(string s) => s switch
+    {
+        "EUR" => "🇪🇺", "GBP" => "🇬🇧", "JPY" => "🇯🇵", "CHF" => "🇨🇭", "CAD" => "🇨🇦",
+        "AUD" => "🇦🇺", "TRY" => "🇹🇷", "AED" => "🇦🇪", "CNY" => "🇨🇳", "INR" => "🇮🇳",
+        "USD" => "🇺🇸", _ => "🏳️"
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Rates.OnRatesUpdated += (b, items) =>
+            {
+                if (!string.Equals(b, _base, StringComparison.OrdinalIgnoreCase)) return;
+                Items = items ?? new();
+                _offline = false;
+                IsLoading = false;
+                InvokeAsync(StateHasChanged);
+            };
+
+            await Rates.StartAsync();
+            await Rates.SubscribeAsync(_base, Symbols);
+        }
+        catch
+        {
+            _offline = true;
+            IsLoading = false;
+        }
+    }
+
+    private string SymbolsFor(string b) => b == "EUR"
+        ? Symbols.Replace("EUR", "USD")
+        : Symbols;
+
+    private async Task OnBaseChanged()
+    {
+        try
+        {
+            IsLoading = true;
+            StateHasChanged();
+            await Rates.SubscribeAsync(_base, SymbolsFor(_base));
+            _offline = false;
+        }
+        catch
+        {
+            _offline = true;
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private async Task Refresh()
+    {
+        try
+        {
+            IsLoading = true;
+            StateHasChanged();
+            await Rates.RefreshOnceAsync(_base, SymbolsFor(_base));
+            _offline = false;
+        }
+        catch
+        {
+            _offline = true;
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    #region CurrentWindow
+    private int windowWidth;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var dotNetRef = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("resizeListener.register", dotNetRef);
+            windowWidth = await JS.InvokeAsync<int>("getWindowWidth");
+        }
+    }
+    [JSInvokable]
+    public Task OnResize(int width)
+    {
+        windowWidth = width;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+    #endregion
+}

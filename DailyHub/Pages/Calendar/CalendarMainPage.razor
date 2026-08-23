@@ -1,0 +1,369 @@
+@page "/Calendar/CalendarMainPage"
+@using DailyHub.Shared.Dto.Calendar
+@using DailyHub.Client.Services
+@inject CalendarRealtimeService Calendar
+@inject IJSRuntime JS
+
+<style>
+    .cal-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: clamp(12px, 2vw, 20px);
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+
+    .cal-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: .8rem;
+        margin-bottom: 1rem;
+    }
+
+    .cal-stat {
+        border-radius: 16px;
+        padding: 1rem;
+        text-align: center;
+        background: linear-gradient(145deg, #ffffff, #f2f7ff);
+        border: 1px solid rgba(0, 140, 211, .12);
+        box-shadow: 0 6px 16px rgba(30, 60, 140, .06);
+        transition: transform .2s ease;
+    }
+
+    .cal-stat:hover { transform: translateY(-3px); }
+
+    .cal-stat .num {
+        font-size: 1.7rem;
+        font-weight: 900;
+        background: linear-gradient(90deg, #045a7d, #008b9d);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .cal-stat .lbl { font-size: .8rem; opacity: .7; margin-top: .15rem; }
+
+    .cal-months {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        gap: .5rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .month-chip {
+        text-align: center;
+        border-radius: 12px;
+        padding: .5rem .3rem;
+        background: var(--rz-base-100);
+        border: 1px solid var(--rz-base-200);
+        cursor: pointer;
+        transition: all .2s ease;
+        font-size: .85rem;
+    }
+
+    .month-chip:hover { border-color: #008cd3; }
+
+    .month-chip.active {
+        background: linear-gradient(135deg, #008b9d, #6a68e0);
+        color: #fff;
+        border-color: transparent;
+        font-weight: 800;
+    }
+
+    .month-chip .cnt { display: block; font-size: .72rem; opacity: .75; }
+
+    .hol-item {
+        display: flex;
+        align-items: center;
+        gap: .9rem;
+        padding: .85rem 1.1rem;
+        border-radius: 14px;
+        background: #fff;
+        border: 1px solid var(--rz-base-200);
+        margin-bottom: .6rem;
+        transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .hol-item:hover {
+        transform: translateX(-4px);
+        box-shadow: 0 8px 20px rgba(30, 60, 140, .1);
+    }
+
+    .hol-item.today {
+        background: linear-gradient(90deg, #fff8e6, #fff);
+        border-color: #ffd54f;
+    }
+
+    .hol-item.upcoming { border-inline-start: 4px solid #008cd3; }
+    .hol-item.past { opacity: .5; }
+
+    .hol-date-badge {
+        min-width: 64px;
+        text-align: center;
+        background: var(--rz-base-100);
+        border-radius: 12px;
+        padding: .35rem .5rem;
+        line-height: 1.25;
+    }
+
+    .hol-date-badge .d { font-weight: 900; font-size: 1.25rem; direction: ltr; }
+    .hol-date-badge .m { font-size: .72rem; opacity: .7; }
+
+    .hol-name { font-weight: 800; }
+    .hol-sub { font-size: .8rem; opacity: .6; }
+
+    .hol-daysleft {
+        margin-inline-start: auto;
+        background: #eef6ff;
+        color: #0b5ed7;
+        border-radius: 999px;
+        padding: .25rem .8rem;
+        font-size: .8rem;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .hol-progress {
+        height: 8px;
+        border-radius: 999px;
+        background: var(--rz-base-200);
+        overflow: hidden;
+        margin: .25rem 0 1rem;
+    }
+
+    .hol-progress > div {
+        height: 100%;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #008b9d, #6a68e0);
+        transition: width .6s ease;
+    }
+</style>
+
+<BasePage IsLoading="IsLoading">
+    <HeaderContent>
+        <RadzenAlert AlertStyle="AlertStyle.Danger" @bind-Visible="_offline" ShowIcon="false" Variant="Variant.Flat" Shade="Shade.Lighter"
+                     style="margin:1rem; border-radius:18px; width:98%; box-shadow: 0 0px 30px rgba(0,0,0,0.1)!important;">
+            <RadzenText style="color:red; font-weight:800; font-size:16px;"
+                        Text="اتصال شما به سرور برقرار نشد ، لطفا با پشتیبانی تماس بگیرید . " />
+        </RadzenAlert>
+    </HeaderContent>
+
+    <ChildContent>
+        <div dir="rtl" class="cal-wrap">
+            <RadzenCard class="fade-in" Style="border-radius:20px; width:100%;">
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:1rem; margin:0.2rem 0.5rem 0.8rem; flex-wrap:wrap;">
+                    <div class="wx-section-title" style="display:flex; align-items:center; gap:.4rem;">
+                        <RadzenIcon Icon="event" Style="font-size:22px; opacity:.8;" />
+                        <span>تقویم تعطیلات رسمی @_year</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;">
+                        <RadzenDropDown @bind-Value="_country" Data="@_countries" TextProperty="Name" ValueProperty="Code"
+                                        Style="width:170px" Change="@(args => OnFilterChanged())" />
+                        <RadzenDropDown @bind-Value="_year" Data="@_years" Style="width:100px"
+                                        Change="@(args => OnFilterChanged())" />
+                        <RadzenButton Icon="refresh" Text="بروزرسانی" Click="Refresh"
+                                      ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" />
+                    </div>
+                </div>
+
+                @if (IsLoading)
+                {
+                    <div style="opacity:.6; padding:.5rem;">در حال دریافت...</div>
+                }
+                else if (Holidays.Count == 0)
+                {
+                    <div style="opacity:.6; padding:.5rem;">تعطیلی برای این کشور/سال پیدا نشد. کشور دیگری را امتحان کن (مثلاً آلمان یا آمریکا).</div>
+                }
+                else
+                {
+                    <div class="cal-stats">
+                        <div class="cal-stat"><div class="num">@Holidays.Count</div><div class="lbl">کل تعطیلات سال</div></div>
+                        <div class="cal-stat"><div class="num">@PastCount</div><div class="lbl">گذشته</div></div>
+                        <div class="cal-stat"><div class="num">@UpcomingCount</div><div class="lbl">در پیش رو</div></div>
+                        <div class="cal-stat"><div class="num">@DaysUntilNext</div><div class="lbl">روز تا تعطیلی بعدی</div></div>
+                        <div class="cal-stat"><div class="num">@PercentPassed٪</div><div class="lbl">پیشرفت سال</div></div>
+                    </div>
+
+                    <div class="hol-progress"><div style="width:@PercentPassed%"></div></div>
+
+                    <div style="margin-bottom:.6rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:.5rem;">
+                        <div class="month-chip @(SelectedMonth == 0 ? "active" : "")" @onclick="() => SelectedMonth = 0">
+                            همه <span class="cnt">@Holidays.Count روز</span>
+                        </div>
+                        @for (int m = 1; m <= 12; m++)
+                        {
+                            var mm = m;
+                            var cnt = Holidays.Count(h => h.Date.Month == mm);
+                            <div class="month-chip @(SelectedMonth == mm ? "active" : "")" @onclick="() => SelectedMonth = mm">
+                                @MonthName(mm) <span class="cnt">@cnt روز</span>
+                            </div>
+                        }
+                    </div>
+
+                    @foreach (var h in FilteredHolidays)
+                    {
+                        var cls = IsToday(h.Date) ? "today" : (h.Date < DateTime.Today ? "past" : "upcoming");
+                        <div class="hol-item @cls">
+                            <div class="hol-date-badge">
+                                <div class="d">@h.Date.Day</div>
+                                <div class="m">@MonthName(h.Date.Month)</div>
+                            </div>
+                            <div>
+                                <div class="hol-name">@h.LocalName</div>
+                                <div class="hol-sub">@h.Name • @h.Date.ToString("yyyy/MM/dd") @JalaliLabel(h.Date)</div>
+                            </div>
+                            @if (IsToday(h.Date))
+                            {
+                                <div class="hol-daysleft" style="background:#fff3cd; color:#856404;">امروز! 🎉</div>
+                            }
+                            else if (h.Date > DateTime.Today)
+                            {
+                                <div class="hol-daysleft">@DaysUntil(h.Date) روز مانده</div>
+                            }
+                        </div>
+                    }
+                }
+            </RadzenCard>
+        </div>
+    </ChildContent>
+</BasePage>
+
+@code {
+    private bool IsLoading { get; set; } = true;
+    private bool _offline;
+    private List<HolidayDto> Holidays { get; set; } = new();
+    private string _country = "IR";
+    private int _year = DateTime.UtcNow.Year;
+    private int SelectedMonth;
+
+    public sealed record CountryOption(string Name, string Code);
+
+    private readonly List<CountryOption> _countries = new()
+    {
+        new("🇮🇷 ایران", "IR"), new("🇩🇪 آلمان", "DE"), new("🇺🇸 آمریکا", "US"), new("🇹🇷 ترکیه", "TR"),
+        new("🇦🇪 امارات", "AE"), new("🇬🇧 انگلیس", "GB"), new("🇫🇷 فرانسه", "FR"),
+        new("🇨🇦 کانادا", "CA"), new("🇦🇺 استرالیا", "AU"), new("🇯🇵 ژاپن", "JP")
+    };
+
+    private readonly int[] _years = [DateTime.UtcNow.Year + 1, DateTime.UtcNow.Year, DateTime.UtcNow.Year - 1];
+
+    private IEnumerable<HolidayDto> FilteredHolidays =>
+        SelectedMonth == 0 ? Holidays : Holidays.Where(h => h.Date.Month == SelectedMonth);
+
+    private int PastCount => Holidays.Count(h => h.Date < DateTime.Today);
+    private int UpcomingCount => Holidays.Count(h => h.Date >= DateTime.Today);
+
+    private int DaysUntilNext => Holidays.Where(h => h.Date >= DateTime.Today)
+                                         .OrderBy(h => h.Date)
+                                         .Select(h => DaysUntil(h.Date))
+                                         .FirstOrDefault(0);
+
+    private int PercentPassed => Math.Clamp(
+        (int)Math.Round(DayOfYear * 100.0 / (DateTime.IsLeapYear(_year) ? 366 : 365)), 0, 100);
+    private int DayOfYear => DateTime.Today.Year == _year ? DateTime.Today.DayOfYear : (_year > DateTime.Today.Year ? 0 : 365);
+
+    private static bool IsToday(DateTime d) => d.Date == DateTime.Today;
+    private static int DaysUntil(DateTime d) => Math.Max(0, (int)(d.Date - DateTime.Today).TotalDays);
+
+    /// <summary>برچسب شمسی فقط برای ایران</summary>
+    private string JalaliLabel(DateTime d)
+    {
+        if (_country != "IR") return "";
+        try
+        {
+            var pc = new System.Globalization.PersianCalendar();
+            return $"({pc.GetYear(d)}/{pc.GetMonth(d):00}/{pc.GetDayOfMonth(d):00})";
+        }
+        catch { return ""; }
+    }
+
+    private static string MonthName(int m) => m switch
+    {
+        1 => "ژانویه", 2 => "فوریه", 3 => "مارس", 4 => "آوریل", 5 => "مه", 6 => "ژوئن",
+        7 => "ژوئیه", 8 => "اوت", 9 => "سپتامبر", 10 => "اکتبر", 11 => "نوامبر", 12 => "دسامبر",
+        _ => ""
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await Calendar.StartAsync();
+            Holidays = await Calendar.GetHolidaysAsync(_country, _year);
+            _offline = false;
+        }
+        catch
+        {
+            _offline = true;
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private async Task OnFilterChanged()
+    {
+        SelectedMonth = 0;
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        try
+        {
+            IsLoading = true;
+            StateHasChanged();
+            Holidays = await Calendar.GetHolidaysAsync(_country, _year);
+            _offline = false;
+        }
+        catch
+        {
+            _offline = true;
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private async Task Refresh()
+    {
+        try
+        {
+            IsLoading = true;
+            StateHasChanged();
+            Holidays = await Calendar.RefreshOnceAsync(_country, _year);
+            _offline = false;
+        }
+        catch
+        {
+            _offline = true;
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    #region CurrentWindow
+    private int windowWidth;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var dotNetRef = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("resizeListener.register", dotNetRef);
+            windowWidth = await JS.InvokeAsync<int>("getWindowWidth");
+        }
+    }
+    [JSInvokable]
+    public Task OnResize(int width)
+    {
+        windowWidth = width;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+    #endregion
+}

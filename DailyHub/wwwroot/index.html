@@ -6,10 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DailyHub</title>
     <base href="/" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
     <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-
-    <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <link rel="icon" type="image/png" href="favicon.png" />
     <link href="DailyHub.styles.css" rel="stylesheet" />
     <link href="manifest.webmanifest" rel="manifest" />
@@ -29,14 +31,74 @@
         </div>
     </div>
 
-    <div id="blazor-error-ui" style="z-index:999999;background-color:white;">
-        ______  مشکلی پیش آمده . با پشتیبانی تماسی بگیرید  ______
-        <a href="." class="reload" style="color:blue;">Reload ↻</a>
-        <span class="dismiss" style="color:red;"> 🗙 </span>
+    <div id="blazor-error-ui">
+        <div class="error-overlay">
+            <div class="error-card">
+                <div class="error-badge">
+                    مشکل غیرمنتظره
+                </div>
+
+                <h1 class="error-title">
+                    اوه! یه مشکلی پیش اومده 😥
+                </h1>
+
+                <p class="error-text">
+                    برای ادامه، لطفاً با پشتیبانی تماس بگیرید یا صفحه را مجدداً بارگذاری کنید.
+                </p>
+
+                <div class="support-box">
+                    <p>شماره پشتیبانی:</p>
+                    <a class="support-phone" href="tel:09114461400">
+                        09114461400
+                    </a>
+                    <span class="support-hint">
+                        (روی شماره بزنید تا تماس بگیرید)
+                    </span>
+                </div>
+
+                <div class="error-actions">
+                    <a href="." class="reload error-btn primary">
+                        یه بار دیگه امتحان کن 🔄️
+                    </a>
+
+                    <a href="tel:09114461400" class="error-btn secondary">
+                        📞 تماس با پشتیبانی
+                    </a>
+                </div>
+
+                <div class="error-footer">
+                    اگر مشکل ادامه داشت، زمان و توضیح خطا را به پشتیبانی اطلاع دهید.
+                </div>
+
+                <!--<span class="dismiss error-close">
+                    ✕
+                </span>-->
+            </div>
+        </div>
     </div>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var closeBtn = document.querySelector("#blazor-error-ui .dismiss");
+            if (closeBtn) {
+                closeBtn.addEventListener("click", function () {
+                    var errorUi = document.getElementById("blazor-error-ui");
+                    if (errorUi) errorUi.style.display = "none";
+                });
+            }
+        });
+    </script>
+
     <script src="_framework/blazor.webassembly.js"></script>
-    <script>navigator.serviceWorker.register('service-worker.js');</script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.published.js', {
+                    updateViaCache: 'none'
+                });
+            });
+        }
+    </script>
     <script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
     <script src="js/site.js"></script>
     <script>
@@ -60,6 +122,65 @@
             });
         }
     </script>
+
+    <!--<script>
+        (function () {
+            const seen = new WeakSet();
+
+            // اینجا تاخیر کلی رو تنظیم کن (میلی‌ثانیه)
+            const GLOBAL_DELAY = 100; // 1 ثانیه
+
+            const options = {
+                root: null,
+                rootMargin: '0px 0px -10% 0px',
+                threshold: 0.1
+            };
+
+            const io = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const el = entry.target;
+
+                        // با تاخیر کلاس رو بزن
+                        setTimeout(() => {
+                            el.classList.add('is-visible');
+                        }, GLOBAL_DELAY);
+
+                        observer.unobserve(el);
+                    }
+                });
+            }, options);
+
+            function registerTargets(root = document) {
+                root.querySelectorAll('.fade-in').forEach(el => {
+                    if (!seen.has(el)) {
+                        seen.add(el);
+                        io.observe(el);
+                    }
+                });
+            }
+
+            // اول صفحه
+            registerTargets();
+
+            // برای المنت‌هایی که بعداً اضافه می‌شن
+            const mo = new MutationObserver(mutations => {
+                for (const m of mutations) {
+                    m.addedNodes.forEach(node => {
+                        if (node.nodeType !== 1) return;
+                        if (node.matches && node.matches('.fade-in')) {
+                            registerTargets(node.parentNode || document);
+                        }
+                        registerTargets(node);
+                    });
+                }
+            });
+
+            mo.observe(document.body, { childList: true, subtree: true });
+        })();
+    </script>-->
+
+
 </body>
 
 </html>

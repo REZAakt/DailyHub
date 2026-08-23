@@ -15,3 +15,4 @@ public static class HttpClientNames
     public const string Metals = "metals";
     public const string NagerDate = "nagerdate";
 }
+

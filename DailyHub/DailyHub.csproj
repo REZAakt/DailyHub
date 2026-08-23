@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
+    <ApplicationIcon>wwwroot\images\DH.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,7 +32,6 @@
   <ItemGroup>
     <Folder Include="Helper\" />
     <Folder Include="Interfaces\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,6 +40,12 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>MainText.resx</DependentUpon>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\offline.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

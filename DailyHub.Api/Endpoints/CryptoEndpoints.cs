@@ -1,17 +1,23 @@
-﻿namespace DailyHub.Api.Endpoints;
+namespace DailyHub.Api.Endpoints;
 
 using DailyHub.Shared.Abstractions.Crypto;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Routing;
 
 public static class CryptoEndpoints
 {
     public static IEndpointRouteBuilder MapCryptoEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/crypto/prices", (string symbols, ICryptoProvider provider) =>
+        app.MapGet("/api/crypto/prices", async (string symbols, ICryptoProvider provider, CancellationToken ct) =>
         {
-            // Implement later
-            throw new NotImplementedException();
+            try
+            {
+                var ids = symbols.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                var items = await provider.GetAsync(ids, ct);
+                return Results.Ok(items);
+            }
+            catch (Exception ex)
+            {
+                return Results.Problem(ex.Message);
+            }
         });
 
         return app;

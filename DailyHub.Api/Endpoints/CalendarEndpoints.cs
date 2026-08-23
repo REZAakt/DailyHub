@@ -1,17 +1,23 @@
-﻿namespace DailyHub.Api.Endpoints;
+namespace DailyHub.Api.Endpoints;
 
 using DailyHub.Shared.Abstractions.Calendar;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Routing;
 
 public static class CalendarEndpoints
 {
     public static IEndpointRouteBuilder MapCalendarEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/calendar/holidays", (string country, int year, ICalendarProvider provider) =>
+        app.MapGet("/api/calendar/holidays", async (string country, int? year, ICalendarProvider provider, CancellationToken ct) =>
         {
-            // Implement later
-            throw new NotImplementedException();
+            try
+            {
+                var y = year is null or 0 ? DateTime.UtcNow.Year : year.Value;
+                var holidays = await provider.GetHolidaysAsync(country, y, ct);
+                return Results.Ok(holidays);
+            }
+            catch (Exception ex)
+            {
+                return Results.Problem(ex.Message);
+            }
         });
 
         return app;

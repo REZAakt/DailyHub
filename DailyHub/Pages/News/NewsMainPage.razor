@@ -1,0 +1,168 @@
+﻿@page "/News/NewsMainPage"
+@using DailyHub.Shared.Dto.News
+@inject NewsRealtimeService News
+
+<BasePage IsLoading="IsLoading">
+    <HeaderContent>
+        <RadzenAlert AlertStyle="AlertStyle.Danger" @bind-Visible="_offline"
+                     ShowIcon="false" Variant="Variant.Flat" Shade="Shade.Lighter"
+                     style="margin:1rem; border-radius:18px; width:98%; box-shadow: 0 0px 25px rgba(0,0,0,0.08)!important;">
+            <RadzenText style="color:red; font-weight:800; font-size:16px;"
+                        Text="اتصال شما به سرور برقرار نشد ، لطفا با پشتیبانی تماس بگیرید . " />
+        </RadzenAlert>
+    </HeaderContent>
+
+    <ChildContent>
+        <RadzenTabs class="fade-in" RenderMode="TabRenderMode.Client" @bind-SelectedIndex="@selectedIndex" TabPosition="TabPosition.TopRight" Style="justify-content:center;">
+            <Tabs>
+                @foreach (var cat in _categories)
+                {
+                    <RadzenTabsItem Text="@_titles[cat]" >
+                        @NewsTab(cat)
+                    </RadzenTabsItem>
+                }
+            </Tabs>
+        </RadzenTabs>
+    </ChildContent>
+</BasePage>
+
+@code {
+    private bool _offline = false;
+    public bool IsLoading { get; set; } = true;
+    int selectedIndex = 0;
+
+    private readonly string[] _categories = ["all", "sports", "politics", "economy", "health"];
+    private readonly Dictionary<string, string> _titles = new()
+        {
+            ["all"] = "همه",
+            ["sports"] = "ورزشی",
+            ["politics"] = "سیاسی",
+            ["economy"] = "اقتصادی",
+            ["health"] = "سلامتی"
+        };
+
+    private readonly Dictionary<string, List<NewsItemDto>> _data = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            News.OnNewsUpdated += (cat, list) =>
+            {
+                _data[cat] = list ?? new();
+                InvokeAsync(StateHasChanged);
+            };
+
+            IsLoading = true;
+            await News.StartAsync();
+
+            // ⏳ همه‌ی دسته‌ها را موازی بگیر (به‌جای پشت‌سرهم)
+            await Task.WhenAll(_categories.Select(c => News.SubscribeAsync(c)));
+
+            _offline = false;
+        }
+        catch
+        {
+            _offline = true;
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private async Task RefreshAll()
+    {
+        try
+        {
+            IsLoading = true;
+            await News.ForceRefreshAllAsync(_categories);
+            _offline = false;
+        }
+        catch
+        {
+            _offline = true;
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    // ✅ تب‌های خبری
+    RenderFragment NewsTab(string cat) => builder =>
+    {
+        var list = _data.TryGetValue(cat, out var items) ? items : new List<NewsItemDto>();
+
+        builder.OpenElement(0, "div");
+        builder.AddAttribute(1, "style", "padding: 12px; max-width: 1500px; margin: 0 auto;");
+
+        builder.OpenComponent<RadzenCard>(2);
+        builder.AddAttribute(3, "Style", "padding:.75rem 1rem; border-radius:14px;");
+
+        builder.AddAttribute(4, "ChildContent", (RenderFragment)((_builder) =>
+        {
+            _builder.OpenElement(5, "div");
+            _builder.AddAttribute(6, "style", "display:flex; align-items:center; justify-content:space-between; margin-bottom:.75rem; margin: 0.5rem 1.5rem;");
+            _builder.AddContent(7, $"اخبار ({_titles[cat]})");
+
+            _builder.OpenComponent<RadzenButton>(8);
+            _builder.AddAttribute(9, "Icon", "refresh");
+            _builder.AddAttribute(10, "Text", "بروزرسانی");
+            _builder.AddAttribute(11, "ButtonStyle", ButtonStyle.Primary);
+            _builder.AddAttribute(12, "Size", ButtonSize.Small);
+            // _builder.AddAttribute(13, "Click", EventCallback.Factory.Create(this, RefreshAll));
+            _builder.AddAttribute(13, "Click", EventCallback.Factory.Create<MouseEventArgs>(this, RefreshAll));
+            _builder.CloseComponent();
+
+            _builder.CloseElement(); // header
+
+            if (IsLoading)
+            {
+                _builder.AddMarkupContent(14, "<div style='opacity:.6; padding:.5rem;'>در حال دریافت...</div>");
+            }
+            else if (list.Count == 0)
+            {
+                _builder.AddMarkupContent(15, "<div style='opacity:.6; padding:.5rem;'>خبری برای نمایش نیست.</div>");
+            }
+            else
+            {
+                _builder.OpenComponent<RadzenDataList<NewsItemDto>>(16);
+                _builder.AddAttribute(17, "Data", list);
+                _builder.AddAttribute(18, "AllowPaging", true);
+                _builder.AddAttribute(19, "PagerPosition", PagerPosition.TopAndBottom);
+                _builder.AddAttribute(20, "PageSize", 10);
+                _builder.AddAttribute(21, "Style", "overflow:auto; padding-inline:2px;");
+                _builder.AddAttribute(22, "Template", (RenderFragment<NewsItemDto>)((n) => (__b) =>
+                {
+                    __b.OpenComponent<RadzenCard>(30);
+                    __b.AddAttribute(31, "Style", "margin-bottom:.75rem;padding:1rem 2rem;border-radius:12px;border:1px solid var(--rz-base-300);box-shadow:0 2px 6px rgba(0,0,0,0.05);");
+                    __b.AddAttribute(32, "ChildContent", (RenderFragment)((__c) =>
+                    {
+                        __c.AddMarkupContent(33, $"<div style='font-weight:800;margin-bottom:.25rem'>{n.Title}</div>");
+                        __c.AddMarkupContent(34, $"<div style='opacity:.85;margin-bottom:.5rem'>{Truncate(StripHtml(n.Summary), 220)}</div>");
+                        if (!string.IsNullOrWhiteSpace(n.Link))
+                            __c.AddMarkupContent(35, $"<div style='display:flex; justify-content:end;'><a href='{n.Link}' target='_blank'>ادامه خبر</a></div>");
+                    }));
+                    __b.CloseComponent();
+                }));
+                _builder.CloseComponent();
+            }
+        }));
+        builder.CloseComponent();
+        builder.CloseElement();
+    };
+
+    // Utility
+    private static string StripHtml(string? html)
+    {
+        if (string.IsNullOrEmpty(html)) return "";
+        return System.Text.RegularExpressions.Regex.Replace(html, "<.*?>", string.Empty);
+    }
+
+    private static string Truncate(string? s, int max)
+    {
+        if (string.IsNullOrEmpty(s) || s.Length <= max) return s ?? "";
+        return s.Substring(0, max) + "…";
+    }
+}
